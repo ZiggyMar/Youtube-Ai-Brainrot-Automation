@@ -48,83 +48,78 @@ def get_font_path():
 
 CUSTOM_FONT_PATH = get_font_path()
 
-def create_pil_text_image(text, font_path, font_size, color, stroke_width=6):
-    """Generates a transparent PIL Image with stroked text."""
+def create_pil_text_image(text, font_path, color, stroke_width=6):
+    """Generates a transparent PIL Image with stroked text, auto-scaling to fit 900px width."""
+    font_size = 110
+    max_width = 900
+    
     try:
         font = ImageFont.truetype(font_path, font_size)
     except:
         font = ImageFont.load_default()
 
-    # Calculate text size
+    # Create dummy image for measurement
     dummy_img = Image.new('RGBA', (1, 1))
     draw = ImageDraw.Draw(dummy_img)
+    
+    # Auto-scale font size
+    while True:
+        bbox = draw.textbbox((0, 0), text, font=font, stroke_width=stroke_width)
+        w = bbox[2] - bbox[0]
+        if w <= max_width or font_size <= 20:
+            break
+        font_size -= 5
+        try:
+            font = ImageFont.truetype(font_path, font_size)
+        except:
+            break
+            
+    # Final dimensions (with padding)
     bbox = draw.textbbox((0, 0), text, font=font, stroke_width=stroke_width)
-    w = bbox[2] - bbox[0]
-    h = bbox[3] - bbox[1]
+    w = bbox[2] - bbox[0] + 20
+    h = bbox[3] - bbox[1] + 20
     
-    # Add padding
-    w += 20
-    h += 20
-    
-    # Create image
+    # Create final image
     img = Image.new('RGBA', (w, h), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
     
-    # Draw text with stroke
-    # Center position
-    x, y = 10, 10
-    
-    draw.text((x, y), text, font=font, fill=color, 
+    # Draw text centered in the image
+    # Note: textbbox coordinates are relative to (0,0)
+    # We want to draw at (10, 10) padding
+    draw.text((10, 10), text, font=font, fill=color, 
               stroke_width=stroke_width, stroke_fill="black")
               
     return np.array(img)
 
-def create_text_clip_pil(text, font_path, font_size, color, stroke_width, duration):
-    """Creates a MoviePy ImageClip from a PIL image."""
-    img_array = create_pil_text_image(text, font_path, font_size, color, stroke_width)
-    return ImageClip(img_array).set_duration(duration)
-
-def create_word_subtitles(text, duration, color, font_path, word_data=None):
-    """Creates subtitle clips. Uses Whisper timestamps if available, else mathematical sync."""
+def create_perfect_subtitles(json_path, font_path, color):
+    """Creates subtitle clips using Whisper JSON timestamps."""
+    if not os.path.exists(json_path):
+        return []
+        
+    with open(json_path, 'r', encoding='utf-8') as f:
+        words = json.load(f)
+        
+    if not words: return []
+    
     clips = []
     
-    if word_data:
-        # --- WHISPER SYNC ---
-        # Group words into chunks of 1-2 words
-        # This is a simple grouping strategy. 
-        # Ideally, we group by time gaps, but fixed chunks is safer for now.
+    # Group words into chunks of 2
+    chunks = []
+    for i in range(0, len(words), 2):
+        chunk_words = words[i:i+2]
+        text_str = " ".join([w["word"] for w in chunk_words])
+        start_t = chunk_words[0]["start"]
+        end_t = chunk_words[-1]["end"]
+        chunks.append({"text": text_str, "start": start_t, "end": end_t})
         
-        words = word_data
-        if not words: return []
+    for chunk in chunks:
+        duration = chunk["end"] - chunk["start"]
+        if duration <= 0: continue
         
-        # Grouping logic: 2 words max per chunk
-        chunks = []
-        for i in range(0, len(words), 2):
-            chunk_words = words[i:i+2]
-            text_str = " ".join([w["word"] for w in chunk_words])
-            start_t = chunk_words[0]["start"]
-            end_t = chunk_words[-1]["end"]
-            chunks.append({"text": text_str, "start": start_t, "end": end_t})
-            
-        for chunk in chunks:
-            txt_clip = create_text_clip_pil(chunk["text"].upper(), font_path, 110, color, 6, chunk["end"] - chunk["start"])
-            txt_clip = txt_clip.set_start(chunk["start"]).set_position(("center", 1150))
-            clips.append(txt_clip)
-            
-    else:
-        # --- MATHEMATICAL SYNC (FALLBACK) ---
-        words = text.split()
-        if not words: return []
-        
-        chunks = [" ".join(words[i:i+2]) for i in range(0, len(words), 2)]
-        num_chunks = len(chunks)
-        chunk_duration = duration / num_chunks
-        
-        for i, chunk in enumerate(chunks):
-            start_t = i * chunk_duration
-            txt_clip = create_text_clip_pil(chunk.upper(), font_path, 110, color, 6, chunk_duration)
-            txt_clip = txt_clip.set_start(start_t).set_position(("center", 1150))
-            clips.append(txt_clip)
+        img_array = create_pil_text_image(chunk["text"].upper(), font_path, color)
+        txt_clip = ImageClip(img_array).set_duration(duration)
+        txt_clip = txt_clip.set_start(chunk["start"]).set_position(("center", 1150))
+        clips.append(txt_clip)
         
     return clips
 
@@ -140,7 +135,31 @@ def create_difficulty_list_pil(active_label, duration, answer_reveal=None):
             prefix = level["label"].split(".")[0]
             display_text = f"{prefix}. {answer_reveal.upper()}"
 
-        txt_clip = create_text_clip_pil(display_text, CUSTOM_FONT_PATH, 50, color, 2, duration)
+        # Use a simpler text creation for list
+        img_array = create_pil_text_image(display_text, CUSTOM_FONT_PATH, color, stroke_width=2)
+        # Force resize if needed or just rely on auto-scale in function
+        # But for list we want consistent size usually. 
+        # The auto-scale function starts at 110, which is big. 
+        # We should probably make a separate function or param for size, but user asked for specific logic.
+        # User requirement: "Start size 110" was for subtitles. 
+        # For list, let's just use the same function but maybe scale down the result if it's huge?
+        # Actually, let's modify create_pil_text_image to accept start_size
+        
+        # Re-implementing specific list text logic to be safe and consistent
+        try:
+            font = ImageFont.truetype(CUSTOM_FONT_PATH, 50)
+        except:
+            font = ImageFont.load_default()
+            
+        dummy = Image.new('RGBA', (1, 1))
+        draw = ImageDraw.Draw(dummy)
+        bbox = draw.textbbox((0, 0), display_text, font=font, stroke_width=2)
+        w, h = bbox[2]-bbox[0]+20, bbox[3]-bbox[1]+20
+        img = Image.new('RGBA', (w, h), (0,0,0,0))
+        draw = ImageDraw.Draw(img)
+        draw.text((10,10), display_text, font=font, fill=color, stroke_width=2, stroke_fill="black")
+        
+        txt_clip = ImageClip(np.array(img)).set_duration(duration)
         txt_clip = txt_clip.set_position((50, 100 + i * 70))
         clips.append(txt_clip)
         
@@ -183,7 +202,7 @@ def find_character_image(speaker, character_field):
 
 def generate_video(video_data):
     video_id = video_data["video_id"]
-    print(f"🎬 Rendering Video {video_id} with PIL Text Engine...")
+    print(f"🎬 Rendering Video {video_id} with Perfect Sync...")
     
     # 1. Background
     bg_files = glob.glob(os.path.join(ASSETS_DIR, "backgrounds", "*.mp4"))
@@ -218,6 +237,7 @@ def generate_video(video_data):
         
         # Audio
         audio_path = os.path.join(AUDIO_CACHE_DIR, f"v{video_id}_s{i}_{speaker}.wav")
+        json_path = os.path.join(AUDIO_CACHE_DIR, f"v{video_id}_s{i}_{speaker}.json")
         
         if is_timer:
             timer_path = os.path.join(ASSETS_DIR, "overlays", "timer.mp4")
@@ -252,7 +272,7 @@ def generate_video(video_data):
                         prog = t / SLIDE_DUR
                         ease = 1 - (1 - prog) ** 3
                         target_x = 240 
-                        start_x = -1000 # Assume left for simplicity or random
+                        start_x = -1000 
                         cur_x = start_x + (target_x - start_x) * ease
                         return (int(cur_x), "bottom")
                     return ("center", "bottom")
@@ -260,7 +280,7 @@ def generate_video(video_data):
                 char_clip = (ImageClip(char_path).resize(height=800)
                              .rotate(lambda t: 2 * np.sin(2 * np.pi * t / 3.0))
                              .set_duration(duration)
-                             .set_position(slide_pos)) # Simplified slide
+                             .set_position(slide_pos))
                 layers.append(char_clip)
                 
                 # SFX
@@ -272,18 +292,10 @@ def generate_video(video_data):
                         if sfx_clip.duration > duration: sfx_clip = sfx_clip.subclip(0, duration)
                         dialogue_audios.append(sfx_clip.set_start(total_duration))
 
-        # Subtitles (PIL)
+        # Subtitles (Perfect Sync)
         if text and not is_timer:
             color = visuals.get("subtitle_color", "yellow")
-            
-            # Load Whisper Data
-            json_path = os.path.join(AUDIO_CACHE_DIR, f"v{video_id}_s{i}_{speaker}.json")
-            word_data = None
-            if os.path.exists(json_path):
-                with open(json_path, 'r', encoding='utf-8') as f:
-                    word_data = json.load(f)
-            
-            layers.extend(create_word_subtitles(text, duration, color, CUSTOM_FONT_PATH, word_data))
+            layers.extend(create_perfect_subtitles(json_path, CUSTOM_FONT_PATH, color))
             
         # Timer
         if is_timer:
@@ -291,7 +303,7 @@ def generate_video(video_data):
                              .resize(width=900).set_position("center").set_duration(duration))
             layers.append(timer_overlay)
             
-        # Difficulty List (PIL)
+        # Difficulty List
         answer_reveal = visuals.get("answer_reveal")
         layers.extend(create_difficulty_list_pil(visuals.get("list_highlight", "1. EASY"), duration, answer_reveal))
         
@@ -301,7 +313,6 @@ def generate_video(video_data):
             cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
             if os.path.exists(cta_path):
                 cta_clip = VideoFileClip(cta_path).fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
-                # Loop or trim to fit
                 if cta_clip.duration < duration:
                     cta_clip = vfx.loop(cta_clip, duration=duration)
                 else:
@@ -351,7 +362,7 @@ def main():
     with open(SCRIPTS_FILE, "r", encoding="utf-8") as f:
         scripts = json.load(f)
     
-    print(f"🔥 Starting PIL-based render of {len(scripts)} videos...")
+    print(f"🔥 Starting Perfect Sync Render of {len(scripts)} videos...")
     for video in tqdm(scripts, desc="Total Progress", unit="video"):
         try:
             generate_video(video)
