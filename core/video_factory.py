@@ -3,6 +3,8 @@ import os
 import random
 import glob
 import numpy as np
+import multiprocessing
+from tqdm import tqdm
 from moviepy.config import change_settings
 from moviepy.editor import (
     VideoFileClip, ImageClip, TextClip, CompositeVideoClip, 
@@ -16,6 +18,15 @@ PROJECT_ROOT = os.path.dirname(CORE_DIR)
 DATA_DIR = os.path.join(PROJECT_ROOT, 'data')
 
 IMAGEMAGICK_PATH = os.path.abspath(os.path.join(PROJECT_ROOT, "tools", "imagemagick", "magick.exe"))
+
+# Fix for ImageMagick missing modules - Set all relevant environment variables
+magick_dir = os.path.dirname(IMAGEMAGICK_PATH)
+os.environ['MAGICK_HOME'] = magick_dir
+os.environ['MAGICK_CONFIGURE_PATH'] = magick_dir
+os.environ['MAGICK_CODER_MODULE_PATH'] = os.path.join(magick_dir, "modules", "coders")
+# Add to PATH so modules can find Core DLLs
+os.environ['PATH'] = magick_dir + os.pathsep + os.environ.get('PATH', '')
+
 change_settings({"IMAGEMAGICK_BINARY": IMAGEMAGICK_PATH})
 
 ASSETS_DIR = os.path.join(PROJECT_ROOT, "assets")
@@ -27,7 +38,13 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # 1. Asset Loading: Font
 def get_custom_font():
-    font_dir = os.path.join(ASSETS_DIR, "font")
+    # User specifically requested this font
+    font_path = os.path.join(ASSETS_DIR, "Font", "burbankbigcondensed_bold.otf")
+    if os.path.exists(font_path):
+        return font_path
+    
+    # Fallback search
+    font_dir = os.path.join(ASSETS_DIR, "Font")
     fonts = glob.glob(os.path.join(font_dir, "*.ttf")) + glob.glob(os.path.join(font_dir, "*.otf"))
     return fonts[0] if fonts else "Arial"
 
@@ -54,12 +71,18 @@ def create_word_subtitles(text, duration, color, font_path):
     clips = []
     for i, chunk in enumerate(chunks):
         start_t = i * chunk_duration
-        # Style: All Caps, Size 90, Stroke White Width 4
-        txt = (TextClip(chunk.upper(), font=font_path, fontsize=90, color=color,
-                        stroke_color="white", stroke_width=4)
+        # Style: Big, Bold, Spanning width with margins (leanes)
+        # Width 900 leaves ~90px margin on each side (1080 total)
+        # Removed method='caption' to avoid ImageMagick errors, using resize instead
+        txt = (TextClip(chunk.upper(), font=font_path, fontsize=110, color=color,
+                        stroke_color="black", stroke_width=6)
                .set_start(start_t)
-               .set_duration(chunk_duration)
-               .set_position(("center", 1100)))
+               .set_duration(chunk_duration))
+               
+        if txt.w > 900:
+            txt = txt.resize(width=900)
+            
+        txt = txt.set_position(("center", 1000)) # Slightly higher to accommodate large text
         clips.append(txt)
     return clips
 
@@ -130,6 +153,71 @@ def create_difficulty_list(active_label, duration):
         clips.append(txt)
     return clips
 
+def slide_in_wiggle_animation(t, duration, side="left"):
+    """
+    Slide in from side + gentle wiggle.
+    t: current time
+    duration: total duration of clip
+    side: 'left' or 'right'
+    """
+    # 1. Slide In (0 to 0.5s)
+    SLIDE_DURATION = 0.4
+    
+    # Screen width is 1080. Center is 540.
+    # If left, start at -400. If right, start at 1480.
+    start_x = -400 if side == "left" else 1480
+    end_x = "center" # MoviePy handles this as 540
+    
+    # We need to return (x, y) for set_position
+    # But set_position expects a function of t returning (x, y)
+    # This helper calculates the progress
+    
+    slide_progress = min(1.0, t / SLIDE_DURATION)
+    slide_ease = 1 - (1 - slide_progress) ** 3 # Ease out cubic
+    
+    # Calculate X
+    # Since 'center' is a string, we can't interpolate easily with it in a lambda if we return a tuple.
+    # We'll do manual interpolation relative to screen width 1080.
+    target_x = 1080 / 2 - 400 # Assuming image width ~800, center is at 540-400=140
+    # Actually, let's just use relative offsets.
+    
+    # Let's simplify: return the x coordinate.
+    if slide_progress < 1.0:
+        current_x = start_x + (540 - start_x) * slide_ease # 540 is center
+        # Adjust for image center vs top-left. MoviePy positions are top-left usually unless 'center'.
+        # If we use 'center' in set_position, we can't easily animate X.
+        # So we will calculate top-left X.
+        # Image width is resized to height=800. Aspect ratio ~1.5 -> width ~500-600?
+        # Let's assume width is variable. It's safer to use 'center' for final, but for animation we need numbers.
+        # A hack: use 'center' for y, and animate x.
+        pass
+
+    return 0 # Placeholder, logic moved to lambda in generate_video
+
+def get_slide_pos(t, side):
+    SLIDE_DURATION = 0.4
+    if t >= SLIDE_DURATION:
+        return ('center', 'bottom')
+    
+    progress = t / SLIDE_DURATION
+    ease = 1 - (1 - progress) ** 3
+    
+    # Start off screen
+    # We want final position to be ('center', 'bottom')
+    # We can approximate 'center' as 0.5 relative? No, MoviePy uses pixels or strings.
+    
+    # Let's use a simple slide from bottom instead if X is too hard without knowing width.
+    # User asked for Left/Right.
+    # We can assume a standard width or just animate the 'relative' position if MoviePy supports it.
+    # MoviePy set_position((x, y)). x can be a function.
+    
+    return ('center', 'bottom') # Fallback
+
+def wiggle_rotation(t):
+    # Gentle wiggle: +/- 2 degrees, slow sine wave
+    # Period 2 seconds
+    return 2 * np.sin(2 * np.pi * t / 2.0)
+
 def generate_video(video_data):
     video_id = video_data["video_id"]
     print(f"🎬 Rendering Minecraft-Style Video {video_id}...")
@@ -197,12 +285,35 @@ def generate_video(video_data):
         if char_file and not is_timer:
             char_path = find_character_image(speaker, char_file)
             if char_path:
+                # Animation: Slide in from Left/Right + Wiggle
+                # Random side for variety
+                side = random.choice(["left", "right"])
+                start_x = -1000 if side == "left" else 2000
+                
+                # Slide function
+                def slide_pos(t):
+                    SLIDE_DUR = 0.4
+                    if t < SLIDE_DUR:
+                        prog = t / SLIDE_DUR
+                        ease = 1 - (1 - prog) ** 3
+                        # Interpolate x from start_x to 'center' (which is (1080-w)/2)
+                        # Since we don't know W easily without loading, we'll rely on the fact 
+                        # that we can't easily mix 'center' string with math in MoviePy < 2.0
+                        # So we'll stick to a fixed Y 'bottom' and approximate X center as 1080/2 - (height*aspect/2).
+                        # Actually, let's just slide Y (pop up) as it's safer? 
+                        # User EXPLICITLY asked for Left/Right.
+                        # We will assume image width is approx 600px (height 800).
+                        # Center X = (1080 - 600) / 2 = 240.
+                        target_x = 240 
+                        cur_x = start_x + (target_x - start_x) * ease
+                        return (int(cur_x), "bottom")
+                    return ("center", "bottom")
+
                 char_clip = (ImageClip(char_path).resize(height=800)
+                             .rotate(lambda t: 2 * np.sin(2 * np.pi * t / 3.0)) # Gentle Wiggle
                              .set_duration(duration)
-                             .set_position(("center", "bottom"))
-                             .fx(vfx.fadein, 0.2)) # Slide in effect (fadein as proxy or actual slide)
-                # For actual slide in:
-                # char_clip = char_clip.set_position(lambda t: ('center', 1920 - 800 * min(1, t/0.2)))
+                             .set_position(slide_pos))
+                             
                 layers.append(char_clip)
         
         # Subtitle Layer
@@ -254,7 +365,21 @@ def generate_video(video_data):
     final_video = final_video.set_audio(final_audio)
     
     out_path = os.path.join(OUTPUT_DIR, f"video_{video_id}_production.mp4")
-    final_video.write_videofile(out_path, fps=30, codec="libx264", audio_codec="aac", threads=4, preset="ultrafast")
+    
+    out_path = os.path.join(OUTPUT_DIR, f"video_{video_id}_production.mp4")
+    
+    # Reverting to CPU encoding (libx264) for reliability
+    # NVENC was causing black/unplayable videos for the user
+    final_video.write_videofile(
+        out_path, 
+        fps=30, 
+        codec="libx264", 
+        audio_codec="aac", 
+        threads=4, 
+        preset="ultrafast",
+        logger='bar'
+    )
+        
     print(f"✅ Finished: {out_path}")
 
 def main():
@@ -264,8 +389,11 @@ def main():
         
     with open(SCRIPTS_FILE, "r", encoding="utf-8") as f:
         scripts = json.load(f)
-        
-    for video in scripts:
+    
+    # Sequential Processing
+    print(f"🔥 Starting sequential render of {len(scripts)} videos...")
+    
+    for video in tqdm(scripts, desc="Total Progress", unit="video"):
         try:
             generate_video(video)
         except Exception as e:

@@ -43,10 +43,10 @@ def generate_scripts():
     Generate 5 NEW scripts in a list.
     
     STRICT CONTENT LOGIC:
-    - Level 1 (Easy): Question: 'Name a [Category] (e.g., Cereal)'. Answer: 'If you said [Item IN that category], you are out.' (e.g., Froot Loops).
-    - Level 2 (Medium): Question: 'Name a [Category]'. Answer: 'If you said [Item IN that category], you are out.' (Avoid saying the same thing).
-    - Level 3 (Hard): Question: 'Name a [Category]'. Answer: 'If you said [Item IN that category], you are out.' (Avoid saying the same thing).
-    - Level 4 (Impossible): Brainrot/Gen Alpha slang theme.
+    - Level 1 (Easy): Question: 'Name a [Category] (e.g., Cereal)'. Answer: 'If you said [Item IN that category], you are out.' (e.g., Froot Loops). THE ANSWER MUST MATCH THE CATEGORY IN THE QUESTION.
+    - Level 2 (Medium): Question: 'Name a [Category]'. Answer: 'If you said [Item IN that category], you are out.' THE ANSWER MUST MATCH THE CATEGORY IN THE QUESTION.
+    - Level 3 (Hard): Question: 'Name a [Category]'. Answer: 'If you said [Item IN that category], you are out.' THE ANSWER MUST MATCH THE CATEGORY IN THE QUESTION.
+    - Level 4 (Impossible): Brainrot/Gen Alpha slang theme. THE ANSWER MUST MATCH THE QUESTION.
     
     STRICT ASSET LOGIC:
     - If speaker is 'SpongeBob', visuals.character MUST contain 'SpongeBob' (e.g., 'SpongeBob_Happy.png').

@@ -131,6 +131,16 @@ def convert_audio(input_path, output_path, model_name):
 async def process_scripts():
     os.makedirs(AUDIO_CACHE_DIR, exist_ok=True)
 
+    # CLEAR CACHE to prevent mismatched audio/subtitles from previous runs
+    print(f"🧹 Clearing audio cache in {AUDIO_CACHE_DIR}...")
+    for f in os.listdir(AUDIO_CACHE_DIR):
+        file_path = os.path.join(AUDIO_CACHE_DIR, f)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+        except Exception as e:
+            print(f"Error deleting {file_path}: {e}")
+
     if not os.path.exists(SCRIPTS_FILE):
         print(f"❌ Error: {SCRIPTS_FILE} not found.")
         return
