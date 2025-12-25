@@ -377,7 +377,8 @@ def generate_video(video_data):
         audio_codec="aac", 
         threads=4, 
         preset="ultrafast",
-        logger='bar'
+        logger='bar',
+        temp_audiofile=os.path.join(OUTPUT_DIR, f"temp_audio_{video_id}.m4a")
     )
         
     print(f"✅ Finished: {out_path}")

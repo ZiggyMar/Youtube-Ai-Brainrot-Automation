@@ -25,52 +25,51 @@ def generate_scripts():
 
     client = genai.Client(api_key=MY_API_KEY)
     file_path = os.path.join(DATA_DIR, "video_scripts.json")
-    cta_path = os.path.join(DATA_DIR, "cta_master_list.json")
     
-    # Load CTAs
-    ctas = {}
-    if os.path.exists(cta_path):
-        with open(cta_path, "r", encoding="utf-8") as f:
-            ctas = json.load(f)
-    
-    redemption_cta = random.choice(ctas.get("redemption", ["Subscribe to respawn!"]))
-    lock_in_cta = random.choice(ctas.get("lock_in", ["Subscribe to lock in!"]))
-
     print(f"🎬 Generating 5 scripts using gemini-flash-latest...")
 
     prompt_text = f"""
-    You are a creative director for 'Avoid Saying The Same Thing' SpongeBob-themed videos.
+    You are a creative director for viral 'Shorts' trivia game videos.
     Generate 5 NEW scripts in a list.
-    
-    STRICT CONTENT LOGIC:
-    - Level 1 (Easy): Question: 'Name a [Category] (e.g., Cereal)'. Answer: 'If you said [Item IN that category], you are out.' (e.g., Froot Loops). THE ANSWER MUST MATCH THE CATEGORY IN THE QUESTION.
-    - Level 2 (Medium): Question: 'Name a [Category]'. Answer: 'If you said [Item IN that category], you are out.' THE ANSWER MUST MATCH THE CATEGORY IN THE QUESTION.
-    - Level 3 (Hard): Question: 'Name a [Category]'. Answer: 'If you said [Item IN that category], you are out.' THE ANSWER MUST MATCH THE CATEGORY IN THE QUESTION.
-    - Level 4 (Impossible): Brainrot/Gen Alpha slang theme. THE ANSWER MUST MATCH THE QUESTION.
-    
+
+    THEME: SpongeBob SquarePants.
+    GAME TYPE: 'Avoid Saying the Same Thing' OR 'Say the Same Thing' (Mix them up).
+
+    CHARACTERS:
+    - Host: SpongeBob (Enthusiastic/Strict) or Squidward (Grumpy/Arrogant).
+    - Sidekick: Patrick (Goofy/Sympathetic).
+    - Guest: Mr. Krabs (Greedy) or Plankton (Scheming).
+
+    SCRIPT STRUCTURE (STRICTLY FOLLOW THIS FLOW):
+    1. The Hook (0:00-0:05): Host eliminates viewers based on a common physical state (e.g., breathing, sitting, holding a phone). Shock value.
+    2. The Save (0:05-0:10): Sidekick complains it's unfair. Host grants a "Second Chance" ONLY if viewer Subscribes immediately.
+    3. Round 1 (General Knowledge) (0:10-0:20):
+       - Host/Sidekick asks a BROAD question (e.g., Name a fruit).
+       - [TIMER SEGMENT]
+       - Host reveals the most common answer (The Trap).
+    4. Engagement Check (0:20-0:30): Host tells survivors to "Like the video" to lock in their win.
+    5. Round 2 (Show Trivia) (0:30-0:50):
+       - Guest asks a question related to the SpongeBob universe (Lore).
+       - [TIMER SEGMENT]
+       - Guest reveals the answer.
+    6. The Final Trap (End):
+       - Host asks a binary choice (A or B).
+       - One choice wins, the other loses.
+       - "Comment your streak!" or "Tell me why you picked A".
+
     STRICT ASSET LOGIC:
     - If speaker is 'SpongeBob', visuals.character MUST contain 'SpongeBob' (e.g., 'SpongeBob_Happy.png').
-    - If speaker is 'Patrick', visuals.character MUST contain 'Patrick' (e.g., 'Patrick_Confused.png').
+    - If speaker is 'Patrick', visuals.character MUST contain 'Patrick'.
     - If speaker is 'Squidward', visuals.character MUST contain 'Squidward'.
     - If speaker is 'Plankton', visuals.character MUST contain 'Plankton'.
     - If speaker is 'MrKrabs', visuals.character MUST contain 'MrKrabs'.
-    
+
     SUBTITLE COLORS:
     - SpongeBob: "Yellow"
     - Patrick: "Pink"
     - Squidward: "Cyan"
     - Plankton: "Green"
     - MrKrabs: "Red"
-    
-    STRUCTURE PER VIDEO:
-    1. Intro: Speaker A. "Level 1. If you are [Common Act], you are out."
-    2. CTA 1: Speaker B. "{redemption_cta}"
-    3. Level 1 (Easy): Q (Speaker A) -> Timer -> A (Speaker B).
-    4. Level 2 (Medium): Q (Speaker A) -> Timer -> A (Speaker B).
-    5. Level 3 (Hard): Q (Speaker A) -> Timer -> A (Speaker B).
-    6. Level 4 (Impossible): Q (Speaker A) -> Timer -> A (Speaker B).
-    7. CTA 2: Speaker A. "{lock_in_cta}"
-    8. Outro: Speaker B. "Comment your streak!"
 
     JSON OUTPUT FORMAT:
     [
@@ -78,11 +77,21 @@ def generate_scripts():
         "video_id": 1,
         "segments": [
           {{
-            "text": "Spoken words",
+            "text": "If you are breathing right now, you are OUT!",
             "speaker": "SpongeBob",
             "visuals": {{
-              "character": "SpongeBob_Mood.png",
+              "character": "SpongeBob_Angry.png",
               "subtitle_color": "Yellow",
+              "list_highlight": "1. EASY",
+              "show_timer": false
+            }}
+          }},
+          {{
+            "text": "Wait! That's not fair! Give them a chance!",
+            "speaker": "Patrick",
+            "visuals": {{
+              "character": "Patrick_Worried.png",
+              "subtitle_color": "Pink",
               "list_highlight": "1. EASY",
               "show_timer": false
             }}
@@ -91,9 +100,10 @@ def generate_scripts():
         ]
       }}
     ]
-    
-    For Timer segments: speaker="Timer", text="...", visuals.character=null, visuals.show_timer=true.
-    Use Gen Alpha slang (rizz, cooked, sigma, ohio) occasionally for flavor.
+
+    IMPORTANT:
+    - Insert a segment with `visuals.show_timer=true` (and speaker="Timer", text="...") between the Question and the Answer for Round 1 and Round 2.
+    - Use Gen Alpha slang (rizz, cooked, sigma, ohio) naturally but lightly.
     """
 
     try:
