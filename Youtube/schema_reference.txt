@@ -1,0 +1,90 @@
+[
+  {
+    "segment_id": 1,
+    "type": "hook",
+    "duration_estimate": 3.5,
+    "audio": {
+      "speaker": "SpongeBob",
+      "voice_model": "spongebob_v2.pth",
+      "text": "If you're wearing a shirt right now, you're eliminated!",
+      "emotion_tag": "gangster" 
+    },
+    "visuals": {
+      "background_video": "minecraft_parkour_04.mp4",
+      "quiz_overlay": {
+        "visible": true,
+        "highlighted_index": 0,
+        "items": ["1. Easy", "2. Edging", "3. Brainrot", "4. Zesty"]
+      },
+      "character": {
+        "name": "SpongeBob",
+        "image_file": "spongebob_gangster.png",
+        "screen_position": "center", 
+        "animation_entry": "slide_in_left",
+        "animation_idle": "bobbing_rotation"
+      }
+    },
+    "subtitles": {
+      "text": "If you're wearing a shirt right now, you're eliminated!",
+      "color_hex": "#FFFF00",
+      "stroke_color": "#000000",
+      "font": "SpongeBobFont",
+      "position": ["center", 250]
+    },
+    "sfx": {
+      "transition_in": "woosh.mp3"
+    }
+  },
+  {
+    "segment_id": 2,
+    "type": "dialogue",
+    "audio": {
+      "speaker": "Patrick",
+      "voice_model": "patrick_v1.pth",
+      "text": "But what if it's a cool shirt, SpongeBob?",
+      "emotion_tag": "shocked"
+    },
+    "visuals": {
+      "background_video": "continue",
+      "quiz_overlay": {
+        "visible": true,
+        "highlighted_index": 0,
+        "items": ["1. Easy", "2. Edging", "3. Brainrot", "4. Zesty"]
+      },
+      "character": {
+        "name": "Patrick",
+        "image_file": "patrick_shocked.png",
+        "screen_position": "center",
+        "animation_entry": "slide_in_right",
+        "animation_idle": "bobbing_rotation"
+      }
+    },
+    "subtitles": {
+      "text": "But what if it's a cool shirt, SpongeBob?",
+      "color_hex": "#FFC0CB", 
+      "stroke_color": "#000000",
+      "position": ["center", 250]
+    },
+    "sfx": {
+      "transition_in": "woosh.mp3"
+    }
+  },
+  {
+    "segment_id": 3,
+    "type": "cta_subscribe",
+    "audio": {
+      "speaker": "SpongeBob",
+      "voice_model": "spongebob_v2.pth",
+      "text": "Okay I'll let it slide, but only if you subscribe right now!",
+      "emotion_tag": "silly"
+    },
+    "visuals": {
+        "cta_overlay_video": "subscribe_green_screen.mp4"
+    },
+     "subtitles": {
+      "text": "SUBSCRIBE RIGHT NOW!",
+      "color_hex": "#00FF00",
+      "position": ["center", 500] 
+    }
+  }
+]

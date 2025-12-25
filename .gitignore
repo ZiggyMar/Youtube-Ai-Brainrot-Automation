@@ -1,0 +1,8 @@
+# Ignore background assets
+Youtube/assets/backgrounds/
+
+# Ignore music assets
+Youtube/assets/music/
+
+#Ignore AI Models
+Youtube/rvc_models

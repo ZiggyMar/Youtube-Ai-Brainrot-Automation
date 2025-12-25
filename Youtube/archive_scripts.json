@@ -1,0 +1,121 @@
+[
+  {
+    "video_id": 1,
+    "segments": [
+      {
+        "segment_id": 1,
+        "type": "hook",
+        "audio": {
+          "speaker": "SpongeBob",
+          "text": "Yo, only real chads survive this Brainrot quiz. If you don't know the full Skibidi anthem, you are officially cooked.",
+          "emotion": "gangster"
+        },
+        "visuals": {
+          "character": "spongebob_gangster.png",
+          "animation": "slide_in_left"
+        },
+        "quiz_overlay": {
+          "visible": false,
+          "items": []
+        }
+      },
+      {
+        "segment_id": 2,
+        "type": "cta_redemption",
+        "audio": {
+          "speaker": "Patrick",
+          "text": "Eliminated? Hit subscribe to restart the level.",
+          "emotion": "shocked"
+        },
+        "visuals": {
+          "character": "patrick_shocked.png",
+          "animation": "zoom_in"
+        },
+        "quiz_overlay": {
+          "visible": false,
+          "items": []
+        }
+      },
+      {
+        "segment_id": 3,
+        "type": "question",
+        "audio": {
+          "speaker": "Patrick",
+          "text": "Q1: Which creature is the ultimate 'Ohio Rizz Master'?",
+          "emotion": "shocked"
+        },
+        "visuals": {
+          "character": "patrick_shocked.png",
+          "animation": "slide_in_right"
+        },
+        "quiz_overlay": {
+          "visible": true,
+          "items": [
+            "1. Skibidi Toilet",
+            "2. Plankton",
+            "3. DaBaby Car"
+          ]
+        }
+      },
+      {
+        "segment_id": 4,
+        "type": "question",
+        "audio": {
+          "speaker": "SpongeBob",
+          "text": "Q2: What is your sigma mode reaction to seeing a wild Griddy?",
+          "emotion": "intense"
+        },
+        "visuals": {
+          "character": "spongebob_intense.png",
+          "animation": "pulse"
+        },
+        "quiz_overlay": {
+          "visible": true,
+          "items": [
+            "1. Hit the Griddy back",
+            "2. Ignore, too sigma",
+            "3. Ask for Fanum Tax"
+          ]
+        }
+      },
+      {
+        "segment_id": 5,
+        "type": "question",
+        "audio": {
+          "speaker": "Squidward",
+          "text": "Q3, This is a final boss level: What song plays when the Titan Cameraman appears in Episode 68? No cheating!",
+          "emotion": "annoyed"
+        },
+        "visuals": {
+          "character": "squidward_annoyed.png",
+          "animation": "shake"
+        },
+        "quiz_overlay": {
+          "visible": true,
+          "items": [
+            "1. Triple Kill",
+            "2. Ready or Not",
+            "3. My Way"
+          ]
+        }
+      },
+      {
+        "segment_id": 6,
+        "type": "cta_lock_in",
+        "audio": {
+          "speaker": "SpongeBob",
+          "text": "Lock in! Double-tap the screen to confirm your choice.",
+          "emotion": "confident"
+        },
+        "visuals": {
+          "character": "spongebob_confident.png",
+          "animation": "slide_up"
+        },
+        "quiz_overlay": {
+          "visible": false,
+          "items": []
+        }
+      }
+    ]
+  }
+]
