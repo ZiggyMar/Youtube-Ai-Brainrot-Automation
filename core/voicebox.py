@@ -15,12 +15,17 @@ def safe_load(*args, **kwargs):
 torch.load = safe_load
 
 # Configuration
-AUDIO_CACHE_DIR = "audio_cache"
-RVC_MODELS_DIR = "rvc_models"
-SCRIPTS_FILE = "video_scripts.json"
+CORE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(CORE_DIR)
+DATA_DIR = os.path.join(PROJECT_ROOT, 'data')
+
+AUDIO_CACHE_DIR = os.path.join(PROJECT_ROOT, "audio_cache")
+RVC_MODELS_DIR = os.path.join(PROJECT_ROOT, "rvc_models")
+SCRIPTS_FILE = os.path.join(DATA_DIR, "video_scripts.json")
 
 # Ensure ffmpeg is in PATH
-os.environ["PATH"] += os.pathsep + os.getcwd()
+FFMPEG_DIR = os.path.join(PROJECT_ROOT, "tools", "ffmpeg")
+os.environ["PATH"] += os.pathsep + FFMPEG_DIR
 
 # Voice Mapping
 VOICE_MAPPING = {

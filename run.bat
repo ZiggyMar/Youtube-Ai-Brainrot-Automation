@@ -16,8 +16,8 @@ if %errorlevel% neq 0 (
 )
 
 :: Run the Main Control Script
-echo [INFO] Launching main.py...
-python main.py
+echo [INFO] Launching core/main.py...
+python core/main.py
 
 if %errorlevel% neq 0 (
     echo.

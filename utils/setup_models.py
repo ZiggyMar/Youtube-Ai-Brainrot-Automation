@@ -9,7 +9,9 @@ MODELS = {
     "squidward": "https://huggingface.co/ThatBlondeGuy/Squidward-300EP/resolve/main/Squidward.zip?download=true"
 }
 
-BASE_DIR = "rvc_models"
+UTILS_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(UTILS_DIR)
+BASE_DIR = os.path.join(PROJECT_ROOT, "rvc_models")
 
 def download_file(url, filename):
     print(f"Downloading {url} to {filename}...")

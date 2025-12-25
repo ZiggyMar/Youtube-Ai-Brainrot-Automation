@@ -3,20 +3,29 @@ from google.genai import types
 import json
 import os
 import random
+from dotenv import load_dotenv
+
+# Configuration
+CORE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(CORE_DIR)
+DATA_DIR = os.path.join(PROJECT_ROOT, 'data')
+
+# Load environment variables from .env in project root
+load_dotenv(os.path.join(PROJECT_ROOT, '.env'))
 
 # ==========================================
 # API KEY
 # ==========================================
-MY_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyDubhc3fO4CG9e1KRk8NSk6-sRRgqCaox8")
+MY_API_KEY = os.environ.get("GEMINI_API_KEY")
 
 def generate_scripts():
     if not MY_API_KEY or "PASTE_YOUR" in MY_API_KEY:
-        print("❌ ERROR: Invalid API Key.")
+        print("❌ ERROR: Invalid API Key. Please check your .env file.")
         return
 
     client = genai.Client(api_key=MY_API_KEY)
-    file_path = "video_scripts.json"
-    cta_path = "cta_master_list.json"
+    file_path = os.path.join(DATA_DIR, "video_scripts.json")
+    cta_path = os.path.join(DATA_DIR, "cta_master_list.json")
     
     # Load CTAs
     ctas = {}

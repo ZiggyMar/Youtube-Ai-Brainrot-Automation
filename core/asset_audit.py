@@ -3,9 +3,10 @@ import os
 
 def check_assets():
     # Define paths
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    json_path = os.path.join(base_dir, 'video_scripts.json')
-    assets_dir = os.path.join(base_dir, 'assets')
+    core_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(core_dir)
+    json_path = os.path.join(project_root, 'data', 'video_scripts.json')
+    assets_dir = os.path.join(project_root, 'assets')
     
     # Character name mapping for specific capitalization
     char_mapping = {

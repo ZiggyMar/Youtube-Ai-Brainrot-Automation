@@ -10,16 +10,18 @@ from moviepy.editor import (
     CompositeAudioClip, afx
 )
 
-# ==========================================
-# CONFIGURATION
-# ==========================================
-IMAGEMAGICK_PATH = os.path.abspath(os.path.join("tools", "imagemagick", "magick.exe"))
+# Configuration
+CORE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(CORE_DIR)
+DATA_DIR = os.path.join(PROJECT_ROOT, 'data')
+
+IMAGEMAGICK_PATH = os.path.abspath(os.path.join(PROJECT_ROOT, "tools", "imagemagick", "magick.exe"))
 change_settings({"IMAGEMAGICK_BINARY": IMAGEMAGICK_PATH})
 
-ASSETS_DIR = "assets"
-OUTPUT_DIR = "output"
-SCRIPTS_FILE = "video_scripts.json"
-AUDIO_CACHE_DIR = "audio_cache"
+ASSETS_DIR = os.path.join(PROJECT_ROOT, "assets")
+OUTPUT_DIR = os.path.join(PROJECT_ROOT, "output")
+SCRIPTS_FILE = os.path.join(DATA_DIR, "video_scripts.json")
+AUDIO_CACHE_DIR = os.path.join(PROJECT_ROOT, "audio_cache")
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 

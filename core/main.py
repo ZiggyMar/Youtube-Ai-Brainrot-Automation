@@ -4,10 +4,13 @@ import json
 import sys
 
 # Configuration
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SCRIPTS_FILE = os.path.join(BASE_DIR, 'video_scripts.json')
-ARCHIVE_FILE = os.path.join(BASE_DIR, 'archive_scripts.json')
-OUTPUT_DIR = os.path.join(BASE_DIR, 'output')
+CORE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(CORE_DIR)
+DATA_DIR = os.path.join(PROJECT_ROOT, 'data')
+OUTPUT_DIR = os.path.join(PROJECT_ROOT, 'output')
+
+SCRIPTS_FILE = os.path.join(DATA_DIR, 'video_scripts.json')
+ARCHIVE_FILE = os.path.join(DATA_DIR, 'archive_scripts.json')
 
 def run_step(script_name, stage_title):
     """
@@ -17,7 +20,7 @@ def run_step(script_name, stage_title):
     print(f"=== {stage_title} ===")
     print(f"{'='*50}\n")
     
-    script_path = os.path.join(BASE_DIR, script_name)
+    script_path = os.path.join(CORE_DIR, script_name)
     
     if not os.path.exists(script_path):
         print(f"❌ Error: Script not found: {script_name}")
