@@ -1,0 +1,62 @@
+[
+  {
+    "word": "Round",
+    "start": 0.0,
+    "end": 0.18
+  },
+  {
+    "word": "two",
+    "start": 0.18,
+    "end": 0.5
+  },
+  {
+    "word": "trivia.",
+    "start": 0.5,
+    "end": 0.9
+  },
+  {
+    "word": "What",
+    "start": 1.4,
+    "end": 1.52
+  },
+  {
+    "word": "is",
+    "start": 1.52,
+    "end": 1.66
+  },
+  {
+    "word": "Mr.",
+    "start": 1.66,
+    "end": 1.9
+  },
+  {
+    "word": "Krabs'",
+    "start": 2.04,
+    "end": 2.38
+  },
+  {
+    "word": "absolute",
+    "start": 2.54,
+    "end": 2.82
+  },
+  {
+    "word": "favorite",
+    "start": 2.82,
+    "end": 3.24
+  },
+  {
+    "word": "thing",
+    "start": 3.24,
+    "end": 3.46
+  },
+  {
+    "word": "to",
+    "start": 3.46,
+    "end": 3.64
+  },
+  {
+    "word": "count?",
+    "start": 3.64,
+    "end": 3.86
+  }
+]

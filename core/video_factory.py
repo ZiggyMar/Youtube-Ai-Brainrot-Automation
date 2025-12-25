@@ -304,6 +304,7 @@ def generate_video(video_data):
     dialogue_audios = []
     current_time = 0
     bg_cursor = 0
+    cta_shown = False
     
     for i, segment in enumerate(video_data.get("segments", []), start=1):
         visuals = segment.get("visuals", {})
@@ -389,7 +390,8 @@ def generate_video(video_data):
         
         # CTA Overlay Logic
         cta_keywords = ["subscribe", "like", "button", "lock in"]
-        if text and any(k in text.lower() for k in cta_keywords):
+        if not cta_shown and text and any(k in text.lower() for k in cta_keywords):
+            cta_shown = True
             cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
             if validate_video_asset(cta_path):
                 try:

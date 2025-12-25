@@ -1,0 +1,47 @@
+[
+  {
+    "word": "Comment",
+    "start": 0.0,
+    "end": 0.3
+  },
+  {
+    "word": "your",
+    "start": 0.3,
+    "end": 0.5
+  },
+  {
+    "word": "final",
+    "start": 0.5,
+    "end": 0.78
+  },
+  {
+    "word": "streak.",
+    "start": 0.78,
+    "end": 1.16
+  },
+  {
+    "word": "Why",
+    "start": 1.7,
+    "end": 2.14
+  },
+  {
+    "word": "did",
+    "start": 2.14,
+    "end": 2.26
+  },
+  {
+    "word": "you",
+    "start": 2.26,
+    "end": 2.4
+  },
+  {
+    "word": "choose",
+    "start": 2.4,
+    "end": 2.62
+  },
+  {
+    "word": "B?",
+    "start": 2.62,
+    "end": 2.82
+  }
+]

@@ -28,80 +28,99 @@ You are a creative director for viral 'Shorts' trivia game videos.
 Generate 5 NEW scripts in a list.
 
 THEME: SpongeBob SquarePants.
-GAME TYPE: 'Avoid Saying the Same Thing' OR 'Say the Same Thing' (Mix them up).
-VARIETY RULE: Do NOT repeat the same slang (like 'OHIO', 'SKIBIDI', 'RIZZ') or catchphrases across the 5 scripts. Each script must feel unique and fresh.
+GAME TYPE: 'Avoid Saying the Same Thing'.
+
+STRICT RULES:
+1. NO FILLER: Do not write questions like "Name a vegetable" unless it is the actual game round.
+2. NO STAGE DIRECTIONS: Do not write (Laughs), (Cut to black), etc. Only dialogue.
+3. NO SLANG MISUSE: Do not use "Ohio", "Sigma", etc. unless it makes perfect sense. Keep it simple.
+4. STRICT FLOW: Question -> Timer -> Answer. Never leave a question unanswered.
+5. ONE CTA VIDEO: The script should naturally lead to a Subscribe CTA early on.
 
 CHARACTERS:
-- Host: SpongeBob (Enthusiastic/Strict) or Squidward (Grumpy/Arrogant).
-- Sidekick: Patrick (Goofy/Sympathetic).
-- Guest: Mr. Krabs (Greedy) or Plankton (Scheming).
+- SpongeBob (Excited, slightly strict host)
+- Patrick (Complaining, tries to help the viewer)
+- Squidward (Annoyed, arrogant)
 
 SCRIPT STRUCTURE (STRICTLY FOLLOW THIS FLOW):
-1. The Hook (0:00-0:05): Host eliminates viewers based on a common physical state (e.g., breathing, sitting, holding a phone). Shock value.
-2. The Save (0:05-0:10): Sidekick complains it's unfair. Host grants a "Second Chance" ONLY if viewer Subscribes immediately.
-3. Round 1 (General Knowledge) (0:10-0:20):
-    - Host/Sidekick asks a BROAD question (e.g., Name a fruit).
-    - [TIMER SEGMENT]
-    - Host reveals the most common answer (The Trap).
-4. Engagement Check (0:20-0:30): Host tells survivors to "Like the video" to lock in their win.
-5. Round 2 (Show Trivia) (0:30-0:50):
-    - Guest asks a question related to the SpongeBob universe (Lore).
-    - [TIMER SEGMENT]
-    - Guest reveals the answer.
-6. The Final Trap (End):
-    - Host asks a binary choice (A or B).
-    - One choice wins, the other loses.
-    - "Comment your streak!" or "Tell me why you picked A".
-
-STRICT ASSET LOGIC:
-- If speaker is 'SpongeBob', visuals.character MUST contain 'SpongeBob' (e.g., 'SpongeBob_Happy.png').
-- If speaker is 'Patrick', visuals.character MUST contain 'Patrick'.
-- If speaker is 'Squidward', visuals.character MUST contain 'Squidward'.
-- If speaker is 'Plankton', visuals.character MUST contain 'Plankton'.
-- If speaker is 'MrKrabs', visuals.character MUST contain 'MrKrabs'.
-
-SUBTITLE COLORS:
-- SpongeBob: "Yellow"
-- Patrick: "Pink"
-- Squidward: "Cyan"
-- Plankton: "Green"
-- MrKrabs: "Red"
+1. The Hook: SpongeBob sets an impossible elimination trap (e.g., "If you are breathing, you are OUT!").
+2. The Redemption: Patrick complains it's too hard. Tells viewers to "Subscribe for a second chance/revive".
+3. Round 1: SpongeBob asks Question 1 (Broad category).
+   - [TIMER SEGMENT]
+   - SpongeBob reveals Answer 1. "If you said [Answer], you're out!"
+4. Round 2: Squidward asks Question 2.
+   - [TIMER SEGMENT]
+   - Squidward reveals Answer 2. "I chose [Answer]. If you matched me, leave."
+5. Final Round: Patrick asks to pick between two options (e.g., "Krusty Krab or Chum Bucket").
+   - Patrick reveals his choice. "I picked [Option]. Comment if you won!"
 
 JSON OUTPUT FORMAT:
 [
-    {
+  {
     "video_id": 1,
     "segments": [
-        {
-        "text": "If you are breathing right now, you are OUT!",
+      {
+        "text": "If you are wearing socks right now, you are ELIMINATED!",
         "speaker": "SpongeBob",
         "visuals": {
-            "character": "SpongeBob_Angry.png",
-            "subtitle_color": "Yellow",
-            "list_highlight": "1. EASY",
-            "show_timer": false,
-            "answer_reveal": null
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
         }
-        },
-        {
-        "text": "If you said Froot Loops, you are out!",
+      },
+      {
+        "text": "That is way too hard! Subscribe right now for a revive!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Fine. Round 1. Name a fruit.",
         "speaker": "SpongeBob",
         "visuals": {
-            "character": "SpongeBob_Laugh.png",
-            "subtitle_color": "Yellow",
-            "list_highlight": "1. EASY",
-            "show_timer": false,
-            "answer_reveal": "FROOT LOOPS"
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
         }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
         }
+      },
+      {
+        "text": "I picked Apple. If you said Apple, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "APPLE"
+        }
+      }
     ]
-    }
+  }
 ]
 
 IMPORTANT:
-- Insert a segment with `visuals.show_timer=true` (and speaker="Timer", text="...") between the Question and the Answer for Round 1 and Round 2.
-- For ANSWER segments (where the host reveals the trap), set `visuals.answer_reveal` to the specific item (e.g., "APPLE", "FROOT LOOPS"). Otherwise set it to null.
-- Use Gen Alpha slang (rizz, cooked, sigma, ohio) naturally but lightly.
+- Insert a segment with `visuals.show_timer=true` (and speaker="Timer", text="...") between EVERY Question and Answer.
+- For ANSWER segments, set `visuals.answer_reveal` to the specific item.
 - RETURN ONLY RAW JSON. NO MARKDOWN.
 """
 

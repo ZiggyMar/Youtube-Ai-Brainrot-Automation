@@ -1,0 +1,72 @@
+[
+  {
+    "word": "Comment",
+    "start": 0.0,
+    "end": 0.3
+  },
+  {
+    "word": "your",
+    "start": 0.3,
+    "end": 0.5
+  },
+  {
+    "word": "final",
+    "start": 0.5,
+    "end": 0.8
+  },
+  {
+    "word": "streak.",
+    "start": 0.8,
+    "end": 1.12
+  },
+  {
+    "word": "Why",
+    "start": 1.88,
+    "end": 2.16
+  },
+  {
+    "word": "is",
+    "start": 2.16,
+    "end": 2.3
+  },
+  {
+    "word": "it",
+    "start": 2.3,
+    "end": 2.36
+  },
+  {
+    "word": "the",
+    "start": 2.36,
+    "end": 2.48
+  },
+  {
+    "word": "better",
+    "start": 2.48,
+    "end": 2.66
+  },
+  {
+    "word": "choice",
+    "start": 2.66,
+    "end": 2.94
+  },
+  {
+    "word": "for",
+    "start": 2.94,
+    "end": 3.14
+  },
+  {
+    "word": "the",
+    "start": 3.14,
+    "end": 3.24
+  },
+  {
+    "word": "next",
+    "start": 3.24,
+    "end": 3.42
+  },
+  {
+    "word": "episode?",
+    "start": 3.42,
+    "end": 3.82
+  }
+]

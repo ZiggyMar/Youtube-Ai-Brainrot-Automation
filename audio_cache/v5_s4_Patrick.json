@@ -1,0 +1,57 @@
+[
+  {
+    "word": "Round",
+    "start": 0.0,
+    "end": 0.28
+  },
+  {
+    "word": "1,",
+    "start": 0.28,
+    "end": 0.62
+  },
+  {
+    "word": "avoid",
+    "start": 1.08,
+    "end": 1.36
+  },
+  {
+    "word": "the",
+    "start": 1.36,
+    "end": 1.58
+  },
+  {
+    "word": "obvious.",
+    "start": 1.58,
+    "end": 1.96
+  },
+  {
+    "word": "Name",
+    "start": 2.58,
+    "end": 2.9
+  },
+  {
+    "word": "a",
+    "start": 2.9,
+    "end": 3.06
+  },
+  {
+    "word": "common",
+    "start": 3.06,
+    "end": 3.36
+  },
+  {
+    "word": "breakfast",
+    "start": 3.36,
+    "end": 3.78
+  },
+  {
+    "word": "food",
+    "start": 3.78,
+    "end": 4.16
+  },
+  {
+    "word": "item.",
+    "start": 4.16,
+    "end": 4.48
+  }
+]

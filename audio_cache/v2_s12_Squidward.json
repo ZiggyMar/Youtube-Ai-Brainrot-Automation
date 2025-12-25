@@ -1,0 +1,52 @@
+[
+  {
+    "word": "Comment",
+    "start": 0.0,
+    "end": 0.3
+  },
+  {
+    "word": "your",
+    "start": 0.3,
+    "end": 0.52
+  },
+  {
+    "word": "streak.",
+    "start": 0.52,
+    "end": 0.94
+  },
+  {
+    "word": "Tell",
+    "start": 1.5400000000000003,
+    "end": 1.98
+  },
+  {
+    "word": "me",
+    "start": 1.98,
+    "end": 2.12
+  },
+  {
+    "word": "why",
+    "start": 2.12,
+    "end": 2.34
+  },
+  {
+    "word": "you",
+    "start": 2.34,
+    "end": 2.5
+  },
+  {
+    "word": "didn't",
+    "start": 2.5,
+    "end": 2.76
+  },
+  {
+    "word": "pick",
+    "start": 2.76,
+    "end": 2.88
+  },
+  {
+    "word": "A.",
+    "start": 2.88,
+    "end": 3.08
+  }
+]
