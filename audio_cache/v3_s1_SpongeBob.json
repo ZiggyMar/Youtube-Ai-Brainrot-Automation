@@ -1,0 +1,42 @@
+[
+  {
+    "word": "If",
+    "start": 0.0,
+    "end": 0.18
+  },
+  {
+    "word": "you're",
+    "start": 0.18,
+    "end": 0.32
+  },
+  {
+    "word": "wearing",
+    "start": 0.32,
+    "end": 0.5
+  },
+  {
+    "word": "clothes",
+    "start": 0.5,
+    "end": 0.8
+  },
+  {
+    "word": "right",
+    "start": 0.8,
+    "end": 1.0
+  },
+  {
+    "word": "now,",
+    "start": 1.0,
+    "end": 1.2
+  },
+  {
+    "word": "you're",
+    "start": 1.42,
+    "end": 1.58
+  },
+  {
+    "word": "out.",
+    "start": 1.58,
+    "end": 1.72
+  }
+]

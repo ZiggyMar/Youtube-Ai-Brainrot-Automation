@@ -1,0 +1,37 @@
+[
+  {
+    "word": "What's",
+    "start": 0.0,
+    "end": 0.28
+  },
+  {
+    "word": "the",
+    "start": 0.28,
+    "end": 0.38
+  },
+  {
+    "word": "name",
+    "start": 0.38,
+    "end": 0.54
+  },
+  {
+    "word": "of",
+    "start": 0.54,
+    "end": 0.72
+  },
+  {
+    "word": "Squidward's",
+    "start": 0.72,
+    "end": 1.28
+  },
+  {
+    "word": "favorite",
+    "start": 1.28,
+    "end": 1.48
+  },
+  {
+    "word": "hobby?",
+    "start": 1.48,
+    "end": 1.8
+  }
+]

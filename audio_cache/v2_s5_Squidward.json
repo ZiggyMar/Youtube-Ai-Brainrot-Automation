@@ -1,0 +1,42 @@
+[
+  {
+    "word": "If",
+    "start": 0.0,
+    "end": 0.18
+  },
+  {
+    "word": "you",
+    "start": 0.18,
+    "end": 0.26
+  },
+  {
+    "word": "said",
+    "start": 0.26,
+    "end": 0.5
+  },
+  {
+    "word": "goal",
+    "start": 0.5,
+    "end": 0.74
+  },
+  {
+    "word": "fish,",
+    "start": 0.74,
+    "end": 1.14
+  },
+  {
+    "word": "you",
+    "start": 1.38,
+    "end": 1.48
+  },
+  {
+    "word": "are",
+    "start": 1.48,
+    "end": 1.64
+  },
+  {
+    "word": "out.",
+    "start": 1.64,
+    "end": 1.92
+  }
+]

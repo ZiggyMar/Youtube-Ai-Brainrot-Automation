@@ -1,0 +1,632 @@
+[
+  {
+    "video_id": 1,
+    "segments": [
+      {
+        "text": "If you're holding a phone right now, you're OUT!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Angry.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Ohio, that's too easy! Subscribe for a second chance!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick_Confused.png",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Name a vegetable!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Happy.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "3... 2... 1...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": null,
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Carrot, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Laugh.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "CARROT"
+        }
+      },
+      {
+        "text": "Like this video to lock in your win, sigma!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Wink.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "What's the name of SpongeBob's favorite ice cream flavor?",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs_Greedy.png",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "3... 2... 1...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": null,
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "It's Chocolate with sprinkles, you landlubber!",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs_Angry.png",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "CHOCOLATE WITH SPRINKLES"
+        }
+      },
+      {
+        "text": "Pick A or B to win! A: Jellyfishing or B: Krabby Patty eating contest?",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Excited.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Comment your streak, cooked!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Wink.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      }
+    ]
+  },
+  {
+    "video_id": 2,
+    "segments": [
+      {
+        "text": "If you're sitting down, you're OUT!",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Grumpy.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Ohio, that's not fair! Subscribe for a second chance!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick_Confused.png",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Name a type of fish!",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Arrogant.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "3... 2... 1...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": null,
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Goldfish, you are out!",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Laugh.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "GOLDFISH"
+        }
+      },
+      {
+        "text": "Like this video to lock in your win, sigma!",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Wink.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "What's the name of Squidward's favorite hobby?",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton_Scheming.png",
+          "subtitle_color": "Green",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "3... 2... 1...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": null,
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "It's playing the clarinet, you tiny terror!",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton_Laugh.png",
+          "subtitle_color": "Green",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "PLAYING THE CLARINET"
+        }
+      },
+      {
+        "text": "Pick A or B to win! A: Art or B: Music?",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Excited.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Comment your streak, cooked!",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Wink.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      }
+    ]
+  },
+  {
+    "video_id": 3,
+    "segments": [
+      {
+        "text": "If you're wearing clothes right now, you're OUT!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Angry.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Ohio, that's not fair! Subscribe for a second chance!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick_Confused.png",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Name a type of sea creature!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Happy.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "3... 2... 1...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": null,
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Starfish, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Laugh.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "STARFISH"
+        }
+      },
+      {
+        "text": "Like this video to lock in your win, sigma!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Wink.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "What's the name of SpongeBob's favorite sport?",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs_Greedy.png",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "3... 2... 1...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": null,
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "It's Jellyfishing, you barnacle brain!",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs_Angry.png",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "JELLYFISHING"
+        }
+      },
+      {
+        "text": "Pick A or B to win! A: Jellyfish Net or B: Krabby Patty?",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Excited.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Comment your streak, cooked!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Wink.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      }
+    ]
+  },
+  {
+    "video_id": 4,
+    "segments": [
+      {
+        "text": "If you're smiling right now, you're OUT!",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Grumpy.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Ohio, that's not fair! Subscribe for a second chance!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick_Confused.png",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Name a type of shell!",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Arrogant.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "3... 2... 1...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": null,
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Seashell, you are out!",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Laugh.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "SEASHELL"
+        }
+      },
+      {
+        "text": "Like this video to lock in your win, sigma!",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Wink.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "What's the name of Squidward's favorite food?",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton_Scheming.png",
+          "subtitle_color": "Green",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "3... 2... 1...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": null,
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "It's Chocolate milk, you tiny terror!",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton_Laugh.png",
+          "subtitle_color": "Green",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "CHOCOLATE MILK"
+        }
+      },
+      {
+        "text": "Pick A or B to win! A: Chocolate or B: Milk?",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Excited.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Comment your streak, cooked!",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Wink.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      }
+    ]
+  },
+  {
+    "video_id": 5,
+    "segments": [
+      {
+        "text": "If you're listening to music right now, you're OUT!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Angry.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Ohio, that's not fair! Subscribe for a second chance!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick_Confused.png",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Name a type of sea plant!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Happy.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "3... 2... 1...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": null,
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Seaweed, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Laugh.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "SEAWEED"
+        }
+      },
+      {
+        "text": "Like this video to lock in your win, sigma!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Wink.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "What's the name of SpongeBob's favorite instrument?",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs_Greedy.png",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "3... 2... 1...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": null,
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "It's the Ukulele, you barnacle brain!",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs_Angry.png",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "UKULELE"
+        }
+      },
+      {
+        "text": "Pick A or B to win! A: Ukulele or B: Clarinet?",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Excited.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Comment your streak, cooked!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Wink.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      }
+    ]
+  }
+]

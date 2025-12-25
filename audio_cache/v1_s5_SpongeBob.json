@@ -1,0 +1,37 @@
+[
+  {
+    "word": "If",
+    "start": 0.0,
+    "end": 0.18
+  },
+  {
+    "word": "you",
+    "start": 0.18,
+    "end": 0.28
+  },
+  {
+    "word": "said",
+    "start": 0.28,
+    "end": 0.46
+  },
+  {
+    "word": "carrot,",
+    "start": 0.46,
+    "end": 0.76
+  },
+  {
+    "word": "you",
+    "start": 1.02,
+    "end": 1.12
+  },
+  {
+    "word": "are",
+    "start": 1.12,
+    "end": 1.22
+  },
+  {
+    "word": "out.",
+    "start": 1.22,
+    "end": 1.44
+  }
+]

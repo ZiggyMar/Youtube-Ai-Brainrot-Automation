@@ -1,0 +1,47 @@
+[
+  {
+    "word": "If",
+    "start": 0.0,
+    "end": 0.16
+  },
+  {
+    "word": "you're",
+    "start": 0.16,
+    "end": 0.3
+  },
+  {
+    "word": "holding",
+    "start": 0.3,
+    "end": 0.5
+  },
+  {
+    "word": "a",
+    "start": 0.5,
+    "end": 0.66
+  },
+  {
+    "word": "phone",
+    "start": 0.66,
+    "end": 0.86
+  },
+  {
+    "word": "right",
+    "start": 0.86,
+    "end": 1.06
+  },
+  {
+    "word": "now,",
+    "start": 1.06,
+    "end": 1.26
+  },
+  {
+    "word": "you're",
+    "start": 1.48,
+    "end": 1.62
+  },
+  {
+    "word": "out.",
+    "start": 1.62,
+    "end": 1.78
+  }
+]
