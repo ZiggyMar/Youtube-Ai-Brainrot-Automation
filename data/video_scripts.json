@@ -1,0 +1,527 @@
+[
+  {
+    "video_id": 1,
+    "segments": [
+      {
+        "text": "If you are currently breathing and also blinking, you are cooked! Get out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Angry.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Woah, SpongeBob! That\u2019s harsh! They need a second chance! Subscribe right now for a lifeline!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick_Worried.png",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Avoid saying the most common! Name a creature that lives in Bikini Bottom!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Determined.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "3... 2... 1... Time's up, bestie!",
+        "speaker": "Timer",
+        "visuals": {
+          "character": "Clock.png",
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true
+        }
+      },
+      {
+        "text": "If you said SQUIDWARD, you fell for the trap! That choice is cringe!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Shocked.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Survivors, congrats on having the ultimate rizz! Like the video right now to lock in your victory!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Happy.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Ahoy, mateys! Avoid sayin' the most common! Name a specific vehicle Spongebob has failed to drive!",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs_Greedy.png",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "The clock is tickin'! Choose wisely!",
+        "speaker": "Timer",
+        "visuals": {
+          "character": "Clock.png",
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true
+        }
+      },
+      {
+        "text": "If ye picked the BOATING SCHOOL BOAT, yer wallet is safe! Everyone else, get back to work!",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs_Angry.png",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "FINAL TRAP! Did Mrs. Puff have a first name: A) Yes, B) No. Pick A or B now! Comment your streak if you made it this far!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Serious.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      }
+    ]
+  },
+  {
+    "video_id": 2,
+    "segments": [
+      {
+        "text": "If you possess a heartbeat and are not currently rich, you are eliminated! Go back to Ohio.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Bored.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Squidward, that\u2019s so mean! Wait! If you subscribe now, you can get a participation trophy!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick_Sympathetic.png",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "We are playing 'Say the Same Thing'! Name a popular topping for a Krabby Patty.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Disgusted.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Decision time! Don't let your brain lag!",
+        "speaker": "Timer",
+        "visuals": {
+          "character": "Clock.png",
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true
+        }
+      },
+      {
+        "text": "If you didn't say LETTUCE, you failed to copy the assignment. Pathetic.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Annoyed.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Wow! You guys are totally crushing it! Like this video to prove you\u2019re ready for Round Two!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick_Excited.png",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Say the most common! What is the name of my computer wife?",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton_Scheming.png",
+          "subtitle_color": "Green",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Choose quickly before my master plan succeeds!",
+        "speaker": "Timer",
+        "visuals": {
+          "character": "Clock.png",
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true
+        }
+      },
+      {
+        "text": "If you said KAREN, congratulations! We share the same suffering! BWA-HA-HA!",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton_Angry.png",
+          "subtitle_color": "Green",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "FINAL TRAP! Who is the better musician: A) Squidward, B) Anyone else. Pick A or B. Tell me why you picked A in the comments.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Smug.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      }
+    ]
+  },
+  {
+    "video_id": 3,
+    "segments": [
+      {
+        "text": "If you own a pet fish or have ever tasted lemonade, you are instantly eliminated! Say goodbye!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Shocked.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Wait, SpongeBob! That\u2019s not very sigma of you! Give them a second chance! Hit that Sub button now!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick_Goofy.png",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Avoid the most common answer! Name something you keep in your kitchen cabinet!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Determined.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Hurry up! Don't let the secret ingredient distract you!",
+        "speaker": "Timer",
+        "visuals": {
+          "character": "Clock.png",
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true
+        }
+      },
+      {
+        "text": "If you said PLATES, you were tricked! You are totally cooked!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Sad.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Wow! You are truly based if you survived that! Like the video to solidify your winning energy!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Happy.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Avoid the obvious! What is the name of the organization Sandy Cheeks belongs to?",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton_Scheming.png",
+          "subtitle_color": "Green",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Tick tock! My patience is thin as a microscope slide!",
+        "speaker": "Timer",
+        "visuals": {
+          "character": "Clock.png",
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true
+        }
+      },
+      {
+        "text": "The common answer is 'Karate'! If you said 'Science Brigade', you avoid the trap!",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton_Angry.png",
+          "subtitle_color": "Green",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "FINAL TRAP! Who is better at driving: A) Mrs. Puff, B) SpongeBob. Pick A or B right now. Comment your streak!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Serious.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      }
+    ]
+  },
+  {
+    "video_id": 4,
+    "segments": [
+      {
+        "text": "If you currently have money in your pocket that isn't mine, you are OUT! Begone!",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Angry.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Squidward, that\u2019s so unfair! They just need a bit of rizz! Subscribe for immediate forgiveness!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick_Worried.png",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Say the same thing as everyone else! Name a common office supply item.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Bored.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "My boredom is peaking. Decide already!",
+        "speaker": "Timer",
+        "visuals": {
+          "character": "Clock.png",
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true
+        }
+      },
+      {
+        "text": "If you said PEN, congratulations, you are predictably boring. You survive.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Disgusted.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Whoa! You are totally dominating! Like this short to cement your victory!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick_Excited.png",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Say the most common! What item did I constantly try to sell in the Krusty Krab parking lot?",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs_Greedy.png",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Stop wasting my profit margins! Think!",
+        "speaker": "Timer",
+        "visuals": {
+          "character": "Clock.png",
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true
+        }
+      },
+      {
+        "text": "If ye said HATS, yer a true loyal customer! I mean, you survive! Argh!",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs_Happy.png",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "FINAL TRAP! Which is worse: A) SpongeBob's singing, B) SpongeBob's laugh. Pick A or B. Comment your answer immediately!",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward_Serious.png",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      }
+    ]
+  },
+  {
+    "video_id": 5,
+    "segments": [
+      {
+        "text": "If you are currently sitting down while holding your phone, you are finished! Get cooked!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Angry.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Oh, tartar sauce! That\u2019s the most unfair rule! You need to subscribe now for a second chance, please!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick_Worried.png",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Avoid the common answer! Name a type of sandwich!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Determined.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Ding! Time is running out! Hurry, friend!",
+        "speaker": "Timer",
+        "visuals": {
+          "character": "Clock.png",
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true
+        }
+      },
+      {
+        "text": "If you said GRILLED CHEESE, you fell into the obvious trap! You are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Sad.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Survivors, you have big sigma energy! Like this video to seal the deal on your success!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Happy.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Avoid the obvious! What is the name of the main ingredient that is NOT the secret one in the Krabby Patty?",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs_Serious.png",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "Money! Money! Think quickly, the clock is expensive!",
+        "speaker": "Timer",
+        "visuals": {
+          "character": "Clock.png",
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true
+        }
+      },
+      {
+        "text": "If ye chose the PICKLES, ye avoided the bun trap! Ye survived my cheap trick! Hahaha!",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs_Laughing.png",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      },
+      {
+        "text": "FINAL TRAP! Is Sandy\u2019s tree dome made of: A) Plastic, B) Glass. Pick A or B. Comment your final answer below!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob_Serious.png",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false
+        }
+      }
+    ]
+  }
+]
