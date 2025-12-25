@@ -2,11 +2,11 @@
   {
     "word": "Like",
     "start": 0.0,
-    "end": 0.2
+    "end": 0.18
   },
   {
     "word": "this",
-    "start": 0.2,
+    "start": 0.18,
     "end": 0.42
   },
   {
@@ -41,7 +41,7 @@
   },
   {
     "word": "Sigma.",
-    "start": 2.0,
+    "start": 1.98,
     "end": 2.26
   }
 ]

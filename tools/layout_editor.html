@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brainrot Layout Editor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e1e;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1 { margin-bottom: 10px; }
+
+        #controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007acc;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+
+        button:hover { background-color: #005f9e; }
+
+        #canvas-container {
+            position: relative;
+            width: 1080px;
+            height: 1920px;
+            background-color: #000;
+            border: 2px solid #444;
+            transform-origin: top center;
+            transform: scale(0.45); /* Scale down to fit screen */
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            background-image: linear-gradient(45deg, #111 25%, transparent 25%), 
+                              linear-gradient(-45deg, #111 25%, transparent 25%), 
+                              linear-gradient(45deg, transparent 75%, #111 75%), 
+                              linear-gradient(-45deg, transparent 75%, #111 75%);
+            background-size: 40px 40px;
+            background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
+        }
+
+        .element {
+            position: absolute;
+            cursor: grab;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            text-align: center;
+            user-select: none;
+            border: 2px solid transparent;
+            box-sizing: border-box;
+        }
+
+        .element:hover { border-color: rgba(255, 255, 255, 0.5); }
+        .element.selected { border-color: #007acc; z-index: 1000; }
+
+        /* Resize Handle */
+        .resize-handle {
+            width: 20px;
+            height: 20px;
+            background-color: #007acc;
+            position: absolute;
+            right: -10px;
+            bottom: -10px;
+            cursor: se-resize;
+            display: none;
+            border-radius: 50%;
+        }
+
+        .element.selected .resize-handle { display: block; }
+
+        /* Specific Element Styles */
+        #character { background-color: rgba(255, 165, 0, 0.5); color: orange; }
+        #subtitles { background-color: rgba(255, 255, 0, 0.5); color: yellow; font-family: Impact, sans-serif; -webkit-text-stroke: 1px black; }
+        #timer { background-color: rgba(0, 255, 0, 0.3); color: lightgreen; border-radius: 50%; }
+        #cta { background-color: rgba(255, 0, 0, 0.4); color: red; }
+        #difficulty_list { background-color: rgba(255, 255, 255, 0.2); color: white; align-items: flex-start; padding: 20px; }
+        #overlay_text { background-color: rgba(0, 255, 255, 0.3); color: cyan; }
+
+        #properties {
+            position: absolute;
+            right: 20px;
+            top: 80px;
+            background: #333;
+            padding: 20px;
+            border-radius: 8px;
+            width: 250px;
+        }
+        
+        .prop-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        input[type="number"] { width: 60px; background: #222; border: 1px solid #555; color: white; padding: 4px; }
+
+    </style>
+</head>
+<body>
+
+    <h1>📏 Layout Editor</h1>
+    <div id="controls">
+        <button onclick="downloadConfig()">💾 Download layout_config.json</button>
+        <button onclick="resetLayout()">↺ Reset to Defaults</button>
+    </div>
+
+    <div id="canvas-container">
+        <!-- Elements -->
+        <div id="character" class="element" style="left: 0px; top: 1120px; width: 1080px; height: 800px;">
+            CHARACTER<br>(SpongeBob)
+            <div class="resize-handle"></div>
+        </div>
+
+        <div id="subtitles" class="element" style="left: 90px; top: 1050px; width: 900px; height: 150px;">
+            SUBTITLES HERE
+            <div class="resize-handle"></div>
+        </div>
+
+        <div id="timer" class="element" style="left: 90px; top: 510px; width: 900px; height: 900px;">
+            TIMER OVERLAY
+            <div class="resize-handle"></div>
+        </div>
+
+        <div id="cta" class="element" style="left: 140px; top: 560px; width: 800px; height: 800px;">
+            CTA VIDEO<br>(Subscribe)
+            <div class="resize-handle"></div>
+        </div>
+
+        <div id="difficulty_list" class="element" style="left: 50px; top: 100px; width: 400px; height: 400px;">
+            1. EASY<br>2. MEDIUM<br>3. HARD<br>4. IMPOSSIBLE
+            <div class="resize-handle"></div>
+        </div>
+    </div>
+
+    <div id="properties">
+        <h3>Selected Element</h3>
+        <div class="prop-row">ID: <span id="prop-id">None</span></div>
+        <div class="prop-row">X: <input type="number" id="prop-x" onchange="updateElementFromProps()"></div>
+        <div class="prop-row">Y: <input type="number" id="prop-y" onchange="updateElementFromProps()"></div>
+        <div class="prop-row">W: <input type="number" id="prop-w" onchange="updateElementFromProps()"></div>
+        <div class="prop-row">H: <input type="number" id="prop-h" onchange="updateElementFromProps()"></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas-container');
+        let selectedElement = null;
+        let isDragging = false;
+        let isResizing = false;
+        let startX, startY, startLeft, startTop, startWidth, startHeight;
+
+        // Initialize
+        document.querySelectorAll('.element').forEach(el => {
+            el.addEventListener('mousedown', onMouseDown);
+        });
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+
+        function onMouseDown(e) {
+            if (e.target.classList.contains('resize-handle')) {
+                isResizing = true;
+                selectedElement = e.target.parentElement;
+            } else {
+                isDragging = true;
+                selectedElement = e.target;
+            }
+
+            // Select visual
+            document.querySelectorAll('.element').forEach(el => el.classList.remove('selected'));
+            selectedElement.classList.add('selected');
+            updatePropsDisplay();
+
+            startX = e.clientX;
+            startY = e.clientY;
+            
+            const rect = selectedElement.getBoundingClientRect();
+            const parentRect = canvas.getBoundingClientRect();
+            const scale = 0.45; // Must match CSS transform
+
+            // Calculate current style values (relative to canvas 1080x1920)
+            startLeft = parseInt(selectedElement.style.left || 0);
+            startTop = parseInt(selectedElement.style.top || 0);
+            startWidth = parseInt(selectedElement.style.width || 0);
+            startHeight = parseInt(selectedElement.style.height || 0);
+
+            e.preventDefault();
+        }
+
+        function onMouseMove(e) {
+            if (!selectedElement) return;
+
+            const scale = 0.45; // Must match CSS transform
+            const dx = (e.clientX - startX) / scale;
+            const dy = (e.clientY - startY) / scale;
+
+            if (isDragging) {
+                selectedElement.style.left = Math.round(startLeft + dx) + 'px';
+                selectedElement.style.top = Math.round(startTop + dy) + 'px';
+            } else if (isResizing) {
+                selectedElement.style.width = Math.max(50, Math.round(startWidth + dx)) + 'px';
+                selectedElement.style.height = Math.max(50, Math.round(startHeight + dy)) + 'px';
+            }
+            
+            updatePropsDisplay();
+        }
+
+        function onMouseUp() {
+            isDragging = false;
+            isResizing = false;
+        }
+
+        function updatePropsDisplay() {
+            if (!selectedElement) return;
+            document.getElementById('prop-id').innerText = selectedElement.id;
+            document.getElementById('prop-x').value = parseInt(selectedElement.style.left);
+            document.getElementById('prop-y').value = parseInt(selectedElement.style.top);
+            document.getElementById('prop-w').value = parseInt(selectedElement.style.width);
+            document.getElementById('prop-h').value = parseInt(selectedElement.style.height);
+        }
+
+        function updateElementFromProps() {
+            if (!selectedElement) return;
+            selectedElement.style.left = document.getElementById('prop-x').value + 'px';
+            selectedElement.style.top = document.getElementById('prop-y').value + 'px';
+            selectedElement.style.width = document.getElementById('prop-w').value + 'px';
+            selectedElement.style.height = document.getElementById('prop-h').value + 'px';
+        }
+
+        function downloadConfig() {
+            const config = {};
+            document.querySelectorAll('.element').forEach(el => {
+                config[el.id] = {
+                    x: parseInt(el.style.left),
+                    y: parseInt(el.style.top),
+                    width: parseInt(el.style.width),
+                    height: parseInt(el.style.height)
+                };
+            });
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(config, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "layout_config.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        function resetLayout() {
+            if(confirm("Reset all positions?")) {
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

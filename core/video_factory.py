@@ -22,6 +22,12 @@ AUDIO_CACHE_DIR = os.path.join(PROJECT_ROOT, "audio_cache")
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
+# FFmpeg Configuration
+FFMPEG_PATH = os.path.join(PROJECT_ROOT, "tools", "ffmpeg", "ffmpeg.exe")
+if os.path.exists(FFMPEG_PATH):
+    os.environ["IMAGEIO_FFMPEG_EXE"] = FFMPEG_PATH
+    print(f"✅ Using Custom FFmpeg: {FFMPEG_PATH}")
+
 # Difficulty List Config
 DIFFICULTY_LEVELS = [
     {"label": "1. EASY", "color": "#2ecc71"},
@@ -29,6 +35,32 @@ DIFFICULTY_LEVELS = [
     {"label": "3. HARD", "color": "#e67e22"},
     {"label": "4. IMPOSSIBLE", "color": "#e74c3c"}
 ]
+
+LAYOUT_CONFIG_FILE = os.path.join(DATA_DIR, "layout_config.json")
+
+DEFAULT_LAYOUT = {
+    "character": {"x": 0, "y": 1120, "width": 1080, "height": 850},
+    "subtitles": {"x": 90, "y": 1050, "width": 900, "height": 150},
+    "timer": {"x": 90, "y": 510, "width": 900, "height": 900},
+    "cta": {"x": 140, "y": 560, "width": 800, "height": 800},
+    "difficulty_list": {"x": 50, "y": 100, "width": 400, "height": 400}
+}
+
+def load_layout_config():
+    if os.path.exists(LAYOUT_CONFIG_FILE):
+        try:
+            with open(LAYOUT_CONFIG_FILE, 'r') as f:
+                config = json.load(f)
+                print(f"✅ Loaded Custom Layout from {LAYOUT_CONFIG_FILE}")
+                # Merge with defaults to ensure all keys exist
+                final_config = DEFAULT_LAYOUT.copy()
+                final_config.update(config)
+                return final_config
+        except Exception as e:
+            print(f"⚠️ Error loading layout config: {e}")
+    return DEFAULT_LAYOUT
+
+LAYOUT = load_layout_config()
 
 def get_font_path():
     """Hardcoded check for Burbank.ttf"""
@@ -51,7 +83,7 @@ CUSTOM_FONT_PATH = get_font_path()
 def create_pil_text_image(text, font_path, color, stroke_width=6):
     """Generates a transparent PIL Image with stroked text, auto-scaling to fit 900px width."""
     font_size = 110
-    max_width = 900
+    max_width = LAYOUT["subtitles"]["width"]
     
     try:
         font = ImageFont.truetype(font_path, font_size)
@@ -118,7 +150,7 @@ def create_perfect_subtitles(json_path, font_path, color):
         
         img_array = create_pil_text_image(chunk["text"].upper(), font_path, color)
         txt_clip = ImageClip(img_array).set_duration(duration)
-        txt_clip = txt_clip.set_start(chunk["start"]).set_position(("center", 1150))
+        txt_clip = txt_clip.set_start(chunk["start"]).set_position(("center", LAYOUT["subtitles"]["y"]))
         clips.append(txt_clip)
         
     return clips
@@ -160,7 +192,7 @@ def create_difficulty_list_pil(active_label, duration, answer_reveal=None):
         draw.text((10,10), display_text, font=font, fill=color, stroke_width=2, stroke_fill="black")
         
         txt_clip = ImageClip(np.array(img)).set_duration(duration)
-        txt_clip = txt_clip.set_position((50, 100 + i * 70))
+        txt_clip = txt_clip.set_position((LAYOUT["difficulty_list"]["x"], LAYOUT["difficulty_list"]["y"] + i * 70))
         clips.append(txt_clip)
         
     return clips
@@ -268,16 +300,17 @@ def generate_video(video_data):
                 # Slide Animation
                 def slide_pos(t):
                     SLIDE_DUR = 0.4
+                    target_x = LAYOUT["character"]["x"]
+                    target_y = LAYOUT["character"]["y"]
                     if t < SLIDE_DUR:
                         prog = t / SLIDE_DUR
                         ease = 1 - (1 - prog) ** 3
-                        target_x = 240 
                         start_x = -1000 
                         cur_x = start_x + (target_x - start_x) * ease
-                        return (int(cur_x), "bottom")
-                    return ("center", "bottom")
+                        return (int(cur_x), target_y)
+                    return (target_x, target_y)
 
-                char_clip = (ImageClip(char_path).resize(height=800)
+                char_clip = (ImageClip(char_path).resize(height=LAYOUT["character"]["height"])
                              .rotate(lambda t: 2 * np.sin(2 * np.pi * t / 3.0))
                              .set_duration(duration)
                              .set_position(slide_pos))
@@ -288,7 +321,7 @@ def generate_video(video_data):
                 if os.path.exists(sfx_dir):
                     sfx_files = glob.glob(os.path.join(sfx_dir, "*.wav"))
                     if sfx_files:
-                        sfx_clip = AudioFileClip(random.choice(sfx_files)).volumex(0.05)
+                        sfx_clip = AudioFileClip(random.choice(sfx_files)).volumex(0.15)
                         if sfx_clip.duration > duration: sfx_clip = sfx_clip.subclip(0, duration)
                         dialogue_audios.append(sfx_clip.set_start(total_duration))
 
@@ -300,7 +333,7 @@ def generate_video(video_data):
         # Timer
         if is_timer:
             timer_overlay = (timer_clip.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
-                             .resize(width=900).set_position("center").set_duration(duration))
+                             .resize(width=LAYOUT["timer"]["width"]).set_position((LAYOUT["timer"]["x"], LAYOUT["timer"]["y"])).set_duration(duration))
             layers.append(timer_overlay)
             
         # Difficulty List
@@ -312,14 +345,27 @@ def generate_video(video_data):
         if text and any(k in text.lower() for k in cta_keywords):
             cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
             if os.path.exists(cta_path):
-                cta_clip = VideoFileClip(cta_path).fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
-                if cta_clip.duration < duration:
-                    cta_clip = vfx.loop(cta_clip, duration=duration)
-                else:
-                    cta_clip = cta_clip.subclip(0, duration)
-                
-                cta_clip = cta_clip.resize(width=800).set_position(("center", "center")).set_start(0)
-                layers.append(cta_clip)
+                try:
+                    cta_source = VideoFileClip(cta_path)
+                    cta_clip = cta_source.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
+                    
+                    if cta_clip.duration < duration:
+                        cta_clip = vfx.loop(cta_clip, duration=duration)
+                        # Loop audio too if needed, but usually CTA is short. 
+                        # For simplicity, let's just take the original audio and volume adjust
+                        if cta_source.audio:
+                             cta_audio = afx.audio_loop(cta_source.audio, duration=duration).volumex(0.1)
+                             dialogue_audios.append(cta_audio.set_start(total_duration))
+                    else:
+                        cta_clip = cta_clip.subclip(0, duration)
+                        if cta_source.audio:
+                            cta_audio = cta_source.audio.subclip(0, duration).volumex(0.1)
+                            dialogue_audios.append(cta_audio.set_start(total_duration))
+                    
+                    cta_clip = cta_clip.resize(width=LAYOUT["cta"]["width"]).set_position((LAYOUT["cta"]["x"], LAYOUT["cta"]["y"])).set_start(0)
+                    layers.append(cta_clip)
+                except Exception as e:
+                    print(f"⚠️ Warning: Failed to load CTA overlay: {e}")
 
         # Composite
         segment_comp = CompositeVideoClip(layers, size=(1080, 1920)).set_duration(duration)

@@ -2,7 +2,7 @@
   {
     "word": "Ohio,",
     "start": 0.0,
-    "end": 0.46
+    "end": 0.44
   },
   {
     "word": "that's",
@@ -21,27 +21,27 @@
   },
   {
     "word": "Subscribe",
-    "start": 2.26,
-    "end": 2.82
+    "start": 2.38,
+    "end": 2.84
   },
   {
     "word": "for",
-    "start": 2.82,
+    "start": 2.84,
     "end": 3.12
   },
   {
     "word": "a",
     "start": 3.12,
-    "end": 3.26
+    "end": 3.24
   },
   {
     "word": "second",
-    "start": 3.26,
+    "start": 3.24,
     "end": 3.54
   },
   {
     "word": "chance.",
     "start": 3.54,
-    "end": 4.0
+    "end": 4.02
   }
 ]

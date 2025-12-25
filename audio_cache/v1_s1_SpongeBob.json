@@ -12,11 +12,11 @@
   {
     "word": "holding",
     "start": 0.3,
-    "end": 0.5
+    "end": 0.52
   },
   {
     "word": "a",
-    "start": 0.5,
+    "start": 0.52,
     "end": 0.66
   },
   {
@@ -32,7 +32,7 @@
   {
     "word": "now,",
     "start": 1.06,
-    "end": 1.26
+    "end": 1.28
   },
   {
     "word": "you're",

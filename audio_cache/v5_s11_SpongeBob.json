@@ -2,21 +2,21 @@
   {
     "word": "Comment",
     "start": 0.0,
-    "end": 0.28
+    "end": 0.3
   },
   {
     "word": "your",
-    "start": 0.28,
+    "start": 0.3,
     "end": 0.48
   },
   {
-    "word": "streak,",
+    "word": "streak!",
     "start": 0.48,
     "end": 0.8
   },
   {
-    "word": "cut!",
+    "word": "Cut!",
     "start": 1.0,
-    "end": 1.18
+    "end": 1.16
   }
 ]

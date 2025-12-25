@@ -7,11 +7,11 @@
   {
     "word": "this",
     "start": 0.2,
-    "end": 0.42
+    "end": 0.44
   },
   {
     "word": "video",
-    "start": 0.42,
+    "start": 0.44,
     "end": 0.72
   },
   {
@@ -37,11 +37,11 @@
   {
     "word": "win,",
     "start": 1.44,
-    "end": 1.74
+    "end": 1.72
   },
   {
     "word": "Sigma.",
     "start": 1.98,
-    "end": 2.26
+    "end": 2.28
   }
 ]
