@@ -84,25 +84,47 @@ def create_text_clip_pil(text, font_path, font_size, color, stroke_width, durati
     img_array = create_pil_text_image(text, font_path, font_size, color, stroke_width)
     return ImageClip(img_array).set_duration(duration)
 
-def create_word_subtitles(text, duration, color, font_path):
-    """Splits text and creates a sequence of PIL-based clips."""
-    words = text.split()
-    if not words: return []
-    
-    # Split into chunks of 2 words max
-    chunks = [" ".join(words[i:i+2]) for i in range(0, len(words), 2)]
-    num_chunks = len(chunks)
-    chunk_duration = duration / num_chunks
-    
+def create_word_subtitles(text, duration, color, font_path, word_data=None):
+    """Creates subtitle clips. Uses Whisper timestamps if available, else mathematical sync."""
     clips = []
-    for i, chunk in enumerate(chunks):
-        start_t = i * chunk_duration
+    
+    if word_data:
+        # --- WHISPER SYNC ---
+        # Group words into chunks of 1-2 words
+        # This is a simple grouping strategy. 
+        # Ideally, we group by time gaps, but fixed chunks is safer for now.
         
-        # Create Clip using PIL
-        txt_clip = create_text_clip_pil(chunk.upper(), font_path, 110, color, 6, chunk_duration)
+        words = word_data
+        if not words: return []
         
-        txt_clip = txt_clip.set_start(start_t).set_position(("center", 1150))
-        clips.append(txt_clip)
+        # Grouping logic: 2 words max per chunk
+        chunks = []
+        for i in range(0, len(words), 2):
+            chunk_words = words[i:i+2]
+            text_str = " ".join([w["word"] for w in chunk_words])
+            start_t = chunk_words[0]["start"]
+            end_t = chunk_words[-1]["end"]
+            chunks.append({"text": text_str, "start": start_t, "end": end_t})
+            
+        for chunk in chunks:
+            txt_clip = create_text_clip_pil(chunk["text"].upper(), font_path, 110, color, 6, chunk["end"] - chunk["start"])
+            txt_clip = txt_clip.set_start(chunk["start"]).set_position(("center", 1150))
+            clips.append(txt_clip)
+            
+    else:
+        # --- MATHEMATICAL SYNC (FALLBACK) ---
+        words = text.split()
+        if not words: return []
+        
+        chunks = [" ".join(words[i:i+2]) for i in range(0, len(words), 2)]
+        num_chunks = len(chunks)
+        chunk_duration = duration / num_chunks
+        
+        for i, chunk in enumerate(chunks):
+            start_t = i * chunk_duration
+            txt_clip = create_text_clip_pil(chunk.upper(), font_path, 110, color, 6, chunk_duration)
+            txt_clip = txt_clip.set_start(start_t).set_position(("center", 1150))
+            clips.append(txt_clip)
         
     return clips
 
@@ -253,7 +275,15 @@ def generate_video(video_data):
         # Subtitles (PIL)
         if text and not is_timer:
             color = visuals.get("subtitle_color", "yellow")
-            layers.extend(create_word_subtitles(text, duration, color, CUSTOM_FONT_PATH))
+            
+            # Load Whisper Data
+            json_path = os.path.join(AUDIO_CACHE_DIR, f"v{video_id}_s{i}_{speaker}.json")
+            word_data = None
+            if os.path.exists(json_path):
+                with open(json_path, 'r', encoding='utf-8') as f:
+                    word_data = json.load(f)
+            
+            layers.extend(create_word_subtitles(text, duration, color, CUSTOM_FONT_PATH, word_data))
             
         # Timer
         if is_timer:
