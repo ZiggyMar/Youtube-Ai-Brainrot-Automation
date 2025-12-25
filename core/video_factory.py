@@ -37,24 +37,30 @@ DIFFICULTY_LEVELS = [
 ]
 
 LAYOUT_CONFIG_FILE = os.path.join(DATA_DIR, "layout_config.json")
+LAYOUT_CONFIG_ROOT = os.path.join(PROJECT_ROOT, "layout_config.json")
 
 DEFAULT_LAYOUT = {
     "character": {"x": 0, "y": 1120, "width": 1080, "height": 850},
     "subtitles": {"x": 90, "y": 1050, "width": 900, "height": 150},
     "timer": {"x": 90, "y": 510, "width": 900, "height": 900},
     "cta": {"x": 140, "y": 560, "width": 800, "height": 800},
-    "difficulty_list": {"x": 50, "y": 100, "width": 400, "height": 400}
+    "difficulty_list": {"x": 50, "y": 100, "width": 400, "height": 400, "font_size": 50}
 }
 
 def load_layout_config():
-    if os.path.exists(LAYOUT_CONFIG_FILE):
+    # Check root first, then data dir
+    target_path = LAYOUT_CONFIG_ROOT if os.path.exists(LAYOUT_CONFIG_ROOT) else LAYOUT_CONFIG_FILE
+    
+    if os.path.exists(target_path):
         try:
-            with open(LAYOUT_CONFIG_FILE, 'r') as f:
+            with open(target_path, 'r') as f:
                 config = json.load(f)
-                print(f"✅ Loaded Custom Layout from {LAYOUT_CONFIG_FILE}")
+                print(f"✅ Loaded Custom Layout from {target_path}")
                 # Merge with defaults to ensure all keys exist
                 final_config = DEFAULT_LAYOUT.copy()
-                final_config.update(config)
+                for key in config:
+                    if key in final_config:
+                        final_config[key].update(config[key])
                 return final_config
         except Exception as e:
             print(f"⚠️ Error loading layout config: {e}")
@@ -179,9 +185,11 @@ def create_difficulty_list_pil(active_label, duration, answer_reveal=None):
         
         # Re-implementing specific list text logic to be safe and consistent
         try:
-            font = ImageFont.truetype(CUSTOM_FONT_PATH, 50)
+            font_size = LAYOUT["difficulty_list"].get("font_size", 50)
+            font = ImageFont.truetype(CUSTOM_FONT_PATH, font_size)
         except:
             font = ImageFont.load_default()
+            font_size = 50
             
         dummy = Image.new('RGBA', (1, 1))
         draw = ImageDraw.Draw(dummy)
@@ -192,7 +200,8 @@ def create_difficulty_list_pil(active_label, duration, answer_reveal=None):
         draw.text((10,10), display_text, font=font, fill=color, stroke_width=2, stroke_fill="black")
         
         txt_clip = ImageClip(np.array(img)).set_duration(duration)
-        txt_clip = txt_clip.set_position((LAYOUT["difficulty_list"]["x"], LAYOUT["difficulty_list"]["y"] + i * 70))
+        spacing = font_size + 20
+        txt_clip = txt_clip.set_position((LAYOUT["difficulty_list"]["x"], LAYOUT["difficulty_list"]["y"] + i * spacing))
         clips.append(txt_clip)
         
     return clips
@@ -333,7 +342,9 @@ def generate_video(video_data):
         # Timer
         if is_timer:
             timer_overlay = (timer_clip.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
-                             .resize(width=LAYOUT["timer"]["width"]).set_position((LAYOUT["timer"]["x"], LAYOUT["timer"]["y"])).set_duration(duration))
+                             .resize(width=LAYOUT["timer"]["width"])
+                             .set_position((LAYOUT["timer"]["x"], LAYOUT["timer"]["y"]))
+                             .set_duration(duration))
             layers.append(timer_overlay)
             
         # Difficulty List
@@ -351,8 +362,6 @@ def generate_video(video_data):
                     
                     if cta_clip.duration < duration:
                         cta_clip = vfx.loop(cta_clip, duration=duration)
-                        # Loop audio too if needed, but usually CTA is short. 
-                        # For simplicity, let's just take the original audio and volume adjust
                         if cta_source.audio:
                              cta_audio = afx.audio_loop(cta_source.audio, duration=duration).volumex(0.1)
                              dialogue_audios.append(cta_audio.set_start(total_duration))
@@ -362,6 +371,7 @@ def generate_video(video_data):
                             cta_audio = cta_source.audio.subclip(0, duration).volumex(0.1)
                             dialogue_audios.append(cta_audio.set_start(total_duration))
                     
+                    # Apply layout config
                     cta_clip = cta_clip.resize(width=LAYOUT["cta"]["width"]).set_position((LAYOUT["cta"]["x"], LAYOUT["cta"]["y"])).set_start(0)
                     layers.append(cta_clip)
                 except Exception as e:

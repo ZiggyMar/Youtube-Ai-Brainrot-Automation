@@ -1,0 +1,33 @@
+{
+  "character": {
+    "x": -12,
+    "y": 1063,
+    "width": 1080,
+    "height": 850
+  },
+  "subtitles": {
+    "x": 83,
+    "y": 883,
+    "width": 900,
+    "height": 150
+  },
+  "timer": {
+    "x": 140,
+    "y": 359,
+    "width": 773,
+    "height": 768
+  },
+  "cta": {
+    "x": 144,
+    "y": 513,
+    "width": 771,
+    "height": 160
+  },
+  "difficulty_list": {
+    "x": 58,
+    "y": 78,
+    "width": 436,
+    "height": 403,
+    "font_size": 90
+  }
+}

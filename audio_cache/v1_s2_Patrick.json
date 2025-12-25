@@ -17,16 +17,16 @@
   {
     "word": "easy.",
     "start": 1.32,
-    "end": 1.68
+    "end": 1.66
   },
   {
     "word": "Subscribe",
-    "start": 2.38,
-    "end": 2.84
+    "start": 2.26,
+    "end": 2.82
   },
   {
     "word": "for",
-    "start": 2.84,
+    "start": 2.82,
     "end": 3.12
   },
   {
@@ -37,11 +37,11 @@
   {
     "word": "second",
     "start": 3.24,
-    "end": 3.54
+    "end": 3.52
   },
   {
     "word": "chance.",
-    "start": 3.54,
-    "end": 4.02
+    "start": 3.52,
+    "end": 4.0
   }
 ]

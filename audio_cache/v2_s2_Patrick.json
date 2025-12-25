@@ -6,37 +6,37 @@
   },
   {
     "word": "that's",
-    "start": 0.9,
+    "start": 0.88,
     "end": 1.22
   },
   {
     "word": "not",
     "start": 1.22,
-    "end": 1.38
+    "end": 1.36
   },
   {
     "word": "fair.",
-    "start": 1.38,
-    "end": 1.7
+    "start": 1.36,
+    "end": 1.72
   },
   {
     "word": "Subscribe",
     "start": 2.26,
-    "end": 2.88
+    "end": 2.9
   },
   {
     "word": "for",
-    "start": 2.88,
+    "start": 2.9,
     "end": 3.18
   },
   {
     "word": "a",
     "start": 3.18,
-    "end": 3.3
+    "end": 3.32
   },
   {
     "word": "second",
-    "start": 3.3,
+    "start": 3.32,
     "end": 3.6
   },
   {
