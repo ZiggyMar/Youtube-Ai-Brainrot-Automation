@@ -43,6 +43,11 @@ def get_custom_font():
     if os.path.exists(font_path):
         return font_path
     
+    # Fallback 1: Burbank.ttf
+    font_path_alt = os.path.join(ASSETS_DIR, "Font", "Burbank.ttf")
+    if os.path.exists(font_path_alt):
+        return font_path_alt
+
     # Fallback search
     font_dir = os.path.join(ASSETS_DIR, "Font")
     fonts = glob.glob(os.path.join(font_dir, "*.ttf")) + glob.glob(os.path.join(font_dir, "*.otf"))
@@ -72,17 +77,12 @@ def create_word_subtitles(text, duration, color, font_path):
     for i, chunk in enumerate(chunks):
         start_t = i * chunk_duration
         # Style: Big, Bold, Spanning width with margins (leanes)
-        # Width 900 leaves ~90px margin on each side (1080 total)
-        # Removed method='caption' to avoid ImageMagick errors, using resize instead
+        # Using method='caption' for faster rendering and auto-wrapping
         txt = (TextClip(chunk.upper(), font=font_path, fontsize=110, color=color,
-                        stroke_color="black", stroke_width=6)
+                        stroke_color="black", stroke_width=6, method='caption', size=(900, None), align='center')
                .set_start(start_t)
-               .set_duration(chunk_duration))
-               
-        if txt.w > 900:
-            txt = txt.resize(width=900)
-            
-        txt = txt.set_position(("center", 1000)) # Slightly higher to accommodate large text
+               .set_duration(chunk_duration)
+               .set_position(("center", 1000))) # Slightly higher to accommodate large text
         clips.append(txt)
     return clips
 
@@ -139,14 +139,21 @@ def find_character_image(speaker, character_field):
         
     return None
 
-def create_difficulty_list(active_label, duration):
+def create_difficulty_list(active_label, duration, answer_reveal=None):
     clips = []
     for i, level in enumerate(DIFFICULTY_LEVELS):
         # Highlight current level Green, others White
         is_active = level["label"] == active_label
         color = "#2ecc71" if is_active else "white"
         
-        txt = (TextClip(level["label"], font=CUSTOM_FONT, fontsize=50, color=color, 
+        # If this is the active level AND we have an answer to reveal, swap the text
+        display_text = level["label"]
+        if is_active and answer_reveal:
+            # Format: "1. [ANSWER]" (keeping the number from the label)
+            prefix = level["label"].split(".")[0] # Get "1", "2", etc.
+            display_text = f"{prefix}. {answer_reveal.upper()}"
+
+        txt = (TextClip(display_text, font=CUSTOM_FONT, fontsize=50, color=color, 
                         stroke_color="black", stroke_width=2)
                .set_position((50, 100 + i * 70))
                .set_duration(duration))
@@ -331,7 +338,9 @@ def generate_video(video_data):
             layers.append(timer_overlay)
 
         # Difficulty List Layer
-        layers.extend(create_difficulty_list(visuals.get("list_highlight", "1. EASY"), duration))
+        # Pass answer_reveal if it exists in visuals
+        answer_reveal = visuals.get("answer_reveal")
+        layers.extend(create_difficulty_list(visuals.get("list_highlight", "1. EASY"), duration, answer_reveal))
 
         # Composite Segment
         segment_comp = CompositeVideoClip(layers, size=(1080, 1920)).set_duration(duration)
@@ -372,7 +381,7 @@ def generate_video(video_data):
     # NVENC was causing black/unplayable videos for the user
     final_video.write_videofile(
         out_path, 
-        fps=30, 
+        fps=24, 
         codec="libx264", 
         audio_codec="aac", 
         threads=4, 

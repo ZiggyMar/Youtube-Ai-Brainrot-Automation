@@ -83,17 +83,19 @@ def generate_scripts():
               "character": "SpongeBob_Angry.png",
               "subtitle_color": "Yellow",
               "list_highlight": "1. EASY",
-              "show_timer": false
+              "show_timer": false,
+              "answer_reveal": null
             }}
           }},
           {{
-            "text": "Wait! That's not fair! Give them a chance!",
-            "speaker": "Patrick",
+            "text": "If you said Froot Loops, you are out!",
+            "speaker": "SpongeBob",
             "visuals": {{
-              "character": "Patrick_Worried.png",
-              "subtitle_color": "Pink",
+              "character": "SpongeBob_Laugh.png",
+              "subtitle_color": "Yellow",
               "list_highlight": "1. EASY",
-              "show_timer": false
+              "show_timer": false,
+              "answer_reveal": "FROOT LOOPS"
             }}
           }},
           ...
@@ -103,6 +105,7 @@ def generate_scripts():
 
     IMPORTANT:
     - Insert a segment with `visuals.show_timer=true` (and speaker="Timer", text="...") between the Question and the Answer for Round 1 and Round 2.
+    - For ANSWER segments (where the host reveals the trap), set `visuals.answer_reveal` to the specific item (e.g., "APPLE", "FROOT LOOPS"). Otherwise set it to null.
     - Use Gen Alpha slang (rizz, cooked, sigma, ohio) naturally but lightly.
     """
 

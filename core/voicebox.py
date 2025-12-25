@@ -77,7 +77,7 @@ async def generate_base_audio(text, voice, rate, pitch, output_path):
     communicate = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
     await communicate.save(output_path)
 
-def smart_trim(audio_path, output_path, silence_thresh=-40, keep_silence_ms=60):
+def smart_trim(audio_path, output_path, silence_thresh=-50, keep_silence_ms=20):
     """Trims leading and trailing silence but keeps a small buffer."""
     try:
         audio = AudioSegment.from_file(audio_path)
@@ -212,7 +212,7 @@ async def process_scripts():
             convert_audio(base_path, rvc_path, config["model"])
 
             # Smart Trim
-            smart_trim(rvc_path, final_path, silence_thresh=-40, keep_silence_ms=60)
+            smart_trim(rvc_path, final_path, silence_thresh=-50, keep_silence_ms=20)
 
             # Cleanup
             if os.path.exists(base_path):
