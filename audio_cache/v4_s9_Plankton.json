@@ -1,0 +1,32 @@
+[
+  {
+    "word": "It's",
+    "start": 0.0,
+    "end": 0.24
+  },
+  {
+    "word": "chocolate",
+    "start": 0.24,
+    "end": 0.52
+  },
+  {
+    "word": "milk,",
+    "start": 0.52,
+    "end": 0.88
+  },
+  {
+    "word": "you",
+    "start": 1.14,
+    "end": 1.22
+  },
+  {
+    "word": "tiny",
+    "start": 1.22,
+    "end": 1.54
+  },
+  {
+    "word": "tarar.",
+    "start": 1.54,
+    "end": 1.9
+  }
+]

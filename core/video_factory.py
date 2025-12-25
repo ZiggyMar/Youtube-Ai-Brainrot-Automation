@@ -68,6 +68,17 @@ def load_layout_config():
 
 LAYOUT = load_layout_config()
 
+def validate_video_asset(path):
+    """Checks if a video file is readable by MoviePy."""
+    if not os.path.exists(path): return False
+    try:
+        with VideoFileClip(path) as clip:
+            _ = clip.get_frame(0)
+        return True
+    except Exception as e:
+        print(f"⚠️ Asset validation failed for {path}: {e}")
+        return False
+
 def get_font_path():
     """Hardcoded check for Burbank.ttf"""
     font_path = os.path.join(ASSETS_DIR, "Font", "Burbank.ttf")
@@ -82,17 +93,20 @@ def get_font_path():
         return font_path
         
     print("⚠️ Font not found, using default.")
-    return "arial.ttf"
+    return None # PIL will handle None by loading default
 
 CUSTOM_FONT_PATH = get_font_path()
 
 def create_pil_text_image(text, font_path, color, stroke_width=6):
-    """Generates a transparent PIL Image with stroked text, auto-scaling to fit 900px width."""
+    """Generates a transparent PIL Image with stroked text, auto-scaling to fit width."""
     font_size = 110
     max_width = LAYOUT["subtitles"]["width"]
     
     try:
-        font = ImageFont.truetype(font_path, font_size)
+        if font_path:
+            font = ImageFont.truetype(font_path, font_size)
+        else:
+            font = ImageFont.load_default()
     except:
         font = ImageFont.load_default()
 
@@ -108,7 +122,10 @@ def create_pil_text_image(text, font_path, color, stroke_width=6):
             break
         font_size -= 5
         try:
-            font = ImageFont.truetype(font_path, font_size)
+            if font_path:
+                font = ImageFont.truetype(font_path, font_size)
+            else:
+                break
         except:
             break
             
@@ -122,8 +139,6 @@ def create_pil_text_image(text, font_path, color, stroke_width=6):
     draw = ImageDraw.Draw(img)
     
     # Draw text centered in the image
-    # Note: textbbox coordinates are relative to (0,0)
-    # We want to draw at (10, 10) padding
     draw.text((10, 10), text, font=font, fill=color, 
               stroke_width=stroke_width, stroke_fill="black")
               
@@ -173,20 +188,12 @@ def create_difficulty_list_pil(active_label, duration, answer_reveal=None):
             prefix = level["label"].split(".")[0]
             display_text = f"{prefix}. {answer_reveal.upper()}"
 
-        # Use a simpler text creation for list
-        img_array = create_pil_text_image(display_text, CUSTOM_FONT_PATH, color, stroke_width=2)
-        # Force resize if needed or just rely on auto-scale in function
-        # But for list we want consistent size usually. 
-        # The auto-scale function starts at 110, which is big. 
-        # We should probably make a separate function or param for size, but user asked for specific logic.
-        # User requirement: "Start size 110" was for subtitles. 
-        # For list, let's just use the same function but maybe scale down the result if it's huge?
-        # Actually, let's modify create_pil_text_image to accept start_size
-        
-        # Re-implementing specific list text logic to be safe and consistent
         try:
             font_size = LAYOUT["difficulty_list"].get("font_size", 50)
-            font = ImageFont.truetype(CUSTOM_FONT_PATH, font_size)
+            if CUSTOM_FONT_PATH:
+                font = ImageFont.truetype(CUSTOM_FONT_PATH, font_size)
+            else:
+                font = ImageFont.load_default()
         except:
             font = ImageFont.load_default()
             font_size = 50
@@ -245,11 +252,39 @@ def generate_video(video_data):
     video_id = video_data["video_id"]
     print(f"🎬 Rendering Video {video_id} with Perfect Sync...")
     
-    # 1. Background
+    # 1. Calculate Total Duration First
+    total_duration = 0
+    for i, segment in enumerate(video_data.get("segments", []), start=1):
+        visuals = segment.get("visuals", {})
+        speaker = segment.get("speaker", "")
+        is_timer = visuals.get("show_timer", False)
+        
+        audio_path = os.path.join(AUDIO_CACHE_DIR, f"v{video_id}_s{i}_{speaker}.wav")
+        if is_timer:
+            timer_path = os.path.join(ASSETS_DIR, "overlays", "timer.mp4")
+            if os.path.exists(timer_path):
+                with VideoFileClip(timer_path) as tc:
+                    total_duration += tc.duration
+        elif os.path.exists(audio_path):
+            with AudioFileClip(audio_path) as ac:
+                total_duration += ac.duration
+
+    # 2. Background with Random Start
     bg_files = glob.glob(os.path.join(ASSETS_DIR, "backgrounds", "*.mp4"))
     if not bg_files: return
-    bg_source = VideoFileClip(random.choice(bg_files)).without_audio()
     
+    bg_path = random.choice(bg_files)
+    bg_source = VideoFileClip(bg_path).without_audio()
+    
+    # Random Start Point
+    if bg_source.duration > total_duration:
+        max_start = bg_source.duration - total_duration
+        start_time = random.uniform(0, max_start)
+        bg_source = bg_source.subclip(start_time, start_time + total_duration)
+    else:
+        # Loop if background is too short
+        bg_source = bg_source.fx(vfx.loop, duration=total_duration)
+
     # Crop to 9:16
     w, h = bg_source.size
     target_ratio = 9/16
@@ -267,7 +302,7 @@ def generate_video(video_data):
     
     final_segment_clips = []
     dialogue_audios = []
-    total_duration = 0
+    current_time = 0
     bg_cursor = 0
     
     for i, segment in enumerate(video_data.get("segments", []), start=1):
@@ -282,11 +317,12 @@ def generate_video(video_data):
         
         if is_timer:
             timer_path = os.path.join(ASSETS_DIR, "overlays", "timer.mp4")
-            if os.path.exists(timer_path):
+            if validate_video_asset(timer_path):
                 timer_clip = VideoFileClip(timer_path)
                 duration = timer_clip.duration
                 seg_audio = timer_clip.audio
             else:
+                print(f"⚠️ Skipping timer segment: {timer_path} is missing or corrupted.")
                 continue
         elif os.path.exists(audio_path):
             seg_audio = AudioFileClip(audio_path)
@@ -332,7 +368,7 @@ def generate_video(video_data):
                     if sfx_files:
                         sfx_clip = AudioFileClip(random.choice(sfx_files)).volumex(0.15)
                         if sfx_clip.duration > duration: sfx_clip = sfx_clip.subclip(0, duration)
-                        dialogue_audios.append(sfx_clip.set_start(total_duration))
+                        dialogue_audios.append(sfx_clip.set_start(current_time))
 
         # Subtitles (Perfect Sync)
         if text and not is_timer:
@@ -355,7 +391,7 @@ def generate_video(video_data):
         cta_keywords = ["subscribe", "like", "button", "lock in"]
         if text and any(k in text.lower() for k in cta_keywords):
             cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
-            if os.path.exists(cta_path):
+            if validate_video_asset(cta_path):
                 try:
                     cta_source = VideoFileClip(cta_path)
                     cta_clip = cta_source.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
@@ -364,33 +400,35 @@ def generate_video(video_data):
                         cta_clip = vfx.loop(cta_clip, duration=duration)
                         if cta_source.audio:
                              cta_audio = afx.audio_loop(cta_source.audio, duration=duration).volumex(0.1)
-                             dialogue_audios.append(cta_audio.set_start(total_duration))
+                             dialogue_audios.append(cta_audio.set_start(current_time))
                     else:
                         cta_clip = cta_clip.subclip(0, duration)
                         if cta_source.audio:
                             cta_audio = cta_source.audio.subclip(0, duration).volumex(0.1)
-                            dialogue_audios.append(cta_audio.set_start(total_duration))
+                            dialogue_audios.append(cta_audio.set_start(current_time))
                     
                     # Apply layout config
                     cta_clip = cta_clip.resize(width=LAYOUT["cta"]["width"]).set_position((LAYOUT["cta"]["x"], LAYOUT["cta"]["y"])).set_start(0)
                     layers.append(cta_clip)
                 except Exception as e:
                     print(f"⚠️ Warning: Failed to load CTA overlay: {e}")
+            else:
+                print(f"⚠️ Skipping CTA overlay: {cta_path} is missing or corrupted.")
 
         # Composite
         segment_comp = CompositeVideoClip(layers, size=(1080, 1920)).set_duration(duration)
         final_segment_clips.append(segment_comp)
         
         # Audio
-        dialogue_audios.append(seg_audio.set_start(total_duration))
-        total_duration += duration
+        dialogue_audios.append(seg_audio.set_start(current_time))
+        current_time += duration
 
     if not final_segment_clips: return
 
     # Assembly
     dialogue_track = CompositeAudioClip(dialogue_audios)
     if bg_music_path:
-        bg_music = AudioFileClip(bg_music_path).volumex(0.1).fx(afx.audio_loop, duration=total_duration)
+        bg_music = AudioFileClip(bg_music_path).volumex(0.1).fx(afx.audio_loop, duration=current_time)
         final_audio = CompositeAudioClip([bg_music, dialogue_track])
     else:
         final_audio = dialogue_track
@@ -406,11 +444,21 @@ def generate_video(video_data):
         out_path = os.path.join(OUTPUT_DIR, f"{base_name}_{counter}.mp4")
         counter += 1
         
+    temp_audio = os.path.join(OUTPUT_DIR, f"temp_audio_{video_id}.m4a")
     final_video.write_videofile(
         out_path, fps=24, codec="libx264", audio_codec="aac", 
         threads=4, preset="ultrafast", logger='bar',
-        temp_audiofile=os.path.join(OUTPUT_DIR, f"temp_audio_{video_id}.m4a")
+        temp_audiofile=temp_audio
     )
+    
+    # Cleanup temp audio
+    if os.path.exists(temp_audio):
+        try:
+            os.remove(temp_audio)
+            print(f"🧹 Cleaned up temp audio: {temp_audio}")
+        except:
+            pass
+
     print(f"✅ Finished: {out_path}")
 
 def main():

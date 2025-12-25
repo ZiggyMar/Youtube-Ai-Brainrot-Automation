@@ -115,7 +115,8 @@ def convert_audio(input_path, output_path, model_name):
         shutil.copy(input_path, output_path)
         return
 
-    rvc = RVCInference(device="cuda:0" if os.environ.get("CUDA_VISIBLE_DEVICES") else "cpu")
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    rvc = RVCInference(device=device)
     
     try:
         rvc.load_model(model_path, index_path=index_path if os.path.exists(index_path) else "")
@@ -137,15 +138,14 @@ def convert_audio(input_path, output_path, model_name):
 async def process_scripts():
     os.makedirs(AUDIO_CACHE_DIR, exist_ok=True)
 
-    # CLEAR CACHE
-    print(f"🧹 Clearing audio cache in {AUDIO_CACHE_DIR}...")
-    for f in os.listdir(AUDIO_CACHE_DIR):
-        file_path = os.path.join(AUDIO_CACHE_DIR, f)
-        try:
-            if os.path.isfile(file_path):
-                os.unlink(file_path)
-        except Exception as e:
-            print(f"Error deleting {file_path}: {e}")
+    # CLEAR CACHE (Optional: Only if you want a fresh start)
+    # For now, we'll keep existing files to allow resuming failed runs.
+    # To clear manually, delete the audio_cache folder.
+    print(f"ℹ️ Checking audio cache in {AUDIO_CACHE_DIR}...")
+    
+    # CUDA Check for RVC
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    print(f"🚀 Using device: {device}")
 
     if not os.path.exists(SCRIPTS_FILE):
         print(f"❌ Error: {SCRIPTS_FILE} not found.")

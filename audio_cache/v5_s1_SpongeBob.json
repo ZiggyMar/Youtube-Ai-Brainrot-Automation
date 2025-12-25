@@ -1,0 +1,47 @@
+[
+  {
+    "word": "If",
+    "start": 0.0,
+    "end": 0.16
+  },
+  {
+    "word": "you're",
+    "start": 0.16,
+    "end": 0.28
+  },
+  {
+    "word": "listening",
+    "start": 0.28,
+    "end": 0.52
+  },
+  {
+    "word": "to",
+    "start": 0.52,
+    "end": 0.74
+  },
+  {
+    "word": "music",
+    "start": 0.74,
+    "end": 0.96
+  },
+  {
+    "word": "right",
+    "start": 0.96,
+    "end": 1.18
+  },
+  {
+    "word": "now,",
+    "start": 1.18,
+    "end": 1.4
+  },
+  {
+    "word": "you're",
+    "start": 1.64,
+    "end": 1.78
+  },
+  {
+    "word": "out.",
+    "start": 1.78,
+    "end": 1.94
+  }
+]

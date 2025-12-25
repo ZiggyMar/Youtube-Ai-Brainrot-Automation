@@ -1,0 +1,47 @@
+[
+  {
+    "word": "Like",
+    "start": 0.0,
+    "end": 0.2
+  },
+  {
+    "word": "this",
+    "start": 0.2,
+    "end": 0.44
+  },
+  {
+    "word": "video",
+    "start": 0.44,
+    "end": 0.74
+  },
+  {
+    "word": "to",
+    "start": 0.74,
+    "end": 0.92
+  },
+  {
+    "word": "lock",
+    "start": 0.92,
+    "end": 1.14
+  },
+  {
+    "word": "in",
+    "start": 1.14,
+    "end": 1.32
+  },
+  {
+    "word": "your",
+    "start": 1.32,
+    "end": 1.44
+  },
+  {
+    "word": "win,",
+    "start": 1.44,
+    "end": 1.74
+  },
+  {
+    "word": "Sigma.",
+    "start": 2.0,
+    "end": 2.28
+  }
+]

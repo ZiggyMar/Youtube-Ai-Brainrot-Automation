@@ -1,65 +1,67 @@
-# 🧠 YouTube AI Brainrot Automation 🚀
+# 🧠 YouTube AI Brainrot Automation
 
-Welcome to the **Brainrot Factory 3000**! This project is a fully automated pipeline for creating those high-engagement, Gen-Alpha-slang-filled, SpongeBob-themed quiz videos that dominate YouTube Shorts and TikTok. 
+A high-performance, automated pipeline for generating viral "Brainrot" style trivia and quiz videos for YouTube Shorts, TikTok, and Reels. Featuring a visual layout editor and frame-perfect subtitle synchronization.
 
----
+## 🚀 Features
 
-## 🛠️ How It Works
+- **Visual Layout Editor**: A browser-based tool (`tools/layout_editor.html`) to visually position and scale all video elements.
+- **Perfect Sync Subtitles**: Word-level synchronization using OpenAI Whisper timestamps.
+- **Multi-LLM Fallback**: Robust script generation using Gemini, Groq, Mistral, and OpenRouter to bypass quota limits.
+- **Dynamic Character Animations**: Automatic character selection and "sway" animations based on speaker mood.
+- **Professional Audio Mixing**: Automated TTS (Edge-TTS), Voice Conversion (RVC), and background music ducking.
+- **Automated Overlays**: Integrated timer videos and CTA (Call to Action) overlays with green-screen masking.
 
-The magic happens in three main stages:
+## 🛠️ Installation
 
-1.  **The Brain (`core/director.py`)**: Uses **Google Gemini 1.5 Flash** to generate scripts. It picks characters, writes brainrot-infused dialogue (rizz, ohio, skibidi), and structures the quiz levels.
-2.  **The Voice (`core/voicebox.py`)**: 
-    - Generates base TTS using `edge-tts`.
-    - Converts voices using **RVC** (Retrieval-based Voice Conversion) for that authentic SpongeBob sound.
-3.  **The Studio (`core/video_factory.py`)**: Uses **MoviePy** to layer Minecraft parkour, character animations, dynamic subtitles, and sound effects.
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/ZiggyMar/Youtube-Ai-Brainrot-Automation.git
+   cd Youtube-Ai-Brainrot-Automation
+   ```
 
----
+2. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## 📂 Project Structure
+3. **Setup FFmpeg**:
+   Ensure FFmpeg is located in `tools/ffmpeg/ffmpeg.exe` or installed in your system PATH.
 
-```text
-Youtube/
-├── core/               # Main engine scripts (Director, Voicebox, Factory)
-├── utils/              # Setup and diagnostic utilities
-├── data/               # JSON scripts, master lists, and logs
-├── assets/             # Backgrounds, music, characters, and overlays
-├── tools/              # FFmpeg and ImageMagick binaries
-├── rvc_models/         # AI Voice models (.pth and .index files)
-├── audio_cache/        # Generated voice segments
-├── output/             # Final rendered videos
-├── .env                # Your API keys (Keep this private!)
-└── run.bat             # One-click Windows launcher
+4. **Configure Environment**:
+   Create a `.env` file in the root directory:
+   ```env
+   GEMINI_API_KEY=your_key_here
+   ```
+
+## 🎨 Using the Layout Editor
+
+1. Open `tools/layout_editor.html` in your browser.
+2. Drag and scale elements (Character, Subtitles, Timer, CTA).
+3. Adjust the **Difficulty List** font size in the properties panel.
+4. Click **Export layout_config.json**.
+5. Place the exported file in the project root.
+
+## 🎬 Running the Pipeline
+
+Simply run the main entry point:
+```bash
+python core/main.py
 ```
 
----
+The pipeline will:
+1. Generate scripts using the available AI provider.
+2. Generate and convert audio files.
+3. Transcribe audio for word-level timestamps.
+4. Render the final production-ready MP4 files in the `output/` folder.
 
-## 🚀 Quick Start
+## 📁 Project Structure
 
-1.  **Setup**: 
-    - Rename `.env.example` to `.env` (if not already done).
-    - Paste your `GEMINI_API_KEY` into the `.env` file.
-2.  **Install Dependencies**: 
-    ```bash
-    pip install -r requirements.txt
-    ```
-3.  **Run the Factory**:
-    - Execute the main pipeline:
-      ```bash
-      python core/main.py
-      ```
-    - Or just double-click **`run.bat`**!
+- `core/`: Main logic (Director, Voicebox, Video Factory).
+- `data/`: Scripts and layout configurations.
+- `assets/`: Backgrounds, music, fonts, and character images.
+- `tools/`: Layout editor and FFmpeg binaries.
+- `audio_cache/`: Temporary audio and transcription files.
+- `output/`: Final rendered videos.
 
----
-
-## 🎨 Visual Style
-
-- **Font**: Impact (The classic meme font).
-- **Colors**:
-    - **SpongeBob**: Yellow 🟡 | **Patrick**: Pink 🌸 | **Squidward**: Cyan 🧊
-    - **Plankton**: Green 🟢 | **Mr. Krabs**: Red 🦀
-
----
-
-## ⚠️ Disclaimer
-This project is for educational/entertainment purposes. Use your brainrot powers responsibly. Don't let the rizz get to your head. 💀
+## 📜 License
+MIT

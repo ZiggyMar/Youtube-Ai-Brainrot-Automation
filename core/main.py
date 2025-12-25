@@ -56,10 +56,10 @@ def archive_completed_videos():
 
     completed_ids = set()
     for filename in os.listdir(OUTPUT_DIR):
-        if filename.startswith("video_") and filename.endswith("_brainrot.mp4"):
-            # Extract ID: video_1_brainrot.mp4 -> 1
+        if filename.startswith("video_") and filename.endswith("_production.mp4"):
+            # Extract ID: video_1_production.mp4 -> 1
             try:
-                vid_id_str = filename.replace("video_", "").replace("_brainrot.mp4", "")
+                vid_id_str = filename.replace("video_", "").replace("_production.mp4", "")
                 completed_ids.add(int(vid_id_str))
             except ValueError:
                 continue

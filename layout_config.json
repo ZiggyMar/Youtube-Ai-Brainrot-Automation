@@ -1,7 +1,7 @@
 {
   "character": {
-    "x": -12,
-    "y": 1063,
+    "x": -2,
+    "y": 1068,
     "width": 1080,
     "height": 850
   },
@@ -18,10 +18,10 @@
     "height": 768
   },
   "cta": {
-    "x": 144,
-    "y": 513,
-    "width": 771,
-    "height": 160
+    "x": 127,
+    "y": 196,
+    "width": 807,
+    "height": 859
   },
   "difficulty_list": {
     "x": 58,

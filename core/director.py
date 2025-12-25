@@ -15,11 +15,11 @@ DATA_DIR = os.path.join(PROJECT_ROOT, 'data')
 # Load environment variables
 load_dotenv(os.path.join(PROJECT_ROOT, '.env'))
 
-# API Keys
+# API Keys from Environment
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-GROQ_API_KEY = "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"
-MISTRAL_API_KEY = "hCQA0aSCd409vyrO7flk1948SchvxoWv"
-OPENROUTER_API_KEY = "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"
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+MISTRAL_API_KEY = os.environ.get("MISTRAL_API_KEY")
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 
 OUTPUT_FILE = os.path.join(DATA_DIR, "video_scripts.json")
 
@@ -29,6 +29,7 @@ Generate 5 NEW scripts in a list.
 
 THEME: SpongeBob SquarePants.
 GAME TYPE: 'Avoid Saying the Same Thing' OR 'Say the Same Thing' (Mix them up).
+VARIETY RULE: Do NOT repeat the same slang (like 'OHIO', 'SKIBIDI', 'RIZZ') or catchphrases across the 5 scripts. Each script must feel unique and fresh.
 
 CHARACTERS:
 - Host: SpongeBob (Enthusiastic/Strict) or Squidward (Grumpy/Arrogant).
@@ -92,8 +93,7 @@ JSON OUTPUT FORMAT:
             "show_timer": false,
             "answer_reveal": "FROOT LOOPS"
         }
-        },
-        ...
+        }
     ]
     }
 ]
@@ -144,7 +144,7 @@ def try_groq():
         }
         payload = {
             "messages": [{"role": "user", "content": PROMPT_TEXT}],
-            "model": "llama3-8b-8192",
+            "model": "llama-3.3-70b-versatile",
             "response_format": {"type": "json_object"}
         }
         response = requests.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload)
@@ -186,7 +186,7 @@ def try_openrouter():
         }
         payload = {
             "messages": [{"role": "user", "content": PROMPT_TEXT}],
-            "model": "meta-llama/llama-3-8b-instruct:free", # Using a free model
+            "model": "meta-llama/llama-3-8b-instruct:free",
         }
         response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload)
         response.raise_for_status()
