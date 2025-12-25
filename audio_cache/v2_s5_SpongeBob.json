@@ -1,0 +1,67 @@
+[
+  {
+    "word": "I",
+    "start": 0.0,
+    "end": 0.2
+  },
+  {
+    "word": "picked",
+    "start": 0.2,
+    "end": 0.46
+  },
+  {
+    "word": "helmet.",
+    "start": 0.46,
+    "end": 0.76
+  },
+  {
+    "word": "If",
+    "start": 1.46,
+    "end": 1.86
+  },
+  {
+    "word": "you",
+    "start": 1.86,
+    "end": 1.96
+  },
+  {
+    "word": "said",
+    "start": 1.96,
+    "end": 2.16
+  },
+  {
+    "word": "helmet,",
+    "start": 2.16,
+    "end": 2.44
+  },
+  {
+    "word": "you",
+    "start": 2.7,
+    "end": 2.82
+  },
+  {
+    "word": "are",
+    "start": 2.82,
+    "end": 2.92
+  },
+  {
+    "word": "out",
+    "start": 2.92,
+    "end": 3.1
+  },
+  {
+    "word": "of",
+    "start": 3.1,
+    "end": 3.22
+  },
+  {
+    "word": "the",
+    "start": 3.22,
+    "end": 3.3
+  },
+  {
+    "word": "water.",
+    "start": 3.3,
+    "end": 3.56
+  }
+]

@@ -2,46 +2,41 @@
   {
     "word": "If",
     "start": 0.0,
-    "end": 0.16
+    "end": 0.18
   },
   {
-    "word": "you're",
-    "start": 0.16,
+    "word": "you",
+    "start": 0.18,
     "end": 0.28
   },
   {
-    "word": "listening",
+    "word": "have",
     "start": 0.28,
-    "end": 0.52
+    "end": 0.42
   },
   {
-    "word": "to",
-    "start": 0.52,
-    "end": 0.74
+    "word": "two",
+    "start": 0.42,
+    "end": 0.62
   },
   {
-    "word": "music",
-    "start": 0.74,
-    "end": 0.96
+    "word": "arms,",
+    "start": 0.62,
+    "end": 0.94
   },
   {
-    "word": "right",
-    "start": 0.96,
-    "end": 1.18
-  },
-  {
-    "word": "now,",
+    "word": "you",
     "start": 1.18,
+    "end": 1.28
+  },
+  {
+    "word": "are",
+    "start": 1.28,
     "end": 1.4
   },
   {
-    "word": "you're",
-    "start": 1.64,
+    "word": "eliminated.",
+    "start": 1.4,
     "end": 1.78
-  },
-  {
-    "word": "out.",
-    "start": 1.78,
-    "end": 1.94
   }
 ]

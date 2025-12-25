@@ -1,0 +1,52 @@
+[
+  {
+    "word": "I",
+    "start": 0.0,
+    "end": 0.18
+  },
+  {
+    "word": "pick",
+    "start": 0.18,
+    "end": 0.42
+  },
+  {
+    "word": "Pinhead.",
+    "start": 0.42,
+    "end": 0.84
+  },
+  {
+    "word": "Comment",
+    "start": 1.44,
+    "end": 1.86
+  },
+  {
+    "word": "if",
+    "start": 1.86,
+    "end": 2.08
+  },
+  {
+    "word": "you",
+    "start": 2.08,
+    "end": 2.18
+  },
+  {
+    "word": "won",
+    "start": 2.18,
+    "end": 2.34
+  },
+  {
+    "word": "the",
+    "start": 2.34,
+    "end": 2.48
+  },
+  {
+    "word": "entire",
+    "start": 2.48,
+    "end": 2.84
+  },
+  {
+    "word": "thing.",
+    "start": 2.84,
+    "end": 3.14
+  }
+]

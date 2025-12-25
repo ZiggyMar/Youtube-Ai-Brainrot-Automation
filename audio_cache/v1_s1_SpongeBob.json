@@ -5,43 +5,43 @@
     "end": 0.16
   },
   {
-    "word": "you're",
+    "word": "you",
     "start": 0.16,
-    "end": 0.3
+    "end": 0.28
   },
   {
-    "word": "holding",
-    "start": 0.3,
-    "end": 0.52
+    "word": "have",
+    "start": 0.28,
+    "end": 0.44
   },
   {
-    "word": "a",
-    "start": 0.52,
-    "end": 0.66
+    "word": "ever",
+    "start": 0.44,
+    "end": 0.58
   },
   {
-    "word": "phone",
-    "start": 0.66,
-    "end": 0.86
+    "word": "smiled",
+    "start": 0.58,
+    "end": 0.84
   },
   {
-    "word": "right",
-    "start": 0.86,
-    "end": 1.06
+    "word": "today,",
+    "start": 0.84,
+    "end": 1.16
   },
   {
-    "word": "now,",
-    "start": 1.06,
-    "end": 1.26
+    "word": "you",
+    "start": 1.4,
+    "end": 1.5
   },
   {
-    "word": "you're",
-    "start": 1.48,
+    "word": "are",
+    "start": 1.5,
     "end": 1.62
   },
   {
     "word": "out.",
     "start": 1.62,
-    "end": 1.78
+    "end": 1.8
   }
 ]

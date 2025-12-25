@@ -1,0 +1,57 @@
+[
+  {
+    "word": "If",
+    "start": 0.0,
+    "end": 0.18
+  },
+  {
+    "word": "you",
+    "start": 0.18,
+    "end": 0.26
+  },
+  {
+    "word": "know",
+    "start": 0.26,
+    "end": 0.42
+  },
+  {
+    "word": "what",
+    "start": 0.42,
+    "end": 0.62
+  },
+  {
+    "word": "a",
+    "start": 0.62,
+    "end": 0.68
+  },
+  {
+    "word": "goofy",
+    "start": 0.68,
+    "end": 0.88
+  },
+  {
+    "word": "goober",
+    "start": 0.88,
+    "end": 1.26
+  },
+  {
+    "word": "is,",
+    "start": 1.26,
+    "end": 1.48
+  },
+  {
+    "word": "you",
+    "start": 1.68,
+    "end": 1.78
+  },
+  {
+    "word": "are",
+    "start": 1.78,
+    "end": 1.88
+  },
+  {
+    "word": "eliminated.",
+    "start": 1.88,
+    "end": 2.28
+  }
+]

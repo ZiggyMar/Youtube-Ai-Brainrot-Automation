@@ -1,0 +1,32 @@
+[
+  {
+    "word": "Name",
+    "start": 0.0,
+    "end": 0.26
+  },
+  {
+    "word": "a",
+    "start": 0.26,
+    "end": 0.38
+  },
+  {
+    "word": "condom",
+    "start": 0.38,
+    "end": 0.74
+  },
+  {
+    "word": "and",
+    "start": 0.74,
+    "end": 0.84
+  },
+  {
+    "word": "are",
+    "start": 0.84,
+    "end": 0.96
+  },
+  {
+    "word": "topping.",
+    "start": 0.96,
+    "end": 1.28
+  }
+]

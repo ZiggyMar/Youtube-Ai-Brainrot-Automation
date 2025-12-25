@@ -1,0 +1,62 @@
+[
+  {
+    "word": "I",
+    "start": 0.0,
+    "end": 0.16
+  },
+  {
+    "word": "chose",
+    "start": 0.16,
+    "end": 0.44
+  },
+  {
+    "word": "money.",
+    "start": 0.44,
+    "end": 0.76
+  },
+  {
+    "word": "If",
+    "start": 1.28,
+    "end": 1.84
+  },
+  {
+    "word": "you",
+    "start": 1.84,
+    "end": 1.96
+  },
+  {
+    "word": "matched",
+    "start": 1.96,
+    "end": 2.24
+  },
+  {
+    "word": "my",
+    "start": 2.24,
+    "end": 2.44
+  },
+  {
+    "word": "obvious",
+    "start": 2.44,
+    "end": 2.82
+  },
+  {
+    "word": "response,",
+    "start": 2.82,
+    "end": 3.26
+  },
+  {
+    "word": "you",
+    "start": 3.68,
+    "end": 3.82
+  },
+  {
+    "word": "are",
+    "start": 3.82,
+    "end": 3.96
+  },
+  {
+    "word": "gone.",
+    "start": 3.96,
+    "end": 4.22
+  }
+]

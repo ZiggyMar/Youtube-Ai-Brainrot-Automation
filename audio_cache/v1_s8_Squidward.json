@@ -1,0 +1,62 @@
+[
+  {
+    "word": "I",
+    "start": 0.0,
+    "end": 0.16
+  },
+  {
+    "word": "chose",
+    "start": 0.16,
+    "end": 0.44
+  },
+  {
+    "word": "vanilla.",
+    "start": 0.44,
+    "end": 0.78
+  },
+  {
+    "word": "Match",
+    "start": 1.8,
+    "end": 2.12
+  },
+  {
+    "word": "me",
+    "start": 2.12,
+    "end": 2.28
+  },
+  {
+    "word": "and",
+    "start": 2.28,
+    "end": 2.44
+  },
+  {
+    "word": "you",
+    "start": 2.44,
+    "end": 2.58
+  },
+  {
+    "word": "may",
+    "start": 2.58,
+    "end": 2.72
+  },
+  {
+    "word": "as",
+    "start": 2.72,
+    "end": 2.92
+  },
+  {
+    "word": "well",
+    "start": 2.92,
+    "end": 3.08
+  },
+  {
+    "word": "leave",
+    "start": 3.08,
+    "end": 3.32
+  },
+  {
+    "word": "now.",
+    "start": 3.32,
+    "end": 3.56
+  }
+]

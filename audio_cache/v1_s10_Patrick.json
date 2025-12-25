@@ -1,0 +1,47 @@
+[
+  {
+    "word": "I'd",
+    "start": 0.0,
+    "end": 0.3
+  },
+  {
+    "word": "pick",
+    "start": 0.3,
+    "end": 0.42
+  },
+  {
+    "word": "pineapple.",
+    "start": 0.42,
+    "end": 0.96
+  },
+  {
+    "word": "Comment",
+    "start": 1.5,
+    "end": 2.06
+  },
+  {
+    "word": "if",
+    "start": 2.06,
+    "end": 2.3
+  },
+  {
+    "word": "you",
+    "start": 2.3,
+    "end": 2.4
+  },
+  {
+    "word": "survive",
+    "start": 2.4,
+    "end": 2.68
+  },
+  {
+    "word": "this",
+    "start": 2.68,
+    "end": 2.96
+  },
+  {
+    "word": "round.",
+    "start": 2.96,
+    "end": 3.28
+  }
+]

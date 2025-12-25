@@ -1,0 +1,72 @@
+[
+  {
+    "word": "I",
+    "start": 0.0,
+    "end": 0.16
+  },
+  {
+    "word": "chose",
+    "start": 0.16,
+    "end": 0.46
+  },
+  {
+    "word": "band",
+    "start": 0.46,
+    "end": 0.74
+  },
+  {
+    "word": "geeks.",
+    "start": 0.74,
+    "end": 1.26
+  },
+  {
+    "word": "If",
+    "start": 1.82,
+    "end": 2.3
+  },
+  {
+    "word": "you",
+    "start": 2.3,
+    "end": 2.4
+  },
+  {
+    "word": "matched",
+    "start": 2.4,
+    "end": 2.66
+  },
+  {
+    "word": "me,",
+    "start": 2.66,
+    "end": 2.88
+  },
+  {
+    "word": "you",
+    "start": 3.12,
+    "end": 3.22
+  },
+  {
+    "word": "have",
+    "start": 3.22,
+    "end": 3.4
+  },
+  {
+    "word": "too",
+    "start": 3.4,
+    "end": 3.58
+  },
+  {
+    "word": "much",
+    "start": 3.58,
+    "end": 3.8
+  },
+  {
+    "word": "free",
+    "start": 3.8,
+    "end": 4.04
+  },
+  {
+    "word": "time.",
+    "start": 4.04,
+    "end": 4.34
+  }
+]

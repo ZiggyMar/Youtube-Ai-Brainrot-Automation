@@ -1,0 +1,57 @@
+[
+  {
+    "word": "I",
+    "start": 0.0,
+    "end": 0.16
+  },
+  {
+    "word": "chose",
+    "start": 0.16,
+    "end": 0.48
+  },
+  {
+    "word": "jellyfish.",
+    "start": 0.48,
+    "end": 1.04
+  },
+  {
+    "word": "You",
+    "start": 1.6800000000000006,
+    "end": 2.2
+  },
+  {
+    "word": "are",
+    "start": 2.2,
+    "end": 2.34
+  },
+  {
+    "word": "so",
+    "start": 2.34,
+    "end": 2.56
+  },
+  {
+    "word": "predictable",
+    "start": 2.56,
+    "end": 3.04
+  },
+  {
+    "word": "if",
+    "start": 3.04,
+    "end": 3.3
+  },
+  {
+    "word": "you",
+    "start": 3.3,
+    "end": 3.42
+  },
+  {
+    "word": "matched",
+    "start": 3.42,
+    "end": 3.68
+  },
+  {
+    "word": "that.",
+    "start": 3.68,
+    "end": 3.92
+  }
+]

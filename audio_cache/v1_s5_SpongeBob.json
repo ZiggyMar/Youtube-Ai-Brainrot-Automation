@@ -1,37 +1,57 @@
 [
   {
-    "word": "If",
+    "word": "My",
     "start": 0.0,
     "end": 0.18
   },
   {
-    "word": "you",
+    "word": "answer",
     "start": 0.18,
-    "end": 0.28
-  },
-  {
-    "word": "said",
-    "start": 0.28,
     "end": 0.46
   },
   {
-    "word": "carrot,",
+    "word": "is",
     "start": 0.46,
-    "end": 0.76
+    "end": 0.66
+  },
+  {
+    "word": "Squidward.",
+    "start": 0.66,
+    "end": 1.04
+  },
+  {
+    "word": "If",
+    "start": 1.62,
+    "end": 2.08
   },
   {
     "word": "you",
-    "start": 1.02,
-    "end": 1.12
+    "start": 2.08,
+    "end": 2.18
+  },
+  {
+    "word": "said",
+    "start": 2.18,
+    "end": 2.36
+  },
+  {
+    "word": "Squidward,",
+    "start": 2.36,
+    "end": 2.84
+  },
+  {
+    "word": "you",
+    "start": 3.1,
+    "end": 3.2
   },
   {
     "word": "are",
-    "start": 1.12,
-    "end": 1.22
+    "start": 3.2,
+    "end": 3.34
   },
   {
-    "word": "out.",
-    "start": 1.22,
-    "end": 1.44
+    "word": "eliminated.",
+    "start": 3.34,
+    "end": 3.78
   }
 ]

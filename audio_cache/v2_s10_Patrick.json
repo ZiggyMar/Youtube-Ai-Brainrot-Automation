@@ -1,0 +1,57 @@
+[
+  {
+    "word": "I",
+    "start": 0.0,
+    "end": 0.18
+  },
+  {
+    "word": "pick",
+    "start": 0.18,
+    "end": 0.42
+  },
+  {
+    "word": "Plaketon.",
+    "start": 0.42,
+    "end": 0.84
+  },
+  {
+    "word": "Let",
+    "start": 1.66,
+    "end": 1.74
+  },
+  {
+    "word": "me",
+    "start": 1.74,
+    "end": 1.88
+  },
+  {
+    "word": "know",
+    "start": 1.88,
+    "end": 2.08
+  },
+  {
+    "word": "if",
+    "start": 2.08,
+    "end": 2.3
+  },
+  {
+    "word": "you",
+    "start": 2.3,
+    "end": 2.4
+  },
+  {
+    "word": "finally",
+    "start": 2.4,
+    "end": 2.72
+  },
+  {
+    "word": "beat",
+    "start": 2.72,
+    "end": 3.0
+  },
+  {
+    "word": "us.",
+    "start": 3.0,
+    "end": 3.28
+  }
+]

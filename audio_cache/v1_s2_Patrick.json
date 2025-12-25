@@ -1,47 +1,47 @@
 [
   {
-    "word": "Ohio,",
+    "word": "Well,",
     "start": 0.0,
-    "end": 0.44
+    "end": 0.24
   },
   {
-    "word": "that's",
-    "start": 0.82,
-    "end": 1.18
-  },
-  {
-    "word": "too",
-    "start": 1.18,
-    "end": 1.32
-  },
-  {
-    "word": "easy.",
-    "start": 1.32,
-    "end": 1.66
+    "word": "impossible.",
+    "start": 0.34,
+    "end": 0.84
   },
   {
     "word": "Subscribe",
-    "start": 2.26,
-    "end": 2.82
+    "start": 1.44,
+    "end": 2.04
+  },
+  {
+    "word": "now",
+    "start": 2.04,
+    "end": 2.42
   },
   {
     "word": "for",
-    "start": 2.82,
-    "end": 3.12
+    "start": 2.42,
+    "end": 2.68
   },
   {
-    "word": "a",
-    "start": 3.12,
-    "end": 3.24
+    "word": "an",
+    "start": 2.68,
+    "end": 2.8
+  },
+  {
+    "word": "immediate",
+    "start": 2.8,
+    "end": 3.14
   },
   {
     "word": "second",
-    "start": 3.24,
-    "end": 3.52
+    "start": 3.14,
+    "end": 3.56
   },
   {
     "word": "chance.",
-    "start": 3.52,
-    "end": 4.0
+    "start": 3.56,
+    "end": 3.9
   }
 ]

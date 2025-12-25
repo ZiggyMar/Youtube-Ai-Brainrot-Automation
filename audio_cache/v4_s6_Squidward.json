@@ -1,47 +1,32 @@
 [
   {
-    "word": "Like",
+    "word": "Name",
     "start": 0.0,
-    "end": 0.2
+    "end": 0.26
   },
   {
-    "word": "this",
-    "start": 0.2,
-    "end": 0.44
+    "word": "a",
+    "start": 0.26,
+    "end": 0.4
   },
   {
-    "word": "video",
-    "start": 0.44,
-    "end": 0.74
+    "word": "non",
+    "start": 0.4,
+    "end": 0.54
   },
   {
-    "word": "to",
-    "start": 0.74,
-    "end": 0.92
+    "word": "-spongebob",
+    "start": 0.54,
+    "end": 1.16
   },
   {
-    "word": "lock",
-    "start": 0.92,
-    "end": 1.14
+    "word": "episode",
+    "start": 1.16,
+    "end": 1.5
   },
   {
-    "word": "in",
-    "start": 1.14,
-    "end": 1.32
-  },
-  {
-    "word": "your",
-    "start": 1.32,
-    "end": 1.44
-  },
-  {
-    "word": "win,",
-    "start": 1.44,
-    "end": 1.74
-  },
-  {
-    "word": "Sigma.",
-    "start": 2.0,
-    "end": 2.28
+    "word": "title.",
+    "start": 1.5,
+    "end": 1.98
   }
 ]

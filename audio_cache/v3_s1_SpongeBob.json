@@ -5,38 +5,58 @@
     "end": 0.18
   },
   {
-    "word": "you're",
+    "word": "you",
     "start": 0.18,
-    "end": 0.3
+    "end": 0.28
   },
   {
-    "word": "wearing",
-    "start": 0.3,
-    "end": 0.5
+    "word": "haven't",
+    "start": 0.28,
+    "end": 0.58
   },
   {
-    "word": "clothes",
-    "start": 0.5,
-    "end": 0.78
+    "word": "eaten",
+    "start": 0.58,
+    "end": 0.76
   },
   {
-    "word": "right",
-    "start": 0.78,
-    "end": 1.0
+    "word": "a",
+    "start": 0.76,
+    "end": 0.86
   },
   {
-    "word": "now,",
-    "start": 1.0,
+    "word": "crabby",
+    "start": 0.86,
     "end": 1.2
   },
   {
-    "word": "you're",
-    "start": 1.42,
-    "end": 1.58
+    "word": "patty",
+    "start": 1.2,
+    "end": 1.5
   },
   {
-    "word": "out.",
-    "start": 1.58,
-    "end": 1.72
+    "word": "this",
+    "start": 1.5,
+    "end": 1.66
+  },
+  {
+    "word": "week,",
+    "start": 1.66,
+    "end": 1.82
+  },
+  {
+    "word": "you",
+    "start": 2.06,
+    "end": 2.16
+  },
+  {
+    "word": "are",
+    "start": 2.16,
+    "end": 2.28
+  },
+  {
+    "word": "eliminated.",
+    "start": 2.28,
+    "end": 2.68
   }
 ]

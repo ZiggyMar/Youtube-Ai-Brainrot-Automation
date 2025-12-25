@@ -318,12 +318,12 @@ def generate_video(video_data):
         
         if is_timer:
             timer_path = os.path.join(ASSETS_DIR, "overlays", "timer.mp4")
-            if validate_video_asset(timer_path):
+            try:
                 timer_clip = VideoFileClip(timer_path)
                 duration = timer_clip.duration
                 seg_audio = timer_clip.audio
-            else:
-                print(f"⚠️ Skipping timer segment: {timer_path} is missing or corrupted.")
+            except Exception as e:
+                print(f"⚠️ Skipping timer segment: {timer_path} error: {e}")
                 continue
         elif os.path.exists(audio_path):
             seg_audio = AudioFileClip(audio_path)
@@ -392,30 +392,41 @@ def generate_video(video_data):
         cta_keywords = ["subscribe", "like", "button", "lock in"]
         if not cta_shown and text and any(k in text.lower() for k in cta_keywords):
             cta_shown = True
-            cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
-            if validate_video_asset(cta_path):
-                try:
-                    cta_source = VideoFileClip(cta_path)
+            # Use the pre-keyed Alpha MOV file if it exists (Much faster/stable)
+            cta_path_alpha = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta_alpha.mov")
+            cta_path_orig = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
+            
+            target_cta = cta_path_alpha if os.path.exists(cta_path_alpha) else cta_path_orig
+            
+            try:
+                # Try to load the CTA
+                cta_source = VideoFileClip(target_cta, has_mask=True) # has_mask=True for Alpha channel
+                
+                # Only apply green screen key if we are forced to use the MP4
+                if target_cta.endswith(".mp4"):
                     cta_clip = cta_source.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
-                    
-                    if cta_clip.duration < duration:
-                        cta_clip = vfx.loop(cta_clip, duration=duration)
-                        if cta_source.audio:
-                             cta_audio = afx.audio_loop(cta_source.audio, duration=duration).volumex(0.1)
-                             dialogue_audios.append(cta_audio.set_start(current_time))
-                    else:
-                        cta_clip = cta_clip.subclip(0, duration)
-                        if cta_source.audio:
-                            cta_audio = cta_source.audio.subclip(0, duration).volumex(0.1)
-                            dialogue_audios.append(cta_audio.set_start(current_time))
-                    
-                    # Apply layout config
-                    cta_clip = cta_clip.resize(width=LAYOUT["cta"]["width"]).set_position((LAYOUT["cta"]["x"], LAYOUT["cta"]["y"])).set_start(0)
-                    layers.append(cta_clip)
-                except Exception as e:
-                    print(f"⚠️ Warning: Failed to load CTA overlay: {e}")
-            else:
-                print(f"⚠️ Skipping CTA overlay: {cta_path} is missing or corrupted.")
+                else:
+                    cta_clip = cta_source # Alpha is already built-in!
+
+                # Play CTA once. Do NOT loop it (causes freezing).
+                if cta_clip.duration > duration:
+                    cta_clip = cta_clip.subclip(0, duration)
+                    if cta_source.audio:
+                        cta_audio = cta_source.audio.subclip(0, duration).volumex(0.1)
+                        dialogue_audios.append(cta_audio.set_start(current_time))
+                else:
+                    # Shorter than segment? Just play it once and let it end.
+                    if cta_source.audio:
+                        cta_audio = cta_source.audio.volumex(0.1)
+                        dialogue_audios.append(cta_audio.set_start(current_time))
+                
+                # Apply layout config
+                cta_clip = cta_clip.resize(width=LAYOUT["cta"]["width"]).set_position((LAYOUT["cta"]["x"], LAYOUT["cta"]["y"])).set_start(0)
+                layers.append(cta_clip)
+                print(f"   - Added CTA overlay (Duration: {cta_clip.duration:.2f}s)")
+            except Exception as e:
+                print(f"⚠️ Warning: Failed to load CTA overlay: {e}")
+                cta_shown = False
 
         # Composite
         segment_comp = CompositeVideoClip(layers, size=(1080, 1920)).set_duration(duration)
@@ -460,6 +471,13 @@ def generate_video(video_data):
             print(f"🧹 Cleaned up temp audio: {temp_audio}")
         except:
             pass
+
+    # Cleanup clips
+    try:
+        final_video.close()
+        bg_source.close()
+    except:
+        pass
 
     print(f"✅ Finished: {out_path}")
 

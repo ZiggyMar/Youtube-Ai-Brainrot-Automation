@@ -1,0 +1,57 @@
+[
+  {
+    "word": "Okay,",
+    "start": 0.0,
+    "end": 0.34
+  },
+  {
+    "word": "for",
+    "start": 0.56,
+    "end": 0.64
+  },
+  {
+    "word": "the",
+    "start": 0.64,
+    "end": 0.76
+  },
+  {
+    "word": "win.",
+    "start": 0.76,
+    "end": 1.02
+  },
+  {
+    "word": "Which",
+    "start": 1.62,
+    "end": 1.92
+  },
+  {
+    "word": "do",
+    "start": 1.92,
+    "end": 2.08
+  },
+  {
+    "word": "you",
+    "start": 2.08,
+    "end": 2.18
+  },
+  {
+    "word": "pick?",
+    "start": 2.18,
+    "end": 2.4
+  },
+  {
+    "word": "Pineapple",
+    "start": 2.7,
+    "end": 3.14
+  },
+  {
+    "word": "or",
+    "start": 3.14,
+    "end": 3.36
+  },
+  {
+    "word": "rock?",
+    "start": 3.36,
+    "end": 3.56
+  }
+]

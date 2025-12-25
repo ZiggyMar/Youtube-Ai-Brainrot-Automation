@@ -1,32 +1,62 @@
 [
   {
-    "word": "If",
+    "word": "I",
     "start": 0.0,
-    "end": 0.18
+    "end": 0.16
+  },
+  {
+    "word": "picked",
+    "start": 0.16,
+    "end": 0.38
+  },
+  {
+    "word": "Mermaid",
+    "start": 0.38,
+    "end": 0.68
+  },
+  {
+    "word": "Man.",
+    "start": 0.68,
+    "end": 1.04
+  },
+  {
+    "word": "If",
+    "start": 1.56,
+    "end": 2.0
   },
   {
     "word": "you",
-    "start": 0.18,
-    "end": 0.26
+    "start": 2.0,
+    "end": 2.1
   },
   {
-    "word": "sense",
-    "start": 0.26,
-    "end": 0.44
+    "word": "said",
+    "start": 2.1,
+    "end": 2.28
   },
   {
-    "word": "seaweed,",
-    "start": 0.44,
-    "end": 0.78
+    "word": "Mermaid",
+    "start": 2.28,
+    "end": 2.6
   },
   {
-    "word": "you're",
-    "start": 1.08,
-    "end": 1.28
+    "word": "Man,",
+    "start": 2.6,
+    "end": 2.92
   },
   {
-    "word": "out.",
-    "start": 1.28,
-    "end": 1.48
+    "word": "you",
+    "start": 3.1,
+    "end": 3.2
+  },
+  {
+    "word": "are",
+    "start": 3.2,
+    "end": 3.28
+  },
+  {
+    "word": "finished.",
+    "start": 3.28,
+    "end": 3.54
   }
 ]

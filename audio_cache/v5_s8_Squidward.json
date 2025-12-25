@@ -1,0 +1,67 @@
+[
+  {
+    "word": "I",
+    "start": 0.0,
+    "end": 0.16
+  },
+  {
+    "word": "chose",
+    "start": 0.16,
+    "end": 0.48
+  },
+  {
+    "word": "ketchup.",
+    "start": 0.48,
+    "end": 0.8
+  },
+  {
+    "word": "If",
+    "start": 1.38,
+    "end": 1.94
+  },
+  {
+    "word": "you",
+    "start": 1.94,
+    "end": 2.06
+  },
+  {
+    "word": "matched",
+    "start": 2.06,
+    "end": 2.34
+  },
+  {
+    "word": "my",
+    "start": 2.34,
+    "end": 2.54
+  },
+  {
+    "word": "superior",
+    "start": 2.54,
+    "end": 2.96
+  },
+  {
+    "word": "choice,",
+    "start": 2.96,
+    "end": 3.34
+  },
+  {
+    "word": "you",
+    "start": 3.72,
+    "end": 3.84
+  },
+  {
+    "word": "are",
+    "start": 3.84,
+    "end": 4.0
+  },
+  {
+    "word": "beneath",
+    "start": 4.0,
+    "end": 4.26
+  },
+  {
+    "word": "me.",
+    "start": 4.26,
+    "end": 4.54
+  }
+]

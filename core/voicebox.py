@@ -4,6 +4,7 @@ import asyncio
 import edge_tts
 import torch
 import whisper
+import gc
 from pydub import AudioSegment, silence
 from rvc_python.infer import RVCInference
 
@@ -62,11 +63,6 @@ VOICE_MAPPING = {
     }
 }
 
-# Load Whisper Model
-print("⏳ Loading Whisper model...")
-whisper_model = whisper.load_model("base")
-print("✅ Whisper model loaded.")
-
 def clean_text(text):
     """Replaces abbreviations like Q1, Q2 with full words."""
     replacements = {
@@ -104,21 +100,30 @@ def smart_trim(audio_path, output_path, silence_thresh=-50, keep_silence_ms=50):
             import shutil
             shutil.copy(audio_path, output_path)
 
-def convert_audio(input_path, output_path, model_name):
-    """Converts audio using RVC."""
+def run_rvc_batch(speaker, tasks):
+    """Runs RVC inference for a batch of files using a single model load."""
+    if not tasks: return
+    
+    print(f"🎤 Loading RVC Model for {speaker}...")
+    config = VOICE_MAPPING[speaker]
+    model_name = config["model"]
+    
     model_path = os.path.join(RVC_MODELS_DIR, model_name, f"{model_name}.pth")
     index_path = os.path.join(RVC_MODELS_DIR, model_name, f"{model_name}.index")
 
     if not os.path.exists(model_path):
-        print(f"Warning: Model not found at {model_path}. Skipping conversion.")
-        import shutil
-        shutil.copy(input_path, output_path)
+        print(f"⚠️ Model not found: {model_path}. Skipping RVC for {speaker}.")
+        # Fallback: Copy base to rvc path
+        for task in tasks:
+            import shutil
+            shutil.copy(task['base_path'], task['rvc_path'])
         return
 
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
-    rvc = RVCInference(device=device)
     
+    # Load Model ONCE
     try:
+        rvc = RVCInference(device=device)
         rvc.load_model(model_path, index_path=index_path if os.path.exists(index_path) else "")
         rvc.set_params(
             f0_method="rmvpe",
@@ -129,24 +134,30 @@ def convert_audio(input_path, output_path, model_name):
             rms_mix_rate=0.25,
             protect=0.33
         )
-        rvc.infer_file(input_path, output_path)
+        
+        print(f"⚡ Converting {len(tasks)} files for {speaker}...")
+        for task in tasks:
+            # print(f"   - Converting {os.path.basename(task['base_path'])}")
+            rvc.infer_file(task['base_path'], task['rvc_path'])
+            
     except Exception as e:
-        print(f"Error converting audio: {e}")
-        import shutil
-        shutil.copy(input_path, output_path)
+        print(f"❌ Error during RVC batch for {speaker}: {e}")
+        # Fallback
+        for task in tasks:
+            if not os.path.exists(task['rvc_path']):
+                import shutil
+                shutil.copy(task['base_path'], task['rvc_path'])
+    finally:
+        # Cleanup to free VRAM
+        if 'rvc' in locals():
+            del rvc
+        gc.collect()
+        torch.cuda.empty_cache()
 
 async def process_scripts():
     os.makedirs(AUDIO_CACHE_DIR, exist_ok=True)
-
-    # CLEAR CACHE (Optional: Only if you want a fresh start)
-    # For now, we'll keep existing files to allow resuming failed runs.
-    # To clear manually, delete the audio_cache folder.
-    print(f"ℹ️ Checking audio cache in {AUDIO_CACHE_DIR}...")
     
-    # CUDA Check for RVC
-    device = "cuda:0" if torch.cuda.is_available() else "cpu"
-    print(f"🚀 Using device: {device}")
-
+    # Check Scripts
     if not os.path.exists(SCRIPTS_FILE):
         print(f"❌ Error: {SCRIPTS_FILE} not found.")
         return
@@ -154,20 +165,21 @@ async def process_scripts():
     with open(SCRIPTS_FILE, 'r', encoding='utf-8') as f:
         scripts = json.load(f)
     
-    print(f"Found {len(scripts)} videos in {SCRIPTS_FILE}.")
-
+    print(f"🔥 Optimizing Workflow: Batching by Speaker to maximize GPU usage.")
+    
+    # 1. Collect All Tasks
+    all_tasks = []
+    tasks_by_speaker = {k: [] for k in VOICE_MAPPING.keys()}
+    
+    print("📋 Analyzing scripts...")
     for video in scripts:
         video_id = video.get("video_id")
-        print(f"Processing Video {video_id}...")
-        
         for i, segment in enumerate(video.get("segments", []), start=1):
             segment_id = i
             
-            # Check visuals.show_timer
+            # Skip Timer
             visuals = segment.get("visuals", {})
-            if visuals.get("show_timer") is True:
-                print(f"  - Skipping Segment {segment_id} (Timer)")
-                continue
+            if visuals.get("show_timer") is True: continue
 
             text = segment.get("text")
             speaker = segment.get("speaker")
@@ -176,14 +188,12 @@ async def process_scripts():
                 text = segment["audio"].get("text")
                 speaker = segment["audio"].get("speaker")
 
-            if not text or not speaker:
-                continue
-
-            text = clean_text(text)
+            if not text or not speaker: continue
+            
             config = VOICE_MAPPING.get(speaker)
             if not config: continue
-
-            # Filenames
+            
+            # Paths
             base_filename = f"temp_base_v{video_id}_s{segment_id}.mp3"
             rvc_filename = f"temp_rvc_v{video_id}_s{segment_id}.wav"
             final_filename = f"v{video_id}_s{segment_id}_{speaker}.wav"
@@ -193,45 +203,90 @@ async def process_scripts():
             rvc_path = os.path.join(AUDIO_CACHE_DIR, rvc_filename)
             final_path = os.path.join(AUDIO_CACHE_DIR, final_filename)
             json_path = os.path.join(AUDIO_CACHE_DIR, json_filename)
-
+            
+            # Skip if done
             if os.path.exists(final_path) and os.path.exists(json_path):
-                print(f"  - Segment {segment_id}: Audio & Sync data exists.")
                 continue
-
-            print(f"  - Generating Segment {segment_id} ({speaker})...")
-
-            # 1. Generate Base
-            await generate_base_audio(text, config["voice"], config["rate"], config["pitch"], base_path)
-
-            # 2. Convert
-            convert_audio(base_path, rvc_path, config["model"])
-
-            # 3. Trim
-            smart_trim(rvc_path, final_path, silence_thresh=-50, keep_silence_ms=50)
-
-            # 4. Transcribe (The Magic Step)
-            print(f"    - Transcribing for sync...")
-            result = whisper_model.transcribe(final_path, word_timestamps=True)
+                
+            task = {
+                "text": clean_text(text),
+                "speaker": speaker,
+                "config": config,
+                "base_path": base_path,
+                "rvc_path": rvc_path,
+                "final_path": final_path,
+                "json_path": json_path,
+                "id": f"v{video_id}_s{segment_id}"
+            }
             
-            # Extract word data
-            word_data = []
-            for segment in result["segments"]:
-                for word in segment["words"]:
-                    word_data.append({
-                        "word": word["word"].strip(),
-                        "start": word["start"],
-                        "end": word["end"]
-                    })
+            all_tasks.append(task)
+            tasks_by_speaker[speaker].append(task)
+
+    if not all_tasks:
+        print("✅ All audio is already up to date.")
+        return
+
+    print(f"🚀 Processing {len(all_tasks)} audio segments...")
+
+    # 2. Generate All Base Audio (Parallel)
+    print("🗣️ Generating Base TTS (Parallel)...")
+    tts_coroutines = []
+    for task in all_tasks:
+        tts_coroutines.append(generate_base_audio(
+            task["text"], 
+            task["config"]["voice"], 
+            task["config"]["rate"], 
+            task["config"]["pitch"], 
+            task["base_path"]
+        ))
+    
+    if tts_coroutines:
+        await asyncio.gather(*tts_coroutines)
+    print("✅ TTS Generation Complete.")
+
+    # 3. Run RVC Batches (Sequential by Speaker, but Fast)
+    print("🤖 Starting RVC Batch Processing...")
+    for speaker, tasks in tasks_by_speaker.items():
+        if tasks:
+            run_rvc_batch(speaker, tasks)
+    print("✅ RVC Processing Complete.")
+
+    # 4. Whisper Transcribe & Trim (Sequential or Parallel)
+    # We load Whisper once here to avoid holding it during RVC if VRAM is tight,
+    # but for simplicity and speed, we'll load it now.
+    
+    print("📝 Transcribing and Trimming...")
+    try:
+        whisper_model = whisper.load_model("base")
+    except Exception as e:
+        print(f"❌ Failed to load Whisper: {e}")
+        return
+
+    for task in all_tasks:
+        # Trim
+        smart_trim(task['rvc_path'], task['final_path'])
+        
+        # Transcribe
+        # print(f"   - Transcribing {task['id']}...")
+        result = whisper_model.transcribe(task['final_path'], word_timestamps=True)
+        
+        word_data = []
+        for segment in result["segments"]:
+            for word in segment["words"]:
+                word_data.append({
+                    "word": word["word"].strip(),
+                    "start": word["start"],
+                    "end": word["end"]
+                })
+        
+        with open(task['json_path'], "w", encoding="utf-8") as f:
+            json.dump(word_data, f, indent=2)
             
-            # Save Sync Data
-            with open(json_path, "w", encoding="utf-8") as f:
-                json.dump(word_data, f, indent=2)
+        # Cleanup temps
+        if os.path.exists(task['base_path']): os.remove(task['base_path'])
+        if os.path.exists(task['rvc_path']): os.remove(task['rvc_path'])
 
-            # Cleanup
-            if os.path.exists(base_path): os.remove(base_path)
-            if os.path.exists(rvc_path): os.remove(rvc_path)
-
-    print("✅ All audio generation & transcription complete.")
+    print("🎉 All audio processing complete!")
 
 if __name__ == "__main__":
     asyncio.run(process_scripts())

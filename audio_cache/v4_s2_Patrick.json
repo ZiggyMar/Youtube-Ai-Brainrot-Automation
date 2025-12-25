@@ -1,47 +1,52 @@
 [
   {
-    "word": "Ohio,",
+    "word": "Everyone",
     "start": 0.0,
-    "end": 0.48
+    "end": 0.4
   },
   {
-    "word": "that's",
-    "start": 0.86,
-    "end": 1.22
-  },
-  {
-    "word": "not",
-    "start": 1.22,
-    "end": 1.36
-  },
-  {
-    "word": "fair.",
-    "start": 1.36,
-    "end": 1.72
+    "word": "knows.",
+    "start": 0.4,
+    "end": 0.9
   },
   {
     "word": "Subscribe",
-    "start": 2.26,
-    "end": 2.9
+    "start": 1.62,
+    "end": 2.06
   },
   {
-    "word": "for",
-    "start": 2.9,
-    "end": 3.18
+    "word": "now",
+    "start": 2.06,
+    "end": 2.38
   },
   {
-    "word": "a",
-    "start": 3.18,
-    "end": 3.3
+    "word": "to",
+    "start": 2.38,
+    "end": 2.56
   },
   {
-    "word": "second",
-    "start": 3.3,
-    "end": 3.6
+    "word": "survive",
+    "start": 2.56,
+    "end": 2.84
   },
   {
-    "word": "chance.",
-    "start": 3.6,
-    "end": 4.08
+    "word": "the",
+    "start": 2.84,
+    "end": 3.1
+  },
+  {
+    "word": "Tridia",
+    "start": 3.1,
+    "end": 3.44
+  },
+  {
+    "word": "title",
+    "start": 3.44,
+    "end": 3.76
+  },
+  {
+    "word": "wave.",
+    "start": 3.76,
+    "end": 4.06
   }
 ]

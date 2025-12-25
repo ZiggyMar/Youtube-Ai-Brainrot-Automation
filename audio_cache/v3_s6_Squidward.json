@@ -1,0 +1,57 @@
+[
+  {
+    "word": "Name",
+    "start": 0.0,
+    "end": 0.26
+  },
+  {
+    "word": "a",
+    "start": 0.26,
+    "end": 0.42
+  },
+  {
+    "word": "type",
+    "start": 0.42,
+    "end": 0.58
+  },
+  {
+    "word": "of",
+    "start": 0.58,
+    "end": 0.78
+  },
+  {
+    "word": "seed",
+    "start": 0.78,
+    "end": 0.98
+  },
+  {
+    "word": "creature",
+    "start": 0.98,
+    "end": 1.34
+  },
+  {
+    "word": "often",
+    "start": 1.34,
+    "end": 1.68
+  },
+  {
+    "word": "shown",
+    "start": 1.68,
+    "end": 2.06
+  },
+  {
+    "word": "in",
+    "start": 2.06,
+    "end": 2.3
+  },
+  {
+    "word": "bikini",
+    "start": 2.3,
+    "end": 2.68
+  },
+  {
+    "word": "bottom.",
+    "start": 2.68,
+    "end": 2.96
+  }
+]
