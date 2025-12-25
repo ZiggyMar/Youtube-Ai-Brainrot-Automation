@@ -3,6 +3,7 @@ import os
 import asyncio
 import edge_tts
 import torch
+import whisper
 from pydub import AudioSegment, silence
 from rvc_python.infer import RVCInference
 
@@ -32,13 +33,13 @@ VOICE_MAPPING = {
     "SpongeBob": {
         "voice": "en-US-GuyNeural",
         "rate": "+20%",
-        "pitch": "+30Hz",
+        "pitch": "+20Hz",
         "model": "spongebob"
     },
     "Patrick": {
         "voice": "en-US-RogerNeural",
         "rate": "+10%",
-        "pitch": "-20Hz",
+        "pitch": "-10Hz",
         "model": "patrick"
     },
     "Squidward": {
@@ -49,17 +50,22 @@ VOICE_MAPPING = {
     },
     "Plankton": {
         "voice": "en-US-ChristopherNeural",
-        "rate": "+15%",
+        "rate": "+10%",
         "pitch": "+10Hz",
         "model": "plankton"
     },
     "MrKrabs": {
         "voice": "en-US-BrianNeural",
-        "rate": "+15%",
+        "rate": "+10%",
         "pitch": "-5Hz",
         "model": "mrkrabs"
     }
 }
+
+# Load Whisper Model
+print("⏳ Loading Whisper model...")
+whisper_model = whisper.load_model("base")
+print("✅ Whisper model loaded.")
 
 def clean_text(text):
     """Replaces abbreviations like Q1, Q2 with full words."""
@@ -77,7 +83,7 @@ async def generate_base_audio(text, voice, rate, pitch, output_path):
     communicate = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
     await communicate.save(output_path)
 
-def smart_trim(audio_path, output_path, silence_thresh=-50, keep_silence_ms=20):
+def smart_trim(audio_path, output_path, silence_thresh=-50, keep_silence_ms=50):
     """Trims leading and trailing silence but keeps a small buffer."""
     try:
         audio = AudioSegment.from_file(audio_path)
@@ -131,7 +137,7 @@ def convert_audio(input_path, output_path, model_name):
 async def process_scripts():
     os.makedirs(AUDIO_CACHE_DIR, exist_ok=True)
 
-    # CLEAR CACHE to prevent mismatched audio/subtitles from previous runs
+    # CLEAR CACHE
     print(f"🧹 Clearing audio cache in {AUDIO_CACHE_DIR}...")
     for f in os.listdir(AUDIO_CACHE_DIR):
         file_path = os.path.join(AUDIO_CACHE_DIR, f)
@@ -154,7 +160,6 @@ async def process_scripts():
         video_id = video.get("video_id")
         print(f"Processing Video {video_id}...")
         
-        # Use enumerate to get segment_id (1-based)
         for i, segment in enumerate(video.get("segments", []), start=1):
             segment_id = i
             
@@ -164,63 +169,69 @@ async def process_scripts():
                 print(f"  - Skipping Segment {segment_id} (Timer)")
                 continue
 
-            # Get text and speaker (Top level in new JSON)
             text = segment.get("text")
             speaker = segment.get("speaker")
             
-            # Fallback for old JSON structure if needed
             if not text and "audio" in segment:
                 text = segment["audio"].get("text")
                 speaker = segment["audio"].get("speaker")
 
-            if not text:
-                print(f"  - Skipping Segment {segment_id}: Empty text.")
-                continue
-                
-            if not speaker:
-                print(f"  - Skipping Segment {segment_id}: Missing speaker.")
+            if not text or not speaker:
                 continue
 
-            # Clean text
             text = clean_text(text)
-            
-            # Get voice config
             config = VOICE_MAPPING.get(speaker)
-            if not config:
-                print(f"  - Warning: No configuration for speaker {speaker}. Skipping.")
-                continue
+            if not config: continue
 
-            # Define Filenames
+            # Filenames
             base_filename = f"temp_base_v{video_id}_s{segment_id}.mp3"
             rvc_filename = f"temp_rvc_v{video_id}_s{segment_id}.wav"
             final_filename = f"v{video_id}_s{segment_id}_{speaker}.wav"
+            json_filename = f"v{video_id}_s{segment_id}_{speaker}.json"
             
             base_path = os.path.join(AUDIO_CACHE_DIR, base_filename)
             rvc_path = os.path.join(AUDIO_CACHE_DIR, rvc_filename)
             final_path = os.path.join(AUDIO_CACHE_DIR, final_filename)
+            json_path = os.path.join(AUDIO_CACHE_DIR, json_filename)
 
-            if os.path.exists(final_path):
-                print(f"  - Segment {segment_id} ({speaker}): Audio already exists.")
+            if os.path.exists(final_path) and os.path.exists(json_path):
+                print(f"  - Segment {segment_id}: Audio & Sync data exists.")
                 continue
 
-            print(f"  - Generating Segment {segment_id} ({speaker}): {text[:30]}...")
+            print(f"  - Generating Segment {segment_id} ({speaker})...")
 
-            # Generate Base Audio
+            # 1. Generate Base
             await generate_base_audio(text, config["voice"], config["rate"], config["pitch"], base_path)
 
-            # Convert Audio
+            # 2. Convert
             convert_audio(base_path, rvc_path, config["model"])
 
-            # Smart Trim
-            smart_trim(rvc_path, final_path, silence_thresh=-50, keep_silence_ms=20)
+            # 3. Trim
+            smart_trim(rvc_path, final_path, silence_thresh=-50, keep_silence_ms=50)
+
+            # 4. Transcribe (The Magic Step)
+            print(f"    - Transcribing for sync...")
+            result = whisper_model.transcribe(final_path, word_timestamps=True)
+            
+            # Extract word data
+            word_data = []
+            for segment in result["segments"]:
+                for word in segment["words"]:
+                    word_data.append({
+                        "word": word["word"].strip(),
+                        "start": word["start"],
+                        "end": word["end"]
+                    })
+            
+            # Save Sync Data
+            with open(json_path, "w", encoding="utf-8") as f:
+                json.dump(word_data, f, indent=2)
 
             # Cleanup
-            if os.path.exists(base_path):
-                os.remove(base_path)
-            if os.path.exists(rvc_path):
-                os.remove(rvc_path)
+            if os.path.exists(base_path): os.remove(base_path)
+            if os.path.exists(rvc_path): os.remove(rvc_path)
 
-    print("✅ All audio generation complete.")
+    print("✅ All audio generation & transcription complete.")
 
 if __name__ == "__main__":
     asyncio.run(process_scripts())

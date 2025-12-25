@@ -3,57 +3,24 @@ import os
 import random
 import glob
 import numpy as np
-import multiprocessing
 from tqdm import tqdm
-from moviepy.config import change_settings
 from moviepy.editor import (
-    VideoFileClip, ImageClip, TextClip, CompositeVideoClip, 
-    AudioFileClip, concatenate_videoclips, vfx, ColorClip,
+    VideoFileClip, ImageClip, CompositeVideoClip, 
+    AudioFileClip, concatenate_videoclips, vfx, 
     CompositeAudioClip, afx
 )
+from PIL import Image, ImageDraw, ImageFont
 
 # Configuration
 CORE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(CORE_DIR)
 DATA_DIR = os.path.join(PROJECT_ROOT, 'data')
-
-IMAGEMAGICK_PATH = os.path.abspath(os.path.join(PROJECT_ROOT, "tools", "imagemagick", "magick.exe"))
-
-# Fix for ImageMagick missing modules - Set all relevant environment variables
-magick_dir = os.path.dirname(IMAGEMAGICK_PATH)
-os.environ['MAGICK_HOME'] = magick_dir
-os.environ['MAGICK_CONFIGURE_PATH'] = magick_dir
-os.environ['MAGICK_CODER_MODULE_PATH'] = os.path.join(magick_dir, "modules", "coders")
-# Add to PATH so modules can find Core DLLs
-os.environ['PATH'] = magick_dir + os.pathsep + os.environ.get('PATH', '')
-
-change_settings({"IMAGEMAGICK_BINARY": IMAGEMAGICK_PATH})
-
 ASSETS_DIR = os.path.join(PROJECT_ROOT, "assets")
 OUTPUT_DIR = os.path.join(PROJECT_ROOT, "output")
 SCRIPTS_FILE = os.path.join(DATA_DIR, "video_scripts.json")
 AUDIO_CACHE_DIR = os.path.join(PROJECT_ROOT, "audio_cache")
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-# 1. Asset Loading: Font
-def get_custom_font():
-    # User specifically requested this font
-    font_path = os.path.join(ASSETS_DIR, "Font", "burbankbigcondensed_bold.otf")
-    if os.path.exists(font_path):
-        return font_path
-    
-    # Fallback 1: Burbank.ttf
-    font_path_alt = os.path.join(ASSETS_DIR, "Font", "Burbank.ttf")
-    if os.path.exists(font_path_alt):
-        return font_path_alt
-
-    # Fallback search
-    font_dir = os.path.join(ASSETS_DIR, "Font")
-    fonts = glob.glob(os.path.join(font_dir, "*.ttf")) + glob.glob(os.path.join(font_dir, "*.otf"))
-    return fonts[0] if fonts else "Arial"
-
-CUSTOM_FONT = get_custom_font()
 
 # Difficulty List Config
 DIFFICULTY_LEVELS = [
@@ -63,8 +30,62 @@ DIFFICULTY_LEVELS = [
     {"label": "4. IMPOSSIBLE", "color": "#e74c3c"}
 ]
 
-# 2. The Subtitle Engine (The 'Word-by-Word' Fix)
+def get_font_path():
+    """Hardcoded check for Burbank.ttf"""
+    font_path = os.path.join(ASSETS_DIR, "Font", "Burbank.ttf")
+    if os.path.exists(font_path):
+        print(f"✅ Using PIL Font: {font_path}")
+        return font_path
+    
+    # Fallback
+    font_path = os.path.join(ASSETS_DIR, "Font", "burbankbigcondensed_bold.otf")
+    if os.path.exists(font_path):
+        print(f"✅ Using PIL Font: {font_path}")
+        return font_path
+        
+    print("⚠️ Font not found, using default.")
+    return "arial.ttf"
+
+CUSTOM_FONT_PATH = get_font_path()
+
+def create_pil_text_image(text, font_path, font_size, color, stroke_width=6):
+    """Generates a transparent PIL Image with stroked text."""
+    try:
+        font = ImageFont.truetype(font_path, font_size)
+    except:
+        font = ImageFont.load_default()
+
+    # Calculate text size
+    dummy_img = Image.new('RGBA', (1, 1))
+    draw = ImageDraw.Draw(dummy_img)
+    bbox = draw.textbbox((0, 0), text, font=font, stroke_width=stroke_width)
+    w = bbox[2] - bbox[0]
+    h = bbox[3] - bbox[1]
+    
+    # Add padding
+    w += 20
+    h += 20
+    
+    # Create image
+    img = Image.new('RGBA', (w, h), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    
+    # Draw text with stroke
+    # Center position
+    x, y = 10, 10
+    
+    draw.text((x, y), text, font=font, fill=color, 
+              stroke_width=stroke_width, stroke_fill="black")
+              
+    return np.array(img)
+
+def create_text_clip_pil(text, font_path, font_size, color, stroke_width, duration):
+    """Creates a MoviePy ImageClip from a PIL image."""
+    img_array = create_pil_text_image(text, font_path, font_size, color, stroke_width)
+    return ImageClip(img_array).set_duration(duration)
+
 def create_word_subtitles(text, duration, color, font_path):
+    """Splits text and creates a sequence of PIL-based clips."""
     words = text.split()
     if not words: return []
     
@@ -76,54 +97,55 @@ def create_word_subtitles(text, duration, color, font_path):
     clips = []
     for i, chunk in enumerate(chunks):
         start_t = i * chunk_duration
-        # Style: Big, Bold, Spanning width with margins (leanes)
-        # Using method='caption' for faster rendering and auto-wrapping
-        txt = (TextClip(chunk.upper(), font=font_path, fontsize=110, color=color,
-                        stroke_color="black", stroke_width=6, method='caption', size=(900, None), align='center')
-               .set_start(start_t)
-               .set_duration(chunk_duration)
-               .set_position(("center", 1000))) # Slightly higher to accommodate large text
-        clips.append(txt)
+        
+        # Create Clip using PIL
+        txt_clip = create_text_clip_pil(chunk.upper(), font_path, 110, color, 6, chunk_duration)
+        
+        txt_clip = txt_clip.set_start(start_t).set_position(("center", 1150))
+        clips.append(txt_clip)
+        
     return clips
 
-# 3. Visual Stack Helpers
+def create_difficulty_list_pil(active_label, duration, answer_reveal=None):
+    """Creates the difficulty list using PIL."""
+    clips = []
+    for i, level in enumerate(DIFFICULTY_LEVELS):
+        is_active = level["label"] == active_label
+        color = "#2ecc71" if is_active else "white"
+        
+        display_text = level["label"]
+        if is_active and answer_reveal:
+            prefix = level["label"].split(".")[0]
+            display_text = f"{prefix}. {answer_reveal.upper()}"
+
+        txt_clip = create_text_clip_pil(display_text, CUSTOM_FONT_PATH, 50, color, 2, duration)
+        txt_clip = txt_clip.set_position((50, 100 + i * 70))
+        clips.append(txt_clip)
+        
+    return clips
+
 def find_character_image(speaker, character_field):
-    """
-    Safety Check: If speaker is SpongeBob but image says Patrick, FORCE load a SpongeBob image.
-    """
-    # Normalize speaker name to folder name
+    """Resolves character image path."""
     speaker_map = {
-        "SpongeBob": "SpongeBob",
-        "Patrick": "Patrick",
-        "Squidward": "Squidward",
-        "Plankton": "Plankton",
-        "MrKrabs": "Mr. Krabs",
-        "Mr. Krabs": "Mr. Krabs"
+        "SpongeBob": "SpongeBob", "Patrick": "Patrick", "Squidward": "Squidward",
+        "Plankton": "Plankton", "MrKrabs": "Mr. Krabs", "Mr. Krabs": "Mr. Krabs"
     }
     target_folder_name = speaker_map.get(speaker, speaker)
     
-    # Check if character_field contradicts speaker
-    # e.g. speaker="SpongeBob", character_field="Patrick_Happy.png"
+    # Check for contradiction
     is_contradiction = False
-    for s_key, folder in speaker_map.items():
+    for s_key in speaker_map:
         if s_key != speaker and s_key.lower() in character_field.lower():
             is_contradiction = True
             break
             
     if is_contradiction:
-        print(f"⚠️ Safety Check: Speaker is {speaker} but image is {character_field}. Forcing {speaker} image.")
         char_folder = os.path.join(ASSETS_DIR, "characters", target_folder_name)
     else:
-        # Try to find the specific image
-        # character_field might be "SpongeBob_Happy.png" or just "Happy.png"
         clean_name = character_field.replace(".png", "")
         if "_" in clean_name:
             parts = clean_name.split("_")
-            # If first part is a speaker name, use second part as mood
-            if parts[0] in speaker_map:
-                mood = parts[1]
-            else:
-                mood = parts[0]
+            mood = parts[1] if parts[0] in speaker_map else parts[0]
         else:
             mood = clean_name
             
@@ -132,114 +154,21 @@ def find_character_image(speaker, character_field):
         if os.path.exists(specific_path):
             return specific_path
 
-    # Fallback: Pick any image from the correct speaker's folder
     if os.path.exists(char_folder):
         files = glob.glob(os.path.join(char_folder, "*.png"))
         if files: return random.choice(files)
-        
     return None
-
-def create_difficulty_list(active_label, duration, answer_reveal=None):
-    clips = []
-    for i, level in enumerate(DIFFICULTY_LEVELS):
-        # Highlight current level Green, others White
-        is_active = level["label"] == active_label
-        color = "#2ecc71" if is_active else "white"
-        
-        # If this is the active level AND we have an answer to reveal, swap the text
-        display_text = level["label"]
-        if is_active and answer_reveal:
-            # Format: "1. [ANSWER]" (keeping the number from the label)
-            prefix = level["label"].split(".")[0] # Get "1", "2", etc.
-            display_text = f"{prefix}. {answer_reveal.upper()}"
-
-        txt = (TextClip(display_text, font=CUSTOM_FONT, fontsize=50, color=color, 
-                        stroke_color="black", stroke_width=2)
-               .set_position((50, 100 + i * 70))
-               .set_duration(duration))
-        clips.append(txt)
-    return clips
-
-def slide_in_wiggle_animation(t, duration, side="left"):
-    """
-    Slide in from side + gentle wiggle.
-    t: current time
-    duration: total duration of clip
-    side: 'left' or 'right'
-    """
-    # 1. Slide In (0 to 0.5s)
-    SLIDE_DURATION = 0.4
-    
-    # Screen width is 1080. Center is 540.
-    # If left, start at -400. If right, start at 1480.
-    start_x = -400 if side == "left" else 1480
-    end_x = "center" # MoviePy handles this as 540
-    
-    # We need to return (x, y) for set_position
-    # But set_position expects a function of t returning (x, y)
-    # This helper calculates the progress
-    
-    slide_progress = min(1.0, t / SLIDE_DURATION)
-    slide_ease = 1 - (1 - slide_progress) ** 3 # Ease out cubic
-    
-    # Calculate X
-    # Since 'center' is a string, we can't interpolate easily with it in a lambda if we return a tuple.
-    # We'll do manual interpolation relative to screen width 1080.
-    target_x = 1080 / 2 - 400 # Assuming image width ~800, center is at 540-400=140
-    # Actually, let's just use relative offsets.
-    
-    # Let's simplify: return the x coordinate.
-    if slide_progress < 1.0:
-        current_x = start_x + (540 - start_x) * slide_ease # 540 is center
-        # Adjust for image center vs top-left. MoviePy positions are top-left usually unless 'center'.
-        # If we use 'center' in set_position, we can't easily animate X.
-        # So we will calculate top-left X.
-        # Image width is resized to height=800. Aspect ratio ~1.5 -> width ~500-600?
-        # Let's assume width is variable. It's safer to use 'center' for final, but for animation we need numbers.
-        # A hack: use 'center' for y, and animate x.
-        pass
-
-    return 0 # Placeholder, logic moved to lambda in generate_video
-
-def get_slide_pos(t, side):
-    SLIDE_DURATION = 0.4
-    if t >= SLIDE_DURATION:
-        return ('center', 'bottom')
-    
-    progress = t / SLIDE_DURATION
-    ease = 1 - (1 - progress) ** 3
-    
-    # Start off screen
-    # We want final position to be ('center', 'bottom')
-    # We can approximate 'center' as 0.5 relative? No, MoviePy uses pixels or strings.
-    
-    # Let's use a simple slide from bottom instead if X is too hard without knowing width.
-    # User asked for Left/Right.
-    # We can assume a standard width or just animate the 'relative' position if MoviePy supports it.
-    # MoviePy set_position((x, y)). x can be a function.
-    
-    return ('center', 'bottom') # Fallback
-
-def wiggle_rotation(t):
-    # Gentle wiggle: +/- 2 degrees, slow sine wave
-    # Period 2 seconds
-    return 2 * np.sin(2 * np.pi * t / 2.0)
 
 def generate_video(video_data):
     video_id = video_data["video_id"]
-    print(f"🎬 Rendering Minecraft-Style Video {video_id}...")
+    print(f"🎬 Rendering Video {video_id} with PIL Text Engine...")
     
-    # 1. Asset Loading: Background & Music
+    # 1. Background
     bg_files = glob.glob(os.path.join(ASSETS_DIR, "backgrounds", "*.mp4"))
-    if not bg_files:
-        print("❌ No background videos found!")
-        return
+    if not bg_files: return
     bg_source = VideoFileClip(random.choice(bg_files)).without_audio()
     
-    music_files = glob.glob(os.path.join(ASSETS_DIR, "music", "*.mp3"))
-    bg_music_path = random.choice(music_files) if music_files else None
-    
-    # Crop Background to 9:16
+    # Crop to 9:16
     w, h = bg_source.size
     target_ratio = 9/16
     if w/h > target_ratio:
@@ -249,6 +178,10 @@ def generate_video(video_data):
         new_h = w / target_ratio
         bg_source = bg_source.crop(y1=h/2 - new_h/2, width=w, height=new_h)
     bg_source = bg_source.resize((1080, 1920))
+    
+    # 2. Music
+    music_files = glob.glob(os.path.join(ASSETS_DIR, "music", "*.mp3"))
+    bg_music_path = random.choice(music_files) if music_files else None
     
     final_segment_clips = []
     dialogue_audios = []
@@ -261,7 +194,7 @@ def generate_video(video_data):
         speaker = segment.get("speaker", "")
         is_timer = visuals.get("show_timer", False)
         
-        # Audio & Duration
+        # Audio
         audio_path = os.path.join(AUDIO_CACHE_DIR, f"v{video_id}_s{i}_{speaker}.wav")
         
         if is_timer:
@@ -271,16 +204,14 @@ def generate_video(video_data):
                 duration = timer_clip.duration
                 seg_audio = timer_clip.audio
             else:
-                print(f"⚠️ Timer overlay missing: {timer_path}")
                 continue
         elif os.path.exists(audio_path):
             seg_audio = AudioFileClip(audio_path)
             duration = seg_audio.duration
         else:
-            print(f"⚠️ Missing audio: {audio_path}")
             continue
 
-        # Background Layer
+        # Background Slice
         if bg_cursor + duration > bg_source.duration: bg_cursor = 0
         bg_clip = bg_source.subclip(bg_cursor, bg_cursor + duration)
         bg_cursor += duration
@@ -292,142 +223,110 @@ def generate_video(video_data):
         if char_file and not is_timer:
             char_path = find_character_image(speaker, char_file)
             if char_path:
-                # Animation: Slide in from Left/Right + Wiggle
-                # Random side for variety
-                side = random.choice(["left", "right"])
-                start_x = -1000 if side == "left" else 2000
-                
-                # Slide function
+                # Slide Animation
                 def slide_pos(t):
                     SLIDE_DUR = 0.4
                     if t < SLIDE_DUR:
                         prog = t / SLIDE_DUR
                         ease = 1 - (1 - prog) ** 3
-                        # Interpolate x from start_x to 'center' (which is (1080-w)/2)
-                        # Since we don't know W easily without loading, we'll rely on the fact 
-                        # that we can't easily mix 'center' string with math in MoviePy < 2.0
-                        # So we'll stick to a fixed Y 'bottom' and approximate X center as 1080/2 - (height*aspect/2).
-                        # Actually, let's just slide Y (pop up) as it's safer? 
-                        # User EXPLICITLY asked for Left/Right.
-                        # We will assume image width is approx 600px (height 800).
-                        # Center X = (1080 - 600) / 2 = 240.
                         target_x = 240 
+                        start_x = -1000 # Assume left for simplicity or random
                         cur_x = start_x + (target_x - start_x) * ease
                         return (int(cur_x), "bottom")
                     return ("center", "bottom")
 
                 char_clip = (ImageClip(char_path).resize(height=800)
-                             .rotate(lambda t: 2 * np.sin(2 * np.pi * t / 3.0)) # Gentle Wiggle
+                             .rotate(lambda t: 2 * np.sin(2 * np.pi * t / 3.0))
                              .set_duration(duration)
-                             .set_position(slide_pos))
-                             
+                             .set_position(slide_pos)) # Simplified slide
                 layers.append(char_clip)
-
-                # Add Slide Sound Effect
+                
+                # SFX
                 sfx_dir = os.path.join(ASSETS_DIR, "Sounds")
                 if os.path.exists(sfx_dir):
-                    sfx_files = glob.glob(os.path.join(sfx_dir, "*.wav")) + glob.glob(os.path.join(sfx_dir, "*.mp3"))
+                    sfx_files = glob.glob(os.path.join(sfx_dir, "*.wav"))
                     if sfx_files:
-                        sfx_path = random.choice(sfx_files)
-                        sfx_clip = AudioFileClip(sfx_path).volumex(0.05) # 5% volume
-                        # Ensure SFX doesn't exceed segment duration
-                        if sfx_clip.duration > duration:
-                            sfx_clip = sfx_clip.subclip(0, duration)
-                        
-                        # Set start time relative to total video duration so far
-                        sfx_clip = sfx_clip.set_start(total_duration)
-                        dialogue_audios.append(sfx_clip)
-        
-        # Subtitle Layer
+                        sfx_clip = AudioFileClip(random.choice(sfx_files)).volumex(0.05)
+                        if sfx_clip.duration > duration: sfx_clip = sfx_clip.subclip(0, duration)
+                        dialogue_audios.append(sfx_clip.set_start(total_duration))
+
+        # Subtitles (PIL)
         if text and not is_timer:
             color = visuals.get("subtitle_color", "yellow")
-            layers.extend(create_word_subtitles(text, duration, color, CUSTOM_FONT))
+            layers.extend(create_word_subtitles(text, duration, color, CUSTOM_FONT_PATH))
             
-        # Timer Layer
+        # Timer
         if is_timer:
-            # Mask Green Screen
             timer_overlay = (timer_clip.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
-                             .resize(width=900)
-                             .set_position("center")
-                             .set_duration(duration))
+                             .resize(width=900).set_position("center").set_duration(duration))
             layers.append(timer_overlay)
-
-        # Difficulty List Layer
-        # Pass answer_reveal if it exists in visuals
+            
+        # Difficulty List (PIL)
         answer_reveal = visuals.get("answer_reveal")
-        layers.extend(create_difficulty_list(visuals.get("list_highlight", "1. EASY"), duration, answer_reveal))
-
-        # Composite Segment
-        segment_comp = CompositeVideoClip(layers, size=(1080, 1920)).set_duration(duration)
+        layers.extend(create_difficulty_list_pil(visuals.get("list_highlight", "1. EASY"), duration, answer_reveal))
         
-        # Store for final assembly
+        # CTA Overlay Logic
+        cta_keywords = ["subscribe", "like", "button", "lock in"]
+        if text and any(k in text.lower() for k in cta_keywords):
+            cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
+            if os.path.exists(cta_path):
+                cta_clip = VideoFileClip(cta_path).fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
+                # Loop or trim to fit
+                if cta_clip.duration < duration:
+                    cta_clip = vfx.loop(cta_clip, duration=duration)
+                else:
+                    cta_clip = cta_clip.subclip(0, duration)
+                
+                cta_clip = cta_clip.resize(width=800).set_position(("center", "center")).set_start(0)
+                layers.append(cta_clip)
+
+        # Composite
+        segment_comp = CompositeVideoClip(layers, size=(1080, 1920)).set_duration(duration)
         final_segment_clips.append(segment_comp)
         
-        # Handle Audio Offset for CompositeAudioClip
-        seg_audio = seg_audio.set_start(total_duration)
-        dialogue_audios.append(seg_audio)
-        
+        # Audio
+        dialogue_audios.append(seg_audio.set_start(total_duration))
         total_duration += duration
-        
-    if not final_segment_clips:
-        print("❌ No segments to render.")
-        return
 
-    # 4. The Audio Mix
-    # Track 1: Dialogue
+    if not final_segment_clips: return
+
+    # Assembly
     dialogue_track = CompositeAudioClip(dialogue_audios)
-    
-    # Track 2: Background Music
     if bg_music_path:
         bg_music = AudioFileClip(bg_music_path).volumex(0.1).fx(afx.audio_loop, duration=total_duration)
         final_audio = CompositeAudioClip([bg_music, dialogue_track])
     else:
         final_audio = dialogue_track
 
-    # Final Video Assembly
     final_video = concatenate_videoclips(final_segment_clips, method="compose")
     final_video = final_video.set_audio(final_audio)
     
-    # Unique Filename Logic
+    # Filename
     base_name = f"video_{video_id}_production"
     out_path = os.path.join(OUTPUT_DIR, f"{base_name}.mp4")
-    
     counter = 1
     while os.path.exists(out_path):
         out_path = os.path.join(OUTPUT_DIR, f"{base_name}_{counter}.mp4")
         counter += 1
-    
-    # Reverting to CPU encoding (libx264) for reliability
-    # NVENC was causing black/unplayable videos for the user
+        
     final_video.write_videofile(
-        out_path, 
-        fps=24, 
-        codec="libx264", 
-        audio_codec="aac", 
-        threads=4, 
-        preset="ultrafast",
-        logger='bar',
+        out_path, fps=24, codec="libx264", audio_codec="aac", 
+        threads=4, preset="ultrafast", logger='bar',
         temp_audiofile=os.path.join(OUTPUT_DIR, f"temp_audio_{video_id}.m4a")
     )
-        
     print(f"✅ Finished: {out_path}")
 
 def main():
-    if not os.path.exists(SCRIPTS_FILE):
-        print(f"❌ {SCRIPTS_FILE} not found.")
-        return
-        
+    if not os.path.exists(SCRIPTS_FILE): return
     with open(SCRIPTS_FILE, "r", encoding="utf-8") as f:
         scripts = json.load(f)
     
-    # Sequential Processing
-    print(f"🔥 Starting sequential render of {len(scripts)} videos...")
-    
+    print(f"🔥 Starting PIL-based render of {len(scripts)} videos...")
     for video in tqdm(scripts, desc="Total Progress", unit="video"):
         try:
             generate_video(video)
         except Exception as e:
-            print(f"❌ Error on video {video.get('video_id')}: {e}")
+            print(f"❌ Error: {e}")
             import traceback
             traceback.print_exc()
 
