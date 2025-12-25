@@ -322,6 +322,21 @@ def generate_video(video_data):
                              .set_position(slide_pos))
                              
                 layers.append(char_clip)
+
+                # Add Slide Sound Effect
+                sfx_dir = os.path.join(ASSETS_DIR, "Sounds")
+                if os.path.exists(sfx_dir):
+                    sfx_files = glob.glob(os.path.join(sfx_dir, "*.wav")) + glob.glob(os.path.join(sfx_dir, "*.mp3"))
+                    if sfx_files:
+                        sfx_path = random.choice(sfx_files)
+                        sfx_clip = AudioFileClip(sfx_path).volumex(0.05) # 5% volume
+                        # Ensure SFX doesn't exceed segment duration
+                        if sfx_clip.duration > duration:
+                            sfx_clip = sfx_clip.subclip(0, duration)
+                        
+                        # Set start time relative to total video duration so far
+                        sfx_clip = sfx_clip.set_start(total_duration)
+                        dialogue_audios.append(sfx_clip)
         
         # Subtitle Layer
         if text and not is_timer:
@@ -373,9 +388,14 @@ def generate_video(video_data):
     final_video = concatenate_videoclips(final_segment_clips, method="compose")
     final_video = final_video.set_audio(final_audio)
     
-    out_path = os.path.join(OUTPUT_DIR, f"video_{video_id}_production.mp4")
+    # Unique Filename Logic
+    base_name = f"video_{video_id}_production"
+    out_path = os.path.join(OUTPUT_DIR, f"{base_name}.mp4")
     
-    out_path = os.path.join(OUTPUT_DIR, f"video_{video_id}_production.mp4")
+    counter = 1
+    while os.path.exists(out_path):
+        out_path = os.path.join(OUTPUT_DIR, f"{base_name}_{counter}.mp4")
+        counter += 1
     
     # Reverting to CPU encoding (libx264) for reliability
     # NVENC was causing black/unplayable videos for the user
