@@ -1,0 +1,9 @@
+google-genai
+edge-tts
+torch
+pydub
+rvc-python
+moviepy
+numpy
+python-dotenv
+requests
