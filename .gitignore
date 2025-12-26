@@ -6,3 +6,14 @@ assets/music/
 
 #Ignore AI Models
 rvc_models
+
+# Generated Outputs
+output/
+audio_cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.env

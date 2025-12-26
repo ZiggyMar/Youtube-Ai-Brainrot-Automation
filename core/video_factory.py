@@ -30,10 +30,10 @@ if os.path.exists(FFMPEG_PATH):
 
 # Difficulty List Config
 DIFFICULTY_LEVELS = [
-    {"label": "1. EASY", "color": "#2ecc71"},
-    {"label": "2. MEDIUM", "color": "#f1c40f"},
-    {"label": "3. HARD", "color": "#e67e22"},
-    {"label": "4. IMPOSSIBLE", "color": "#e74c3c"}
+    {"label": "1. EASY", "color": "#2ecc71"},       # Green
+    {"label": "2. MEDIUM", "color": "#f39c12"},     # Orange
+    {"label": "3. HARD", "color": "#9b59b6"},       # Purple
+    {"label": "4. IMPOSSIBLE", "color": "#e74c3c"}  # Red
 ]
 
 LAYOUT_CONFIG_FILE = os.path.join(DATA_DIR, "layout_config.json")
@@ -176,18 +176,27 @@ def create_perfect_subtitles(json_path, font_path, color):
         
     return clips
 
-def create_difficulty_list_pil(active_label, duration, answer_reveal=None):
+def create_difficulty_list_pil(active_label, duration, revealed_answers=None):
     """Creates the difficulty list using PIL."""
+    if revealed_answers is None:
+        revealed_answers = {}
+
     clips = []
     for i, level in enumerate(DIFFICULTY_LEVELS):
-        is_active = level["label"] == active_label
-        color = "#2ecc71" if is_active else "white"
+        original_label = level["label"]
+        is_active = original_label == active_label
         
-        display_text = level["label"]
-        if is_active and answer_reveal:
-            prefix = level["label"].split(".")[0]
-            display_text = f"{prefix}. {answer_reveal.upper()}"
+        # Determine display text
+        if original_label in revealed_answers:
+            prefix = original_label.split(".")[0]
+            answer_text = revealed_answers[original_label]
+            display_text = f"{prefix}. {answer_text.upper()}"
+        else:
+            display_text = original_label
 
+        # Color logic: Always use the level's color
+        color = level["color"]
+        
         try:
             font_size = LAYOUT["difficulty_list"].get("font_size", 50)
             if CUSTOM_FONT_PATH:
@@ -200,11 +209,13 @@ def create_difficulty_list_pil(active_label, duration, answer_reveal=None):
             
         dummy = Image.new('RGBA', (1, 1))
         draw = ImageDraw.Draw(dummy)
-        bbox = draw.textbbox((0, 0), display_text, font=font, stroke_width=2)
+        bbox = draw.textbbox((0, 0), display_text, font=font, stroke_width=3)
         w, h = bbox[2]-bbox[0]+20, bbox[3]-bbox[1]+20
         img = Image.new('RGBA', (w, h), (0,0,0,0))
         draw = ImageDraw.Draw(img)
-        draw.text((10,10), display_text, font=font, fill=color, stroke_width=2, stroke_fill="black")
+        
+        # Draw text with stroke
+        draw.text((10,10), display_text, font=font, fill=color, stroke_width=3, stroke_fill="black")
         
         txt_clip = ImageClip(np.array(img)).set_duration(duration)
         spacing = font_size + 20
@@ -302,9 +313,19 @@ def generate_video(video_data):
     
     final_segment_clips = []
     dialogue_audios = []
+    keep_alive_clips = []  # Prevent premature GC
     current_time = 0
     bg_cursor = 0
     cta_shown = False
+    revealed_answers = {}
+    
+    # Mapping from script tags to level labels
+    LEVEL_MAPPING = {
+        "2. R1": "1. EASY",
+        "3. R2": "2. MEDIUM",
+        "4. R3": "3. HARD",
+        "5. R4": "4. IMPOSSIBLE"
+    }
     
     for i, segment in enumerate(video_data.get("segments", []), start=1):
         visuals = segment.get("visuals", {})
@@ -320,6 +341,7 @@ def generate_video(video_data):
             timer_path = os.path.join(ASSETS_DIR, "overlays", "timer.mp4")
             try:
                 timer_clip = VideoFileClip(timer_path)
+                keep_alive_clips.append(timer_clip) # Keep alive
                 duration = timer_clip.duration
                 seg_audio = timer_clip.audio
             except Exception as e:
@@ -385,8 +407,14 @@ def generate_video(video_data):
             layers.append(timer_overlay)
             
         # Difficulty List
+        raw_highlight = visuals.get("list_highlight", "")
+        active_label = LEVEL_MAPPING.get(raw_highlight, raw_highlight)
+        
         answer_reveal = visuals.get("answer_reveal")
-        layers.extend(create_difficulty_list_pil(visuals.get("list_highlight", "1. EASY"), duration, answer_reveal))
+        if answer_reveal and active_label in [l["label"] for l in DIFFICULTY_LEVELS]:
+            revealed_answers[active_label] = answer_reveal
+            
+        layers.extend(create_difficulty_list_pil(active_label, duration, revealed_answers))
         
         # CTA Overlay Logic
         cta_keywords = ["subscribe", "like", "button", "lock in"]
@@ -401,6 +429,7 @@ def generate_video(video_data):
             try:
                 # Try to load the CTA
                 cta_source = VideoFileClip(target_cta, has_mask=True) # has_mask=True for Alpha channel
+                keep_alive_clips.append(cta_source) # Keep alive
                 
                 # Only apply green screen key if we are forced to use the MP4
                 if target_cta.endswith(".mp4"):
@@ -476,6 +505,8 @@ def generate_video(video_data):
     try:
         final_video.close()
         bg_source.close()
+        for clip in keep_alive_clips:
+            clip.close()
     except:
         pass
 
