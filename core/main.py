@@ -43,89 +43,76 @@ def run_step(script_name, stage_title):
 def archive_completed_videos():
     """
     Moves completed video scripts from video_scripts.json to archive_scripts.json
-    based on the existence of final_video_{id}.mp4 in the output directory.
+    based on the existence of {title}.mp4 in the output directory.
     """
+    import re
     print(f"\n{'='*50}")
     print(f"=== STAGE 4: ARCHIVING & CLEANUP ===")
     print(f"{'='*50}\n")
 
-    # 1. Identify Completed Video IDs
-    if not os.path.exists(OUTPUT_DIR):
-        print("⚠️ Output directory does not exist. Nothing to archive.")
-        return
-
-    completed_ids = set()
-    for filename in os.listdir(OUTPUT_DIR):
-        if filename.startswith("video_") and filename.endswith("_production.mp4"):
-            # Extract ID: video_1_production.mp4 -> 1
-            try:
-                vid_id_str = filename.replace("video_", "").replace("_production.mp4", "")
-                completed_ids.add(int(vid_id_str))
-            except ValueError:
-                continue
-    
-    if not completed_ids:
-        print("ℹ️ No completed videos found in output/.")
-        return
-
-    print(f"🔍 Found {len(completed_ids)} completed videos: {sorted(list(completed_ids))}")
-
-    # 2. Load Current Scripts
     if not os.path.exists(SCRIPTS_FILE):
-        print(f"⚠️ {SCRIPTS_FILE} not found. Skipping archive.")
+        print(f"ℹ️ No scripts file found at {SCRIPTS_FILE}")
         return
 
     try:
         with open(SCRIPTS_FILE, 'r', encoding='utf-8') as f:
             current_scripts = json.load(f)
-    except json.JSONDecodeError:
-        print(f"❌ Error decoding {SCRIPTS_FILE}.")
+    except Exception as e:
+        print(f"❌ Error loading scripts: {e}")
         return
 
-    # 3. Load or Initialize Archive
+    if not current_scripts:
+        print("ℹ️ No scripts to archive.")
+        return
+
     archive_data = []
     if os.path.exists(ARCHIVE_FILE):
         try:
             with open(ARCHIVE_FILE, 'r', encoding='utf-8') as f:
                 archive_data = json.load(f)
-        except json.JSONDecodeError:
-            print(f"⚠️ Error decoding {ARCHIVE_FILE}. Starting with empty archive.")
+        except: pass
 
-    # 4. Separate Completed vs Incomplete
     remaining_scripts = []
     moved_count = 0
 
+    ready_dir = os.path.join(OUTPUT_DIR, "Ready To Post")
+    os.makedirs(ready_dir, exist_ok=True)
+
     for video in current_scripts:
-        vid_id = video.get('video_id')
-        if vid_id in completed_ids:
+        title = video.get("title", f"video_{video.get('video_id')}")
+        # Sanitize title same as video_factory.py
+        safe_title = re.sub(r'[<>:"/\\|?*]', '', title).strip()
+        video_path = os.path.join(OUTPUT_DIR, f"{safe_title}.mp4")
+        
+        if os.path.exists(video_path):
+            print(f"   -> Archiving Video: {safe_title}")
             archive_data.append(video)
             moved_count += 1
-            print(f"   -> Archiving Video {vid_id}...")
+            
+            # Move file to Ready To Post
+            target_path = os.path.join(ready_dir, f"{safe_title}.mp4")
+            try:
+                # If target exists, add a timestamp or ID to avoid overwrite
+                if os.path.exists(target_path):
+                    target_path = os.path.join(ready_dir, f"{safe_title}_{video.get('video_id')}.mp4")
+                os.rename(video_path, target_path)
+                print(f"      ✅ Moved to {os.path.relpath(target_path, PROJECT_ROOT)}")
+            except Exception as e:
+                print(f"      ⚠️ Could not move file: {e}")
         else:
             remaining_scripts.append(video)
 
-    # 5. Save Files
     if moved_count > 0:
-        # Save Archive
         with open(ARCHIVE_FILE, 'w', encoding='utf-8') as f:
             json.dump(archive_data, f, indent=2)
-        print(f"✅ Saved {len(archive_data)} total videos to {os.path.basename(ARCHIVE_FILE)}")
-
-        # Save Remaining
         with open(SCRIPTS_FILE, 'w', encoding='utf-8') as f:
             json.dump(remaining_scripts, f, indent=2)
-        print(f"✅ Updated {os.path.basename(SCRIPTS_FILE)} with {len(remaining_scripts)} remaining videos.")
+        print(f"✅ Archived {moved_count} scripts to {os.path.basename(ARCHIVE_FILE)}")
     else:
-        print("ℹ️ No matching scripts found to archive (IDs might not match).")
+        print("ℹ️ No completed videos found in output/ to archive.")
 
 def main():
     # Number of videos to generate in sequence
-    NUM_VIDEOS = 1 # Default to 1 per run as per "generate 1 video at a time" request, or maybe 5?
-    # User said "so it makes video one, then video two", implying a sequence. 
-    # But also "everytime the .run is called it makes a whole new script".
-    # I will set it to 1 for now, as the user can just run the batch file multiple times or I can ask.
-    # Actually, "so it makes video one, then video two" implies a loop in the script.
-    # Let's set it to 5 to match the previous batch size but done sequentially.
     NUM_VIDEOS = 5
 
     for i in range(NUM_VIDEOS):

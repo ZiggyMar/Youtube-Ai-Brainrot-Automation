@@ -13,6 +13,7 @@ from PIL import Image, ImageDraw, ImageFont
 import concurrent.futures
 import time
 import subprocess
+import gc
 
 # Configuration
 CORE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -286,11 +287,34 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown):
 
     out_path = os.path.join(TEMP_SEGMENTS_DIR, f"v{video_id}_s{i}.mp4")
     print(f"   - Rendering Segment {i} ({duration:.2f}s)...")
-    segment_comp.write_videofile(out_path, fps=24, codec="libx264", audio_codec="aac", threads=1, preset="ultrafast", logger=None, verbose=False)
     
-    segment_comp.close()
-    for c in keep_alive: c.close()
-    if seg_audio: seg_audio.close()
+    try:
+        segment_comp.write_videofile(
+            out_path, 
+            fps=24, 
+            codec="libx264", 
+            audio_codec="aac", 
+            threads=1, 
+            preset="ultrafast", 
+            logger=None, 
+            verbose=False
+        )
+    finally:
+        # Crucial: Close EVERYTHING
+        segment_comp.close()
+        for c in keep_alive:
+            try: c.close()
+            except: pass
+        if seg_audio:
+            try: seg_audio.close()
+            except: pass
+        if cta_audio_to_add:
+            try: cta_audio_to_add.close()
+            except: pass
+        
+        # Force garbage collection after each segment
+        gc.collect()
+        
     return out_path, cta_shown
 
 def generate_video(video_data, use_gpu=False):
@@ -338,20 +362,28 @@ def generate_video(video_data, use_gpu=False):
         seg_path, cta_shown = render_segment(video_id, i, seg_data, bg_slice, revealed_answers, cta_shown)
         segment_files.append(seg_path)
         bg_slice.close()
+        gc.collect() # Extra collection between segments
 
     bg_full.close()
     bg_source.close()
+    gc.collect()
 
     import re
     safe_title = re.sub(r'[<>:"/\\|?*]', '', video_data.get("title", f"video_{video_id}")).strip()
     out_path = os.path.join(OUTPUT_DIR, f"{safe_title}.mp4")
     
-    concat_list = os.path.join(TEMP_SEGMENTS_DIR, f"v{video_id}_list.txt")
-    with open(concat_list, "w", encoding="utf-8") as f:
-        for sf in segment_files: f.write(f"file '{sf.replace('\\', '/')}'\n")
 
+    concat_list = os.path.join(TEMP_SEGMENTS_DIR, f"v{video_id}_list.txt")
     print("   - Concatenating Segments...")
     temp_concat = os.path.join(TEMP_SEGMENTS_DIR, f"v{video_id}_concat.mp4")
+    
+    # Fix SyntaxError: f-string expression part cannot include a backslash
+    with open(concat_list, "w", encoding="utf-8") as f:
+        for sf in segment_files:
+            if sf:
+                safe_sf = sf.replace('\\', '/')
+                f.write(f"file '{safe_sf}'\n")
+
     subprocess.run([FFMPEG_PATH, "-y", "-f", "concat", "-safe", "0", "-i", concat_list, "-c", "copy", temp_concat], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     print("   - Final Polish...")
@@ -363,10 +395,16 @@ def generate_video(video_data, use_gpu=False):
         cmd = [FFMPEG_PATH, "-y", "-i", temp_concat, "-c", "copy", out_path]
     subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    os.remove(concat_list)
-    os.remove(temp_concat)
+    # Cleanup with error handling for WinError 32
+    try:
+        if os.path.exists(concat_list): os.remove(concat_list)
+        if os.path.exists(temp_concat): os.remove(temp_concat)
+    except Exception as e:
+        print(f"   ⚠️ Cleanup warning: {e}")
+
     for sf in segment_files:
-        try: os.remove(sf)
+        try:
+            if sf and os.path.exists(sf): os.remove(sf)
         except: pass
     print(f"✅ Finished: {out_path}")
 

@@ -1,9 +1,9 @@
 [
   {
-    "title": "Avoid saying the same thing as FREAKBOB \ud83c\udf4d #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc20 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
     "script": [
       {
-        "text": "Ready to play a game, Barnacle Boy?",
+        "text": "If you are watching TV, then you are out!",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
@@ -14,7 +14,7 @@
         }
       },
       {
-        "text": "I'm always ready, SpongeBob!",
+        "text": "But SpongeBob, that's way too mean! Give them another chance!",
         "speaker": "Patrick",
         "visuals": {
           "character": "Patrick",
@@ -25,7 +25,18 @@
         }
       },
       {
-        "text": "Round 1. Name a sea creature.",
+        "text": "Ugh, fine! But only if they subscribe right now for a revive!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Round 1: EASY. Name a character from Bikini Bottom.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
@@ -47,18 +58,18 @@
         }
       },
       {
-        "text": "I picked Jellyfish. If you said Jellyfish, you are out!",
+        "text": "I picked Patrick. If you said Patrick, you are out!",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
           "subtitle_color": "Yellow",
           "list_highlight": "1. EASY",
           "show_timer": false,
-          "answer_reveal": "JELLYFISH"
+          "answer_reveal": "PATRICK"
         }
       },
       {
-        "text": "Round 2. Name a Krabby Patty topping.",
+        "text": "Round 2: MEDIUM. Name a food that Mr. Krabs loves.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
@@ -80,18 +91,18 @@
         }
       },
       {
-        "text": "I picked Lettuce. If you said Lettuce, you are out!",
+        "text": "I picked Krabby Patties. If you said Krabby Patties, you are out!",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
           "subtitle_color": "Yellow",
           "list_highlight": "2. MEDIUM",
           "show_timer": false,
-          "answer_reveal": "LETTUCE"
+          "answer_reveal": "KRABBY PATTIES"
         }
       },
       {
-        "text": "Round 3. Name a Bikini Bottom resident.",
+        "text": "Round 3: HARD. Name a villain from SpongeBob SquarePants.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
@@ -113,18 +124,18 @@
         }
       },
       {
-        "text": "I picked Sandy. If you said Sandy, you are out!",
+        "text": "I picked Plankton. If you said Plankton, you are out!",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
           "subtitle_color": "Yellow",
           "list_highlight": "3. HARD",
           "show_timer": false,
-          "answer_reveal": "SANDY"
+          "answer_reveal": "PLANKTON"
         }
       },
       {
-        "text": "Round 4. Name a Chum Bucket chum.",
+        "text": "Round 4: IMPOSSIBLE. Name a made-up holiday in Bikini Bottom.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
@@ -146,17 +157,17 @@
         }
       },
       {
-        "text": "I picked Chum. If you said Chum, you are out!",
+        "text": "I picked Mermaid Man and Barnacle Boy Day. If you said Mermaid Man and Barnacle Boy Day, you are out!",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
           "subtitle_color": "Yellow",
           "list_highlight": "4. IMPOSSIBLE",
           "show_timer": false,
-          "answer_reveal": "CHUM"
+          "answer_reveal": "MERMAID MAN AND BARNACLE BOY DAY"
         }
       }
     ],
-    "video_id": 1
+    "video_id": 18
   }
 ]

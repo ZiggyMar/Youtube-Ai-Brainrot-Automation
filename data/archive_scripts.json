@@ -731,5 +731,612 @@
       }
     ],
     "video_id": 1
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc20 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "Welcome to Bikini Bottom's tricky trivia challenge!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": null,
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Round 1. Name a character who lives in a pineapple under the sea.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked SpongeBob. If you said SpongeBob, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "SPONGEBOB"
+        }
+      },
+      {
+        "text": "Round 2. Name a restaurant where SpongeBob and Squidward work.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Krusty Krab. If you said Krusty Krab, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "KRUSTY KRAB"
+        }
+      },
+      {
+        "text": "Round 3. Name a neighbor of SpongeBob who loves jellyfishing.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Patrick. If you said Patrick, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "PATRICK"
+        }
+      },
+      {
+        "text": "Round 4. Name the villain who lives in a moai statue.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Squilliam. If you said Squilliam, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "SQUILLIAM"
+        }
+      }
+    ],
+    "video_id": 1
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc20 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "Welcome to the ultimate SpongeBob SquarePants quiz! You will have to avoid saying the same thing as me.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "Introduction",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Round 1. Name something you might find in a Krusty Krab kitchen.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked a deep fryer. If you said deep fryer, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "Deep Fryer"
+        }
+      },
+      {
+        "text": "Round 2. Name a character who lives in a pineapple under the sea.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked myself, SpongeBob SquarePants. If you said SpongeBob SquarePants, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "SpongeBob SquarePants"
+        }
+      },
+      {
+        "text": "Round 3. Name a villain from the SpongeBob SquarePants universe.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Plankton. If you said Plankton, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "Plankton"
+        }
+      },
+      {
+        "text": "Round 4. Name a song from the SpongeBob SquarePants movie.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Goofy Goober Rock. If you said Goofy Goober Rock, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "Goofy Goober Rock"
+        }
+      }
+    ],
+    "video_id": 1
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc20 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "Welcome to the FREAKBOB quiz show!",
+        "speaker": "Announcer",
+        "visuals": {
+          "character": "Announcer",
+          "subtitle_color": "White",
+          "list_highlight": null,
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I'm your host, SpongeBob!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": null,
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Round 1: Name a type of food that can be found in a Krusty Krab meal.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked a Krabby Patty. If you said Krabby Patty, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "KRABBY PATTY"
+        }
+      },
+      {
+        "text": "Round 2: Name a neighbor of SpongeBob.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Squidward. If you said Squidward, you are out!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "SQUIDWARD"
+        }
+      },
+      {
+        "text": "Round 3: Name something that Plankton has tried to steal.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Purple",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked the Krabby Patty secret formula. If you said the Krabby Patty secret formula, you are out!",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Purple",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "KRABBY PATTY SECRET FORMULA"
+        }
+      },
+      {
+        "text": "Round 4: Name a type of rock that can be found in Bikini Bottom.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked a coral rock. If you said coral rock, you are out!",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "CORAL ROCK"
+        }
+      }
+    ],
+    "video_id": 10
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc20 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "Welcome to Bikini Bottom! I'm your host, SpongeBob!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Round 1: Name a fast food restaurant.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Krusty Krab. If you said Krusty Krab, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "KRUSTY KRAB"
+        }
+      },
+      {
+        "text": "Round 2: Name a type of music.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Purple",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Jazz. If you said Jazz, you are out!",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Purple",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "JAZZ"
+        }
+      },
+      {
+        "text": "Round 3: Name a type of sport.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Mermaid Man and Barnacle Boy's favorite sport, Extreme Jellyfishing! If you said Extreme Jellyfishing, you are out!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "EXTREME JELLYFISHING"
+        }
+      },
+      {
+        "text": "Round 4: Name a deep-sea creature.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Green",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked the elusive, giant Deep-Sea Anglerfish. If you said Deep-Sea Anglerfish, you are out!",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Green",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "DEEP-SEA ANGLERFISH"
+        }
+      }
+    ],
+    "video_id": 13
   }
 ]

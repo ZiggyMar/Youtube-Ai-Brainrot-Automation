@@ -5,6 +5,8 @@ import edge_tts
 import torch
 import whisper
 import gc
+import glob
+import random
 from pydub import AudioSegment, silence
 from rvc_python.infer import RVCInference
 
@@ -60,6 +62,12 @@ VOICE_MAPPING = {
         "rate": "+10%",
         "pitch": "-5Hz",
         "model": "mrkrabs"
+    },
+    "Announcer": {
+        "voice": "en-US-AndrewNeural",
+        "rate": "+5%",
+        "pitch": "+0Hz",
+        "model": None
     }
 }
 
@@ -106,8 +114,15 @@ def run_rvc_batch(speaker, tasks):
     
     print(f"🎤 Loading RVC Model for {speaker}...")
     config = VOICE_MAPPING[speaker]
-    model_name = config["model"]
+    model_name = config.get("model")
     
+    if not model_name:
+        print(f"ℹ️ No RVC model for {speaker}. Using base TTS.")
+        for task in tasks:
+            import shutil
+            shutil.copy(task['base_path'], task['rvc_path'])
+        return
+
     model_path = os.path.join(RVC_MODELS_DIR, model_name, f"{model_name}.pth")
     index_path = os.path.join(RVC_MODELS_DIR, model_name, f"{model_name}.index")
 
@@ -137,7 +152,6 @@ def run_rvc_batch(speaker, tasks):
         
         print(f"⚡ Converting {len(tasks)} files for {speaker}...")
         for task in tasks:
-            # print(f"   - Converting {os.path.basename(task['base_path'])}")
             rvc.infer_file(task['base_path'], task['rvc_path'])
             
     except Exception as e:
@@ -252,9 +266,6 @@ async def process_scripts():
     print("✅ RVC Processing Complete.")
 
     # 4. Whisper Transcribe & Trim (Sequential or Parallel)
-    # We load Whisper once here to avoid holding it during RVC if VRAM is tight,
-    # but for simplicity and speed, we'll load it now.
-    
     print("📝 Transcribing and Trimming...")
     try:
         whisper_model = whisper.load_model("base")
@@ -267,7 +278,6 @@ async def process_scripts():
         smart_trim(task['rvc_path'], task['final_path'])
         
         # Transcribe
-        # print(f"   - Transcribing {task['id']}...")
         result = whisper_model.transcribe(task['final_path'], word_timestamps=True)
         
         word_data = []
