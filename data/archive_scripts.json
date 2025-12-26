@@ -117,5 +117,619 @@
         }
       }
     ]
+  },
+  {
+    "video_id": 1,
+    "segments": [
+      {
+        "text": "If you have ever smiled today, you are OUT!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. HOOK",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Wow, impossible! Subscribe now for an immediate second chance!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. HOOK",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Round 1. Name a character who works at the Krusty Krab.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. R1",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. R1",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "My answer is Squidward. If you said Squidward, you are eliminated!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. R1",
+          "show_timer": false,
+          "answer_reveal": "SQUIDWARD"
+        }
+      },
+      {
+        "text": "Now for a real challenge. Name a flavor of ice cream.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "3. R2",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. R2",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I chose Vanilla. Match me and you may as well leave now.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "3. R2",
+          "show_timer": false,
+          "answer_reveal": "VANILLA"
+        }
+      },
+      {
+        "text": "Okay, for the win! Which do you pick: Pineapple or Rock?",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. R3",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Pineapple. Comment if you survived this round!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. R3",
+          "show_timer": false,
+          "answer_reveal": "PINEAPPLE"
+        }
+      }
+    ]
+  },
+  {
+    "video_id": 2,
+    "segments": [
+      {
+        "text": "If you are not a sponge, you are ELIMINATED!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. HOOK",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I\u2019m not! Hey viewers, hit Subscribe now if you need a life raft!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. HOOK",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Round 1. Name one of Sandy's scientific inventions.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. R1",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. R1",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Helmet. If you said Helmet, you are out of the water!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. R1",
+          "show_timer": false,
+          "answer_reveal": "HELMET"
+        }
+      },
+      {
+        "text": "Your turn, fools. Name something Mr. Krabs loves.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "3. R2",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. R2",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I chose Money. If you matched my obvious response, you are gone.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "3. R2",
+          "show_timer": false,
+          "answer_reveal": "MONEY"
+        }
+      },
+      {
+        "text": "Last one! Plankton or Karen?",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. R3",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Plankton. Let me know if you finally beat us!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. R3",
+          "show_timer": false,
+          "answer_reveal": "PLANKTON"
+        }
+      }
+    ]
+  },
+  {
+    "video_id": 3,
+    "segments": [
+      {
+        "text": "If you haven't eaten a Krabby Patty this week, you are ELIMINATED!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. HOOK",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "That's unfair! To bypass this rule, Subscribe right now!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. HOOK",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Round 1. Name a specific color of Patrick's shorts.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. R1",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. R1",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Green. If you said Green, you lose your turn!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. R1",
+          "show_timer": false,
+          "answer_reveal": "GREEN"
+        }
+      },
+      {
+        "text": "Name a type of sea creature often shown in Bikini Bottom.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "3. R2",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. R2",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I chose Jellyfish. You are so predictable if you matched that.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "3. R2",
+          "show_timer": false,
+          "answer_reveal": "JELLYFISH"
+        }
+      },
+      {
+        "text": "Quick! Choose between Dirty Dan or Pinhead!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. R3",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Pinhead. Comment if you won the entire thing!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. R3",
+          "show_timer": false,
+          "answer_reveal": "PINHEAD"
+        }
+      }
+    ]
+  },
+  {
+    "video_id": 4,
+    "segments": [
+      {
+        "text": "If you know what a Goofy Goober is, you are ELIMINATED!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. HOOK",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Everyone knows! Subscribe now to survive the trivia tidal wave!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. HOOK",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Round 1. Name a vehicle used by a main character.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. R1",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. R1",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Invisible Boatmobile. If you said that, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. R1",
+          "show_timer": false,
+          "answer_reveal": "INVISIBLE BOATMOBILE"
+        }
+      },
+      {
+        "text": "Name a non-SpongeBob episode title.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "3. R2",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. R2",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I chose Band Geeks. If you matched me, you have too much free time.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "3. R2",
+          "show_timer": false,
+          "answer_reveal": "BAND GEEKS"
+        }
+      },
+      {
+        "text": "Decide now: Sea Pouch or Magic Conch?",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. R3",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Magic Conch. Did the shell grant you the win?",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. R3",
+          "show_timer": false,
+          "answer_reveal": "MAGIC CONCH"
+        }
+      }
+    ]
+  },
+  {
+    "video_id": 5,
+    "segments": [
+      {
+        "text": "If you have two arms, you are ELIMINATED!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. HOOK",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Whoa! Subscribe now and I promise you a bonus life!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. HOOK",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Round 1. Name a member of the International Justice League of Super Acquaintances.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. R1",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. R1",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Mermaid Man. If you said Mermaid Man, you are finished!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. R1",
+          "show_timer": false,
+          "answer_reveal": "MERMAID MAN"
+        }
+      },
+      {
+        "text": "Name a condiment or topping.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "3. R2",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. R2",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I chose Ketchup. If you matched my superior choice, you are beneath me.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "3. R2",
+          "show_timer": false,
+          "answer_reveal": "KETCHUP"
+        }
+      },
+      {
+        "text": "Final option! Do you choose Day or Night?",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. R3",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Day. Comment 'I Won' if you survived us!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. R3",
+          "show_timer": false,
+          "answer_reveal": "DAY"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc80 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "I'm ready, I'm ready! To catch you lacking!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Apple. If you said Apple, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "APPLE"
+        }
+      }
+    ],
+    "video_id": 1
   }
 ]

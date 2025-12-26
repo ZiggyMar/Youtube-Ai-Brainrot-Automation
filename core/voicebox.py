@@ -174,7 +174,7 @@ async def process_scripts():
     print("📋 Analyzing scripts...")
     for video in scripts:
         video_id = video.get("video_id")
-        for i, segment in enumerate(video.get("segments", []), start=1):
+        for i, segment in enumerate(video.get("script", []), start=1):
             segment_id = i
             
             # Skip Timer

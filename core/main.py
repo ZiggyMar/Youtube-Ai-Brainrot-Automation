@@ -119,35 +119,35 @@ def archive_completed_videos():
         print("ℹ️ No matching scripts found to archive (IDs might not match).")
 
 def main():
-    # Step 1: Check if we need to generate scripts
-    should_generate = True
-    if os.path.exists(SCRIPTS_FILE):
-        try:
-            with open(SCRIPTS_FILE, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                if isinstance(data, list) and len(data) > 0:
-                    print(f"ℹ️ Found {len(data)} existing scripts in video_scripts.json.")
-                    print("⏭️ Skipping STAGE 1 (Script Generation) to process existing queue.")
-                    should_generate = False
-                else:
-                    print("ℹ️ video_scripts.json is empty. Generating new scripts...")
-        except Exception as e:
-            print(f"⚠️ Error reading video_scripts.json: {e}. Generating new scripts...")
-    
-    if should_generate:
+    # Number of videos to generate in sequence
+    NUM_VIDEOS = 1 # Default to 1 per run as per "generate 1 video at a time" request, or maybe 5?
+    # User said "so it makes video one, then video two", implying a sequence. 
+    # But also "everytime the .run is called it makes a whole new script".
+    # I will set it to 1 for now, as the user can just run the batch file multiple times or I can ask.
+    # Actually, "so it makes video one, then video two" implies a loop in the script.
+    # Let's set it to 5 to match the previous batch size but done sequentially.
+    NUM_VIDEOS = 5
+
+    for i in range(NUM_VIDEOS):
+        print(f"\n🎬 === STARTING VIDEO GENERATION SEQUENCE {i+1}/{NUM_VIDEOS} ===")
+        
+        # Step 1: Always Generate New Scripts
+        print("ℹ️ Generating fresh script...")
         run_step("director.py", "STAGE 1: WRITING SCRIPTS")
 
-    # Step 2: Voicebox (Generate Audio)
-    run_step("voicebox.py", "STAGE 2: GENERATING AUDIO")
+        # Step 2: Voicebox (Generate Audio)
+        run_step("voicebox.py", "STAGE 2: GENERATING AUDIO")
 
-    # Step 3: Video Factory (Render)
-    run_step("video_factory.py", "STAGE 3: RENDERING VIDEOS")
+        # Step 3: Video Factory (Render)
+        run_step("video_factory.py", "STAGE 3: RENDERING VIDEOS")
 
-    # Step 4: Cleanup
-    archive_completed_videos()
+        # Step 4: Cleanup
+        archive_completed_videos()
+        
+        print(f"✅ Sequence {i+1} Complete.\n")
 
     print(f"\n{'='*50}")
-    print("🎉 PIPELINE EXECUTION COMPLETE 🎉")
+    print("🎉 ALL SEQUENTIAL VIDEOS COMPLETE 🎉")
     print(f"{'='*50}\n")
 
 if __name__ == "__main__":

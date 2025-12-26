@@ -3,6 +3,7 @@ import json
 import requests
 import sys
 import time
+import random
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
@@ -25,11 +26,27 @@ OUTPUT_FILE = os.path.join(DATA_DIR, "video_scripts.json")
 
 PROMPT_TEXT = """
 You are a creative director for viral 'Shorts' trivia game videos.
-Generate 5 NEW scripts in a list.
+Generate 1 NEW script.
 
 THEME: SpongeBob SquarePants.
 GAME TYPE: 'Avoid Saying the Same Thing'.
 
+TITLE INSTRUCTIONS:
+- Format: "Avoid saying the same thing as FREAKBOB [Optional Emoji/Variation] #Spongebob #Quiz #BrainrotQuiz #AIQuiz"
+- MUST use "FREAKBOB" instead of "SpongeBob" in the title.
+- MUST include hashtags: #Spongebob #Quiz #BrainrotQuiz #AIQuiz.
+- Example: "Avoid saying the same thing as FREAKBOB 💀 #Spongebob #Quiz #BrainrotQuiz #AIQuiz"
+
+OUTPUT FORMAT (actual "text" is an example of what is expected in the script, but should never be word for word):
+[
+  {
+    "title": "Avoid saying the same thing as FREAKBOB 💀 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "If you're on youtube right now, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
           "subtitle_color": "Yellow",
           "list_highlight": "1. EASY",
           "show_timer": false,
@@ -79,6 +96,105 @@ GAME TYPE: 'Avoid Saying the Same Thing'.
           "show_timer": false,
           "answer_reveal": "APPLE"
         }
+      },
+      {
+        "text": "Round 2. Name a color.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Blue. If you said Blue, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "BLUE"
+        }
+      },
+      {
+        "text": "Round 3. Name a drink.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Water. If you said Water, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "WATER"
+        }
+      },
+      {
+        "text": "Round 4. Name a planet.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Mars. If you said Mars, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "MARS"
+        }
       }
     ]
   }
@@ -86,113 +202,6 @@ GAME TYPE: 'Avoid Saying the Same Thing'.
 
 IMPORTANT:
 - Insert a segment with `visuals.show_timer=true` (and speaker="Timer", text="...") between EVERY Question and Answer.
-- For ANSWER segments, set `visuals.answer_reveal` to the specific item.
-- RETURN ONLY RAW JSON. NO MARKDOWN.
-"""
-
-def save_scripts(data):
-    try:
-        # Assign IDs 1 to 5
-        for i, script in enumerate(data):
-            script["video_id"] = i + 1
-            
-        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
-        print(f"✅ Success! Saved to {OUTPUT_FILE}")
-        return True
-    except Exception as e:
-        print(f"❌ Error saving scripts: {e}")
-        return False
-
-def try_gemini():
-    print("🔹 Attempting Gemini...")
-    if not GEMINI_API_KEY: return False
-    try:
-        client = genai.Client(api_key=GEMINI_API_KEY)
-        response = client.models.generate_content(
-            model="gemini-flash-latest",
-            contents=PROMPT_TEXT,
-            config=types.GenerateContentConfig(response_mime_type="application/json")
-        )
-        return save_scripts(json.loads(response.text))
-    except Exception as e:
-        print(f"⚠️ Gemini Failed: {e}")
-        return False
-
-def try_groq():
-    print("🔹 Attempting Groq...")
-    if not GROQ_API_KEY: return False
-    try:
-        headers = {
-            "Authorization": f"Bearer {GROQ_API_KEY}",
-            "Content-Type": "application/json"
-        }
-        payload = {
-            "messages": [{"role": "user", "content": PROMPT_TEXT}],
-            "model": "llama-3.3-70b-versatile",
-            "response_format": {"type": "json_object"}
-        }
-        response = requests.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=payload)
-        response.raise_for_status()
-        content = response.json()['choices'][0]['message']['content']
-        return save_scripts(json.loads(content))
-    except Exception as e:
-        print(f"⚠️ Groq Failed: {e}")
-        return False
-
-def try_mistral():
-    print("🔹 Attempting Mistral...")
-    if not MISTRAL_API_KEY: return False
-    try:
-        headers = {
-            "Authorization": f"Bearer {MISTRAL_API_KEY}",
-            "Content-Type": "application/json"
-        }
-        payload = {
-            "messages": [{"role": "user", "content": PROMPT_TEXT}],
-            "model": "mistral-small-latest",
-            "response_format": {"type": "json_object"}
-        }
-        response = requests.post("https://api.mistral.ai/v1/chat/completions", headers=headers, json=payload)
-        response.raise_for_status()
-        content = response.json()['choices'][0]['message']['content']
-        return save_scripts(json.loads(content))
-    except Exception as e:
-        print(f"⚠️ Mistral Failed: {e}")
-        return False
-
-def try_openrouter():
-    print("🔹 Attempting OpenRouter...")
-    if not OPENROUTER_API_KEY: return False
-    try:
-        headers = {
-            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-            "Content-Type": "application/json"
-        }
-        payload = {
-            "messages": [{"role": "user", "content": PROMPT_TEXT}],
-            "model": "meta-llama/llama-3-8b-instruct:free",
-        }
-        response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload)
-        response.raise_for_status()
-        content = response.json()['choices'][0]['message']['content']
-        
-        # Clean markdown if present
-        if "```json" in content:
-            content = content.split("```json")[1].split("```")[0]
-        elif "```" in content:
-            content = content.split("```")[1].split("```")[0]
-            
-        return save_scripts(json.loads(content))
-    except Exception as e:
-        print(f"⚠️ OpenRouter Failed: {e}")
-        return False
-
-def generate_scripts():
-    print("🎬 Starting Script Generation with Fallbacks...")
-    
-    if try_gemini(): return
-    print("⏳ Waiting 2s before fallback...")
     time.sleep(2)
     
     if try_groq(): return
@@ -205,8 +214,8 @@ def generate_scripts():
     
     if try_openrouter(): return
     
-    print("❌ CRITICAL: All AI providers failed.")
-    sys.exit(1)
+    print("❌ CRITICAL: All AI providers failed. Using DUMMY script.")
+    generate_dummy_script()
 
 if __name__ == "__main__":
     generate_scripts()
