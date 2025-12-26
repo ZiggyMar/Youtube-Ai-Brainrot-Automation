@@ -30,40 +30,6 @@ Generate 5 NEW scripts in a list.
 THEME: SpongeBob SquarePants.
 GAME TYPE: 'Avoid Saying the Same Thing'.
 
-STRICT RULES:
-1. NO FILLER: Do not write questions like "Name a vegetable" unless it is the actual game round.
-2. NO STAGE DIRECTIONS: Do not write (Laughs), (Cut to black), etc. Only dialogue.
-3. NO SLANG MISUSE: Do not use "Ohio", "Sigma", etc. unless it makes perfect sense. Keep it simple.
-4. STRICT FLOW: Question -> Timer -> Answer. Never leave a question unanswered.
-5. ONE CTA VIDEO: The script should naturally lead to a Subscribe CTA early on.
-
-CHARACTERS:
-- SpongeBob (Excited, slightly strict host)
-- Patrick (Complaining, tries to help the viewer)
-- Squidward (Annoyed, arrogant)
-
-SCRIPT STRUCTURE (STRICTLY FOLLOW THIS FLOW):
-1. The Hook: SpongeBob sets an impossible elimination trap (e.g., "If you are breathing, you are OUT!").
-2. The Redemption: Patrick complains it's too hard. Tells viewers to "Subscribe for a second chance/revive".
-3. Round 1: SpongeBob asks Question 1 (Broad category).
-   - [TIMER SEGMENT]
-   - SpongeBob reveals Answer 1. "If you said [Answer], you're out!"
-4. Round 2: Squidward asks Question 2.
-   - [TIMER SEGMENT]
-   - Squidward reveals Answer 2. "I chose [Answer]. If you matched me, leave."
-5. Final Round: Patrick asks to pick between two options (e.g., "Krusty Krab or Chum Bucket").
-   - Patrick reveals his choice. "I picked [Option]. Comment if you won!"
-
-JSON OUTPUT FORMAT:
-[
-  {
-    "video_id": 1,
-    "segments": [
-      {
-        "text": "If you are wearing socks right now, you are ELIMINATED!",
-        "speaker": "SpongeBob",
-        "visuals": {
-          "character": "SpongeBob",
           "subtitle_color": "Yellow",
           "list_highlight": "1. EASY",
           "show_timer": false,

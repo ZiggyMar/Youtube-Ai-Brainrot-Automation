@@ -10,6 +10,9 @@ from moviepy.editor import (
     CompositeAudioClip, afx
 )
 from PIL import Image, ImageDraw, ImageFont
+import concurrent.futures
+import time
+import subprocess
 
 # Configuration
 CORE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -27,6 +30,20 @@ FFMPEG_PATH = os.path.join(PROJECT_ROOT, "tools", "ffmpeg", "ffmpeg.exe")
 if os.path.exists(FFMPEG_PATH):
     os.environ["IMAGEIO_FFMPEG_EXE"] = FFMPEG_PATH
     print(f"✅ Using Custom FFmpeg: {FFMPEG_PATH}")
+
+def check_nvenc_support():
+    """Checks if NVIDIA NVENC encoder is available."""
+    try:
+        cmd = [FFMPEG_PATH, "-encoders"]
+        result = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8')
+        if "h264_nvenc" in result.stdout:
+            print("🚀 NVIDIA GPU Encoding (NVENC) Detected!")
+            return True
+    except Exception as e:
+        print(f"⚠️ Could not check for NVENC: {e}")
+    return False
+
+HAS_NVENC = check_nvenc_support()
 
 # Difficulty List Config
 DIFFICULTY_LEVELS = [
@@ -259,9 +276,9 @@ def find_character_image(speaker, character_field):
         if files: return random.choice(files)
     return None
 
-def generate_video(video_data):
+def generate_video(video_data, use_gpu=False):
     video_id = video_data["video_id"]
-    print(f"🎬 Rendering Video {video_id} with Perfect Sync...")
+    print(f"🎬 Rendering Video {video_id} with Perfect Sync... (GPU: {use_gpu})")
     
     # 1. Calculate Total Duration First
     total_duration = 0
@@ -479,7 +496,17 @@ def generate_video(video_data):
     final_video = final_video.set_audio(final_audio)
     
     # Filename
-    base_name = f"video_{video_id}_production"
+    import re
+    def sanitize_filename(name):
+        return re.sub(r'[<>:"/\\|?*]', '', name).strip()
+
+    title = video_data.get("title", "")
+    if title:
+        safe_title = sanitize_filename(title)
+        base_name = safe_title
+    else:
+        base_name = f"video_{video_id}_production"
+    
     out_path = os.path.join(OUTPUT_DIR, f"{base_name}.mp4")
     counter = 1
     while os.path.exists(out_path):
@@ -487,10 +514,25 @@ def generate_video(video_data):
         counter += 1
         
     temp_audio = os.path.join(OUTPUT_DIR, f"temp_audio_{video_id}.m4a")
+    
+    # Encoding Parameters
+    if use_gpu and HAS_NVENC:
+        codec = "h264_nvenc"
+        ffmpeg_params = [
+            "-rc:v", "vbr", 
+            "-cq:v", "19", 
+            "-preset", "p7"  # High quality, fast
+        ]
+        preset = None # NVENC doesn't use x264 presets
+    else:
+        codec = "libx264"
+        ffmpeg_params = None
+        preset = "ultrafast"
+
     final_video.write_videofile(
-        out_path, fps=24, codec="libx264", audio_codec="aac", 
-        threads=4, preset="ultrafast", logger='bar',
-        temp_audiofile=temp_audio
+        out_path, fps=24, codec=codec, audio_codec="aac", 
+        threads=4, preset=preset, ffmpeg_params=ffmpeg_params,
+        logger='bar', temp_audiofile=temp_audio
     )
     
     # Cleanup temp audio
@@ -512,19 +554,38 @@ def generate_video(video_data):
 
     print(f"✅ Finished: {out_path}")
 
+def process_video_wrapper(video_data):
+    """Wrapper for parallel execution."""
+    try:
+        generate_video(video_data, use_gpu=HAS_NVENC)
+        return True
+    except Exception as e:
+        print(f"❌ Error processing video {video_data.get('video_id')}: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
 def main():
     if not os.path.exists(SCRIPTS_FILE): return
     with open(SCRIPTS_FILE, "r", encoding="utf-8") as f:
         scripts = json.load(f)
     
     print(f"🔥 Starting Perfect Sync Render of {len(scripts)} videos...")
-    for video in tqdm(scripts, desc="Total Progress", unit="video"):
-        try:
-            generate_video(video)
-        except Exception as e:
-            print(f"❌ Error: {e}")
-            import traceback
-            traceback.print_exc()
+    
+    # Determine max workers (leave some CPU for system)
+    max_workers = max(1, os.cpu_count() - 2)
+    print(f"🚀 Starting Parallel Rendering with {max_workers} workers...")
+    
+    start_time = time.time()
+    
+    with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
+        results = list(tqdm(executor.map(process_video_wrapper, scripts), total=len(scripts), unit="video"))
+        
+    elapsed = time.time() - start_time
+    print(f"✅ All videos processed in {elapsed:.2f} seconds!")
 
 if __name__ == "__main__":
+    # Windows multiprocessing support
+    import multiprocessing
+    multiprocessing.freeze_support()
     main()
