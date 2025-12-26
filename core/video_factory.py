@@ -520,10 +520,9 @@ def generate_video(video_data, use_gpu=False):
         codec = "h264_nvenc"
         ffmpeg_params = [
             "-rc:v", "vbr", 
-            "-cq:v", "19", 
-            "-preset", "p7"  # High quality, fast
+            "-cq:v", "19"
         ]
-        preset = None # NVENC doesn't use x264 presets
+        preset = "p7" # NVENC preset
     else:
         codec = "libx264"
         ffmpeg_params = None
