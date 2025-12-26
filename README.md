@@ -27,13 +27,6 @@ A high-performance, automated pipeline for generating viral "Brainrot" style tri
 3. **Setup FFmpeg**:
    Ensure FFmpeg is located in `tools/ffmpeg/ffmpeg.exe` or installed in your system PATH.
 
-3. **Setup YouTube API**:
-   - Go to the [Google Cloud Console](https://console.cloud.google.com/).
-   - Create a new project and enable the **YouTube Data API v3**.
-   - Create **OAuth 2.0 Client IDs** (Desktop application).
-   - Download the JSON file, rename it to `client_secrets.json`, and place it in the project root.
-   - The first time you run the pipeline, a browser window will open for authorization.
-
 4. **Configure Environment**:
    Create a `.env` file in the root directory:
    ```env

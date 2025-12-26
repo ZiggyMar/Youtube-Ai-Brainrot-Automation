@@ -8,7 +8,6 @@ CORE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(CORE_DIR)
 DATA_DIR = os.path.join(PROJECT_ROOT, 'data')
 OUTPUT_DIR = os.path.join(PROJECT_ROOT, 'output')
-READY_TO_POST_DIR = os.path.join(OUTPUT_DIR, "Ready To Post")
 
 SCRIPTS_FILE = os.path.join(DATA_DIR, 'video_scripts.json')
 ARCHIVE_FILE = os.path.join(DATA_DIR, 'archive_scripts.json')
@@ -50,7 +49,28 @@ def archive_completed_videos():
     print(f"=== STAGE 4: ARCHIVING & CLEANUP ===")
     print(f"{'='*50}\n")
 
-    # 1. Load Current Scripts
+    # 1. Identify Completed Video IDs
+    if not os.path.exists(OUTPUT_DIR):
+        print("⚠️ Output directory does not exist. Nothing to archive.")
+        return
+
+    completed_ids = set()
+    for filename in os.listdir(OUTPUT_DIR):
+        if filename.startswith("video_") and filename.endswith("_production.mp4"):
+            # Extract ID: video_1_production.mp4 -> 1
+            try:
+                vid_id_str = filename.replace("video_", "").replace("_production.mp4", "")
+                completed_ids.add(int(vid_id_str))
+            except ValueError:
+                continue
+    
+    if not completed_ids:
+        print("ℹ️ No completed videos found in output/.")
+        return
+
+    print(f"🔍 Found {len(completed_ids)} completed videos: {sorted(list(completed_ids))}")
+
+    # 2. Load Current Scripts
     if not os.path.exists(SCRIPTS_FILE):
         print(f"⚠️ {SCRIPTS_FILE} not found. Skipping archive.")
         return
@@ -61,39 +81,6 @@ def archive_completed_videos():
     except json.JSONDecodeError:
         print(f"❌ Error decoding {SCRIPTS_FILE}.")
         return
-
-    completed_ids = set()
-    for video in current_scripts:
-        vid_id = video.get('video_id')
-        title = video.get('title', f"video_{vid_id}")
-        # Sanitize title to match video_factory.py's output filename
-        import re
-        def sanitize(name):
-            return re.sub(r'[<>:"/\\|?*]', '', name).strip()
-        
-        safe_title = sanitize(title)
-        
-        # Check for title.mp4, title_1.mp4, etc. in both output and ready_to_post
-        found = False
-        for search_dir in [OUTPUT_DIR, READY_TO_POST_DIR]:
-            if os.path.exists(os.path.join(search_dir, f"{safe_title}.mp4")):
-                found = True
-                break
-            # Check for suffixes like _1, _2
-            for suffix in ["_1", "_2", "_3"]:
-                if os.path.exists(os.path.join(search_dir, f"{safe_title}{suffix}.mp4")):
-                    found = True
-                    break
-            if found: break
-        
-        if found or os.path.exists(os.path.join(OUTPUT_DIR, f"video_{vid_id}_production.mp4")) or os.path.exists(os.path.join(READY_TO_POST_DIR, f"video_{vid_id}_production.mp4")):
-            completed_ids.add(vid_id)
-    
-    if not completed_ids:
-        print("ℹ️ No completed videos found in output/.")
-        return
-
-    print(f"🔍 Found {len(completed_ids)} completed videos: {sorted(list(completed_ids))}")
 
     # 3. Load or Initialize Archive
     archive_data = []
@@ -158,9 +145,6 @@ def main():
 
     # Step 4: Cleanup
     archive_completed_videos()
-
-    # Step 5: YouTube Upload (New)
-    # run_step("youtube_uploader.py", "STAGE 5: UPLOADING TO YOUTUBE")
 
     print(f"\n{'='*50}")
     print("🎉 PIPELINE EXECUTION COMPLETE 🎉")
