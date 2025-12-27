@@ -45,8 +45,8 @@ DIFFICULTY_LEVELS = [
 DEFAULT_LAYOUT = {
     "character": {"x": 0, "y": 1120, "width": 1080, "height": 850},
     "subtitles": {"x": 90, "y": 1050, "width": 900, "height": 150},
-    "timer": {"x": 0, "y": 0, "width": 1080, "height": 1920},
-    "cta": {"x": 0, "y": 0, "width": 1080, "height": 1920},
+    "timer": {"x": 0, "y": 0, "width": 1080, "height": 1920, "scale": 1.0},
+    "cta": {"x": 0, "y": 0, "width": 1080, "height": 1920, "scale": 1.0},
     "difficulty_list": {"x": 50, "y": 100, "width": 400, "height": 400, "font_size": 50}
 }
 
@@ -321,7 +321,31 @@ def generate_video(video_data):
         timer_clip_ref = VideoFileClip(timer_path, has_mask=has_mask)
         if not has_mask: 
             timer_clip_ref = timer_clip_ref.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
-        timer_clip_ref = timer_clip_ref.resize(newsize=(LAYOUT["timer"]["width"], LAYOUT["timer"]["height"]))
+        
+        # Apply Scale
+        timer_scale = LAYOUT["timer"].get("scale", 1.0)
+        if timer_scale != 1.0:
+            timer_clip_ref = timer_clip_ref.resize(timer_scale)
+        else:
+            timer_clip_ref = timer_clip_ref.resize(newsize=(LAYOUT["timer"]["width"], LAYOUT["timer"]["height"]))
+            
+        # Position Logic (Center in 1080x1920 frame if scaled, plus offset)
+        if timer_scale != 1.0:
+            # Calculate centered position relative to 1080x1920
+            # The clip is now (1080*scale) x (1920*scale)
+            # Centered at (1080-w)/2, (1920-h)/2
+            # Add user offset (LAYOUT x, y)
+            
+            w, h = timer_clip_ref.size
+            center_x = (1080 - w) // 2
+            center_y = (1920 - h) // 2
+            
+            final_x = center_x + LAYOUT["timer"]["x"]
+            final_y = center_y + LAYOUT["timer"]["y"]
+            
+            timer_clip_ref = timer_clip_ref.set_position((final_x, final_y))
+        else:
+             timer_clip_ref = timer_clip_ref.set_position((LAYOUT["timer"]["x"], LAYOUT["timer"]["y"]))
 
     cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta_alpha_scaled.mov")
     if not os.path.exists(cta_path): cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
@@ -330,7 +354,26 @@ def generate_video(video_data):
         cta_clip_ref = VideoFileClip(cta_path, has_mask=has_mask)
         if not has_mask:
             cta_clip_ref = cta_clip_ref.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
-        cta_clip_ref = cta_clip_ref.resize(newsize=(LAYOUT["cta"]["width"], LAYOUT["cta"]["height"]))
+            
+        # Apply Scale
+        cta_scale = LAYOUT["cta"].get("scale", 1.0)
+        if cta_scale != 1.0:
+            cta_clip_ref = cta_clip_ref.resize(cta_scale)
+        else:
+            cta_clip_ref = cta_clip_ref.resize(newsize=(LAYOUT["cta"]["width"], LAYOUT["cta"]["height"]))
+
+        # Position Logic (Center in 1080x1920 frame if scaled, plus offset)
+        if cta_scale != 1.0:
+            w, h = cta_clip_ref.size
+            center_x = (1080 - w) // 2
+            center_y = (1920 - h) // 2
+            
+            final_x = center_x + LAYOUT["cta"]["x"]
+            final_y = center_y + LAYOUT["cta"]["y"]
+            
+            cta_clip_ref = cta_clip_ref.set_position((final_x, final_y))
+        else:
+            cta_clip_ref = cta_clip_ref.set_position((LAYOUT["cta"]["x"], LAYOUT["cta"]["y"]))
 
     total_duration = 0
     segments_to_render = []

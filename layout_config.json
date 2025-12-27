@@ -1,6 +1,6 @@
 {
   "character": {
-    "x": -4,
+    "x": 0,
     "y": 1068,
     "width": 1080,
     "height": 850
@@ -13,19 +13,21 @@
   },
   "timer": {
     "x": 0,
-    "y": 0,
+    "y": -121,
     "width": 1080,
-    "height": 1920
+    "height": 1920,
+    "scale": 1.9
   },
   "cta": {
     "x": 0,
-    "y": 0,
+    "y": -300,
     "width": 1080,
-    "height": 1920
+    "height": 1920,
+    "scale": 1.9
   },
   "difficulty_list": {
-    "x": 58,
-    "y": 78,
+    "x": 100,
+    "y": 114,
     "width": 436,
     "height": 403,
     "font_size": 90

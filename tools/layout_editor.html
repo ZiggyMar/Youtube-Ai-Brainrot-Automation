@@ -231,6 +231,42 @@
             height: auto;
             max-width: 100%;
             max-height: 100%;
+            transition: transform 0.1s;
+        }
+
+        /* Hierarchy Panel */
+        #hierarchy {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            width: 200px;
+            border: 1px solid #333;
+            height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+        .hierarchy-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #333;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hierarchy-item:hover {
+            background-color: #333;
+        }
+
+        .hierarchy-item.selected {
+            background-color: #007acc;
+            color: white;
+        }
+
+        /* Scale Slider */
+        input[type="range"] {
+            width: 100%;
         }
     </style>
 </head>
@@ -241,11 +277,18 @@
         <h1>🧠 Brainrot Layout Editor Pro</h1>
         <div id="controls">
             <button class="secondary" onclick="resetLayout()">↺ Reset</button>
+            <button class="secondary" onclick="document.getElementById('import-file').click()">📂 Import JSON</button>
             <button onclick="downloadConfig()">💾 Export layout_config.json</button>
+            <input type="file" id="import-file" style="display: none;" accept=".json" onchange="importConfig(this)">
         </div>
     </div>
 
     <div id="editor-container">
+        <div id="hierarchy">
+            <h4 style="margin-top: 0; color: #007acc;">LAYERS</h4>
+            <div id="hierarchy-list"></div>
+        </div>
+
         <div id="canvas-wrapper">
             <div id="canvas-container">
                 <!-- Background Preview -->
@@ -312,6 +355,16 @@
                         oninput="updateElementFromProps()"></div>
             </div>
 
+            <div class="prop-group" id="prop-scale-row" style="display: none;">
+                <h4>Scale</h4>
+                <div class="prop-row">
+                    <label>Scale:</label>
+                    <input type="range" id="prop-scale" min="0.1" max="2.0" step="0.1" value="1.0"
+                        oninput="updateElementFromProps()">
+                    <span id="prop-scale-val" style="width: 30px; text-align: right;">1.0</span>
+                </div>
+            </div>
+
             <div class="hint">
                 * Drag elements to move<br>
                 * Use blue handle to scale<br>
@@ -329,9 +382,28 @@
         const SCALE = 0.4;
 
         // Initialize
+        function initHierarchy() {
+            const list = document.getElementById('hierarchy-list');
+            list.innerHTML = '';
+            document.querySelectorAll('.element').forEach(el => {
+                const item = document.createElement('div');
+                item.className = 'hierarchy-item';
+                item.innerText = el.id.toUpperCase();
+                item.onclick = () => selectElement(el);
+                item.id = 'hier-' + el.id;
+                list.appendChild(item);
+            });
+        }
+
         document.querySelectorAll('.element').forEach(el => {
             el.addEventListener('mousedown', onMouseDown);
+            // Initialize scale data attribute if missing
+            if ((el.id === 'timer' || el.id === 'cta') && !el.getAttribute('data-scale')) {
+                el.setAttribute('data-scale', '1.0');
+            }
         });
+
+        initHierarchy();
 
         document.addEventListener('mousemove', onMouseMove);
         document.addEventListener('mouseup', onMouseUp);
@@ -344,11 +416,7 @@
                 isDragging = true;
                 selectedElement = e.currentTarget;
             }
-
-            // Select visual
-            document.querySelectorAll('.element').forEach(el => el.classList.remove('selected'));
-            selectedElement.classList.add('selected');
-            updatePropsDisplay();
+            selectElement(selectedElement);
 
             startX = e.clientX;
             startY = e.clientY;
@@ -362,6 +430,18 @@
             e.preventDefault();
         }
 
+        function selectElement(el) {
+            selectedElement = el;
+            document.querySelectorAll('.element').forEach(e => e.classList.remove('selected'));
+            document.querySelectorAll('.hierarchy-item').forEach(e => e.classList.remove('selected'));
+
+            selectedElement.classList.add('selected');
+            const hierItem = document.getElementById('hier-' + selectedElement.id);
+            if (hierItem) hierItem.classList.add('selected');
+
+            updatePropsDisplay();
+        }
+
         function onMouseMove(e) {
             if (!selectedElement) return;
 
@@ -369,9 +449,15 @@
             const dy = (e.clientY - startY) / SCALE;
 
             if (isDragging) {
+                // Lock Timer and CTA position -> UNLOCKED
+                // if (selectedElement.id === 'timer' || selectedElement.id === 'cta') return;
+
                 selectedElement.style.left = Math.round(startLeft + dx) + 'px';
                 selectedElement.style.top = Math.round(startTop + dy) + 'px';
             } else if (isResizing) {
+                // Lock Timer and CTA resize
+                if (selectedElement.id === 'timer' || selectedElement.id === 'cta') return;
+
                 selectedElement.style.width = Math.max(50, Math.round(startWidth + dx)) + 'px';
                 selectedElement.style.height = Math.max(50, Math.round(startHeight + dy)) + 'px';
             }
@@ -399,6 +485,27 @@
             } else {
                 fontSizeRow.style.display = 'none';
             }
+
+            const scaleRow = document.getElementById('prop-scale-row');
+            const isLocked = (selectedElement.id === 'timer' || selectedElement.id === 'cta');
+
+            // Disable Size inputs only for locked elements (Unlock Position)
+            ['prop-w', 'prop-h'].forEach(id => {
+                document.getElementById(id).disabled = isLocked;
+            });
+            // Ensure X/Y are enabled
+            ['prop-x', 'prop-y'].forEach(id => {
+                document.getElementById(id).disabled = false;
+            });
+
+            if (isLocked) {
+                scaleRow.style.display = 'block';
+                const currentScale = selectedElement.getAttribute('data-scale') || 1.0;
+                document.getElementById('prop-scale').value = currentScale;
+                document.getElementById('prop-scale-val').innerText = currentScale;
+            } else {
+                scaleRow.style.display = 'none';
+            }
         }
 
         function updateElementFromProps() {
@@ -415,6 +522,14 @@
                     item.style.fontSize = fs + 'px';
                 });
             }
+
+            if (selectedElement.id === 'timer' || selectedElement.id === 'cta') {
+                const scale = document.getElementById('prop-scale').value;
+                selectedElement.setAttribute('data-scale', scale);
+                document.getElementById('prop-scale-val').innerText = scale;
+                const img = selectedElement.querySelector('img');
+                if (img) img.style.transform = `scale(${scale})`;
+            }
         }
 
         function downloadConfig() {
@@ -428,6 +543,9 @@
                 };
                 if (el.id === 'difficulty_list') {
                     config[el.id].font_size = parseInt(el.getAttribute('data-font-size') || 50);
+                }
+                if (el.id === 'timer' || el.id === 'cta') {
+                    config[el.id].scale = parseFloat(el.getAttribute('data-scale') || 1.0);
                 }
             });
 
@@ -444,6 +562,46 @@
             if (confirm("Reset all positions to defaults?")) {
                 location.reload();
             }
+        }
+
+        function importConfig(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const config = JSON.parse(e.target.result);
+                    for (const id in config) {
+                        const el = document.getElementById(id);
+                        if (el) {
+                            const data = config[id];
+                            el.style.left = data.x + 'px';
+                            el.style.top = data.y + 'px';
+                            el.style.width = data.width + 'px';
+                            el.style.height = data.height + 'px';
+
+                            if (data.font_size) {
+                                el.setAttribute('data-font-size', data.font_size);
+                                el.querySelectorAll('.diff-item').forEach(item => {
+                                    item.style.fontSize = data.font_size + 'px';
+                                });
+                            }
+
+                            if (data.scale !== undefined) {
+                                el.setAttribute('data-scale', data.scale);
+                                const img = el.querySelector('img');
+                                if (img) img.style.transform = `scale(${data.scale})`;
+                            }
+                        }
+                    }
+                    alert("Layout imported successfully!");
+                } catch (err) {
+                    alert("Error parsing JSON: " + err);
+                }
+            };
+            reader.readAsText(file);
+            input.value = ''; // Reset input
         }
     </script>
 </body>
