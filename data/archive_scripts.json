@@ -1895,5 +1895,959 @@
       }
     ],
     "video_id": 23
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc80 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "If you are touching your phone right now, you are eliminated.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "But SpongeBob, how else are they watching this? Give them a chance.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Cyan",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Fine! I'll let it slide. But only if you SUBSCRIBE right now.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "First question. Name SpongeBob's house structure.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Don't say Pineapple!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Pineapple you're out! Like the video if you survived.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "PINEAPPLE"
+        }
+      },
+      {
+        "text": "Next question. Name any type of watercraft or transportation seen in Bikini Bottom.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Brown",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said the Patty Wagon, you are out. Subscribe if you picked anything else.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Brown",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "PATTY WAGON"
+        }
+      },
+      {
+        "text": "Third question. Name a secondary character that works out or is super strong.",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I bet they're gonna say Larry the Lobster.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Larry the Lobster, you're cooked. Comment below how many you got right so far.",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "LARRY THE LOBSTER"
+        }
+      },
+      {
+        "text": "Final question. Pick between driving a Boatmobile or playing the Clarinet.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "The Clarinet offers true artistry.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Cyan",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you picked driving a Boatmobile, you're safe. If you picked playing the Clarinet, you HAVE to subscribe.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "CLARINET"
+        }
+      }
+    ],
+    "video_id": 25
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc80 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "If you are sitting down right now, you are eliminated.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "But SpongeBob, most people watch these videos while sitting! Give them a chance.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Okay fine. I'll let it slide. But only if you SUBSCRIBE right now.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Round 1. Name one of Squidward's favorite hobbies.",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Don't say CLARINET!",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said CLARINET, you're out! Like the video if you survived.",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "CLARINET"
+        }
+      },
+      {
+        "text": "Round 2. Name a famous landmark in Bikini Bottom.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Brown",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Goo Lagoon. If you said Goo Lagoon, you are out. Subscribe if you picked anything else.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Brown",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "GOO LAGOON"
+        }
+      },
+      {
+        "text": "Third question. Name a member of the villainous organization M.A.N.T.A.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I bet they're gonna say Man Ray.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Man Ray, you're cooked. Comment below how many you got right so far.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "MAN RAY"
+        }
+      },
+      {
+        "text": "Final question. Pick between Mermaid Man or Barnacle Boy.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Barnacle Boy is the obvious weak link.",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you picked Mermaid Man, you're safe. If you picked Barnacle Boy, you HAVE to subscribe.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "BARNACLE BOY"
+        }
+      }
+    ],
+    "video_id": 26
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc80 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "If you are touching your phone right now, you are eliminated.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "SpongeBob, come on! Everyone holds their phone! Give them a chance.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Okay fine. I'll let it slide. But only if you SUBSCRIBE right now.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Round 1. First question. Name a place SpongeBob works.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Don't say Krusty Krab!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Krusty Krab you're out! Like the video if you survived.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "KRUSTY KRAB"
+        }
+      },
+      {
+        "text": "Next question. Name a sea creature with more than two legs.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Cyan",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Octopus, you are out. Subscribe if you picked anything else.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Cyan",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "OCTOPUS"
+        }
+      },
+      {
+        "text": "Third question. Name an instrument played by Squidward.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Brown",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I bet they're gonna say Clarinet.",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Clarinet, you're cooked. Comment below how many you got right so far.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Brown",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "CLARINET"
+        }
+      },
+      {
+        "text": "Final question. Pick between Driving a Boat or Taking the Bus.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Boats are way too hard to drive.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you picked Taking the Bus, you're safe. If you picked Driving a Boat, you HAVE to subscribe.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "DRIVING A BOAT"
+        }
+      }
+    ],
+    "video_id": 27
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc80 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "If you are breathing right now, you are eliminated.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "But SpongeBob, everyone is doing that! Give them a chance.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Fine! I'll let it slide. But only if you SUBSCRIBE right now.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "First question. Name the main villain of SpongeBob.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Don't say Plankton!",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Plankton you're out! Like the video if you survived.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "PLANKTON"
+        }
+      },
+      {
+        "text": "Next question. Name a body of water or location in Bikini Bottom.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Brown",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Goo Lagoon, you are out. Subscribe if you picked anything else.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Brown",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "GOO LAGOON"
+        }
+      },
+      {
+        "text": "Third question. Name a source of Mr. Krabs\u2019 money (besides the Krusty Krab).",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I bet they're gonna say Pocket lint.",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Pocket lint, you're cooked. Comment below how many you got right so far.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "POCKET LINT"
+        }
+      },
+      {
+        "text": "Final question. Pick between boating school or driving a bus.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Boating school sounds much safer!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you picked boating school, you're safe. If you picked driving a bus, you HAVE to subscribe.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "DRIVING A BUS"
+        }
+      }
+    ],
+    "video_id": 28
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc80 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "If you are touching your phone right now, you are eliminated.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "But SpongeBob, everyone is doing that! Give them a chance.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Blue",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Fine! I'll let it slide. But only if you SUBSCRIBE right now.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "First question. Name the owner of the Krusty Krab.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Don't say Mr. Krabs!",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Mr. Krabs you're out! Like the video if you survived.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "MR. KRABS"
+        }
+      },
+      {
+        "text": "Next question. Name a character with a pet snail.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Brown",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said SpongeBob, you are out. Subscribe if you picked anything else.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Brown",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "SPONGEBOB"
+        }
+      },
+      {
+        "text": "Third question. Name a vehicle seen under the sea.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Blue",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I bet they're gonna say Boatmobile.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Boatmobile, you're cooked. Comment below how many you got right so far.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Blue",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "BOATMOBILE"
+        }
+      },
+      {
+        "text": "Final question. Pick between the Jellyfish Fields or Bikini Bottom.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "The fields are too dangerous.",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you picked Jellyfish Fields, you're safe. If you picked Bikini Bottom, you HAVE to subscribe.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "BIKINI BOTTOM"
+        }
+      }
+    ],
+    "video_id": 29
   }
 ]

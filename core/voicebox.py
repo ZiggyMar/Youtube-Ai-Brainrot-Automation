@@ -34,31 +34,31 @@ os.environ["PATH"] += os.pathsep + FFMPEG_DIR
 VOICE_MAPPING = {
     "SpongeBob": {
         "voice": "en-US-GuyNeural",
-        "rate": "+35%",
+        "rate": "+27%",
         "pitch": "+20Hz",
         "model": "spongebob"
     },
     "Patrick": {
         "voice": "en-US-RogerNeural",
-        "rate": "+25%",
+        "rate": "+17%",
         "pitch": "-10Hz",
         "model": "patrick"
     },
     "Squidward": {
         "voice": "en-US-EricNeural",
-        "rate": "+25%",
+        "rate": "+27%",
         "pitch": "-10Hz",
         "model": "squidward"
     },
     "Plankton": {
         "voice": "en-US-ChristopherNeural",
-        "rate": "+25%",
+        "rate": "+17%",
         "pitch": "+10Hz",
         "model": "plankton"
     },
     "MrKrabs": {
         "voice": "en-US-BrianNeural",
-        "rate": "+25%",
+        "rate": "+17%",
         "pitch": "-5Hz",
         "model": "mrkrabs"
     }
@@ -80,23 +80,36 @@ async def generate_base_audio(text, voice, rate, pitch, output_path):
     communicate = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
     await communicate.save(output_path)
 
-def smart_trim(audio_path, output_path, silence_thresh=-50, keep_silence_ms=50):
-    """Trims leading and trailing silence but keeps a small buffer."""
+def remove_internal_silence(audio_path, output_path, min_silence_len=200, silence_thresh=-45, keep_silence=50):
+    """Aggressively removes silence from within the audio to cut breathing pauses."""
     try:
         audio = AudioSegment.from_file(audio_path)
         
-        start_trim = silence.detect_leading_silence(audio, silence_threshold=silence_thresh)
-        end_trim = silence.detect_leading_silence(audio.reverse(), silence_threshold=silence_thresh)
+        # Split on silence
+        chunks = silence.split_on_silence(
+            audio,
+            min_silence_len=min_silence_len,
+            silence_thresh=silence_thresh,
+            keep_silence=keep_silence
+        )
         
-        duration = len(audio)
-        new_start = max(0, start_trim - keep_silence_ms)
-        new_end = min(duration, duration - end_trim + keep_silence_ms)
-        
-        trimmed_audio = audio[new_start:new_end]
-        trimmed_audio.export(output_path, format="wav")
-        
+        if chunks:
+            combined = chunks[0]
+            for chunk in chunks[1:]:
+                combined += chunk
+            combined.export(output_path, format="wav")
+        else:
+            # If no silence found or split failed, just export original (trimmed edges)
+            # But let's at least do leading/trailing trim if split didn't happen
+            start_trim = silence.detect_leading_silence(audio, silence_threshold=silence_thresh)
+            end_trim = silence.detect_leading_silence(audio.reverse(), silence_threshold=silence_thresh)
+            duration = len(audio)
+            new_start = max(0, start_trim - keep_silence)
+            new_end = min(duration, duration - end_trim + keep_silence)
+            audio[new_start:new_end].export(output_path, format="wav")
+            
     except Exception as e:
-        print(f"Error trimming audio {audio_path}: {e}")
+        print(f"Error processing silence for {audio_path}: {e}")
         if audio_path != output_path:
             import shutil
             shutil.copy(audio_path, output_path)
@@ -267,8 +280,8 @@ async def process_scripts():
         return
 
     for task in all_tasks:
-        # Trim
-        smart_trim(task['rvc_path'], task['final_path'])
+        # Trim and Remove Internal Silence
+        remove_internal_silence(task['rvc_path'], task['final_path'])
         
         # Transcribe
         result = whisper_model.transcribe(task['final_path'], word_timestamps=True)

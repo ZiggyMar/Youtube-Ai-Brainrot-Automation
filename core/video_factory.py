@@ -196,14 +196,27 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, t
     seg_audio = None
     character_audio = None
     
-    if is_timer and timer_clip_ref:
-        seg_audio = timer_clip_ref.audio.set_start(0)
+    # Load Timer Audio explicitly from MP4 if available (MOV might miss audio)
+    timer_audio_source = None
+    if is_timer:
+        timer_mp4 = os.path.join(ASSETS_DIR, "overlays", "timer.mp4")
+        if os.path.exists(timer_mp4):
+            timer_audio_source = AudioFileClip(timer_mp4)
+        elif timer_clip_ref and timer_clip_ref.audio:
+            timer_audio_source = timer_clip_ref.audio
+
+    if is_timer and timer_audio_source:
+        seg_audio = timer_audio_source.set_start(0)
+        # If we are mixing, lower the timer volume slightly so voice is clear
+        if os.path.exists(audio_path):
+            seg_audio = seg_audio.volumex(0.6)
     
     if os.path.exists(audio_path):
         character_audio = AudioFileClip(audio_path).set_start(0)
         if seg_audio:
             # Mix timer ticking with character speech
             # Ensure both start at 0
+            # Use duration of the segment (which is speech + 0.5s)
             seg_audio = CompositeAudioClip([seg_audio, character_audio])
         else:
             seg_audio = character_audio
@@ -231,16 +244,18 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, t
                 if sfx.duration > duration: sfx = sfx.subclip(0, duration)
                 seg_audio = CompositeAudioClip([seg_audio, sfx]) if seg_audio else sfx
 
-    if text:
-        subs = create_perfect_subtitles(json_path, CUSTOM_FONT_PATH, visuals.get("subtitle_color", "yellow"))
-        layers.extend(subs)
-        keep_alive.extend(subs)
-
+    # Timer Overlay (Add BEFORE subtitles so it doesn't cover them)
     if is_timer and timer_clip_ref:
         # Use preloaded timer clip
         timer_overlay = timer_clip_ref.copy().set_position((LAYOUT["timer"]["x"], LAYOUT["timer"]["y"])).set_duration(duration)
         layers.append(timer_overlay)
         keep_alive.append(timer_overlay)
+
+    # Subtitles (Add AFTER timer)
+    if text:
+        subs = create_perfect_subtitles(json_path, CUSTOM_FONT_PATH, visuals.get("subtitle_color", "yellow"))
+        layers.extend(subs)
+        keep_alive.extend(subs)
 
     LEVEL_MAPPING = {"2. R1": "1. EASY", "3. R2": "2. MEDIUM", "4. R3": "3. HARD", "5. R4": "4. IMPOSSIBLE"}
     raw_highlight = visuals.get("list_highlight", "")
@@ -293,6 +308,9 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, t
             except: pass
         if seg_audio:
             try: seg_audio.close()
+            except: pass
+        if timer_audio_source:
+            try: timer_audio_source.close()
             except: pass
         if cta_audio_to_add:
             try: cta_audio_to_add.close()

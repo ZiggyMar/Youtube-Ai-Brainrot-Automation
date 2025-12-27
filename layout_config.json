@@ -7,7 +7,7 @@
   },
   "subtitles": {
     "x": 83,
-    "y": 883,
+    "y": 918,
     "width": 900,
     "height": 150
   },
@@ -16,14 +16,14 @@
     "y": -121,
     "width": 1080,
     "height": 1920,
-    "scale": 1.9
+    "scale": 1
   },
   "cta": {
     "x": 0,
     "y": -300,
     "width": 1080,
     "height": 1920,
-    "scale": 1.9
+    "scale": 1.1
   },
   "difficulty_list": {
     "x": 100,
