@@ -1509,5 +1509,391 @@
       }
     ],
     "video_id": 18
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc80 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "If you are sitting right now, you are eliminated.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "But SpongeBob, everyone is sitting! That's not fair.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Okay fine. I'll let it slide. But only if you SUBSCRIBE right now.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "First question. Name a main character besides SpongeBob.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Don't say Patrick Star!",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Patrick Star, you're out! Like the video if you survived.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "PATRICK STAR"
+        }
+      },
+      {
+        "text": "Round 2. Name something Mr. Krabs loves.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Money, you are out. Subscribe if you picked anything else.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "MONEY"
+        }
+      },
+      {
+        "text": "Third question. Name a location in Bikini Bottom that isn't a home or restaurant.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I bet they're gonna say Goo Lagoon.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Goo Lagoon, you're cooked. Comment below how many you got right so far.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "GOO LAGOON"
+        }
+      },
+      {
+        "text": "Final question. Pick between Leedle-Leedle-Lee or I'm Ready.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I'm Ready sounds much safer.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you picked I'm Ready, you're safe. If you picked Leedle-Leedle-Lee, you HAVE to subscribe.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "I'M READY / LEEDLE-LEEDLE-LEE"
+        }
+      }
+    ],
+    "video_id": 22
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc80 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "If you are touching your phone right now, you are eliminated.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "But SpongeBob, everyone is doing that! Give them a chance.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Blue",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Fine! I'll let it slide. But only if you SUBSCRIBE right now.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "First question. Name a character who works at the Krusty Krab.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Don't say SpongeBob!",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said SpongeBob you're out! Like the video if you survived.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "SPONGEBOB"
+        }
+      },
+      {
+        "text": "Next question. Name a marine mammal.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Brown",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Whale. If you said Whale, you are out. Subscribe if you picked anything else.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Brown",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "WHALE"
+        }
+      },
+      {
+        "text": "Third question. Name a job or career held by a Bikini Bottom resident.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Blue",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I bet they're gonna say Fry Cook.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Fry Cook, you're cooked. Comment below how many you got right so far.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Blue",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "FRY COOK"
+        }
+      },
+      {
+        "text": "Final question. Pick between boating school or jellyfishing.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Jellyfishing is way more fun, dude.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you picked Boating School, you're safe. If you picked Jellyfishing, you HAVE to subscribe.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "JELLYFISHING"
+        }
+      }
+    ],
+    "video_id": 23
   }
 ]

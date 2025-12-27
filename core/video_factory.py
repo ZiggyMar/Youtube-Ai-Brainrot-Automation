@@ -197,12 +197,13 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, t
     character_audio = None
     
     if is_timer and timer_clip_ref:
-        seg_audio = timer_clip_ref.audio
+        seg_audio = timer_clip_ref.audio.set_start(0)
     
     if os.path.exists(audio_path):
-        character_audio = AudioFileClip(audio_path)
+        character_audio = AudioFileClip(audio_path).set_start(0)
         if seg_audio:
             # Mix timer ticking with character speech
+            # Ensure both start at 0
             seg_audio = CompositeAudioClip([seg_audio, character_audio])
         else:
             seg_audio = character_audio
@@ -226,7 +227,7 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, t
             
             # SFX
             if woosh_file and os.path.exists(woosh_file):
-                sfx = AudioFileClip(woosh_file).volumex(0.15)
+                sfx = AudioFileClip(woosh_file).volumex(0.15).set_start(0)
                 if sfx.duration > duration: sfx = sfx.subclip(0, duration)
                 seg_audio = CompositeAudioClip([seg_audio, sfx]) if seg_audio else sfx
 
@@ -257,7 +258,7 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, t
             if cta_clip.duration > duration: cta_clip = cta_clip.subclip(0, duration)
             
             if cta_clip_ref.audio:
-                cta_audio_to_add = cta_clip_ref.audio.subclip(0, min(cta_clip_ref.audio.duration, duration)).volumex(0.1)
+                cta_audio_to_add = cta_clip_ref.audio.subclip(0, min(cta_clip_ref.audio.duration, duration)).volumex(0.1).set_start(0)
                 
             layers.append(cta_clip)
             keep_alive.append(cta_clip)
@@ -343,10 +344,15 @@ def generate_video(video_data):
         if visuals.get("show_timer"):
             if timer_clip_ref:
                 seg_dur = timer_clip_ref.duration
-            # If character speaks during timer, ensure duration covers speech if longer
+            # If character speaks during timer, ensure duration covers speech + 0.5s buffer
             if os.path.exists(audio_path):
                 with AudioFileClip(audio_path) as ac:
-                    seg_dur = max(seg_dur, ac.duration)
+                    # Logic: If speech exists, duration is speech + 0.5s.
+                    # If this is shorter than timer, we cut the timer.
+                    # If longer, we extend (loop) the timer.
+                    # BUT, usually timer is ~5s and speech is ~2s.
+                    # User wants: Speech ends, then 0.5s later segment ends.
+                    seg_dur = ac.duration + 0.5
         elif os.path.exists(audio_path):
             with AudioFileClip(audio_path) as ac: seg_dur = ac.duration
             

@@ -34,39 +34,33 @@ os.environ["PATH"] += os.pathsep + FFMPEG_DIR
 VOICE_MAPPING = {
     "SpongeBob": {
         "voice": "en-US-GuyNeural",
-        "rate": "+20%",
+        "rate": "+35%",
         "pitch": "+20Hz",
         "model": "spongebob"
     },
     "Patrick": {
         "voice": "en-US-RogerNeural",
-        "rate": "+10%",
+        "rate": "+25%",
         "pitch": "-10Hz",
         "model": "patrick"
     },
     "Squidward": {
         "voice": "en-US-EricNeural",
-        "rate": "+10%",
+        "rate": "+25%",
         "pitch": "-10Hz",
         "model": "squidward"
     },
     "Plankton": {
         "voice": "en-US-ChristopherNeural",
-        "rate": "+10%",
+        "rate": "+25%",
         "pitch": "+10Hz",
         "model": "plankton"
     },
     "MrKrabs": {
         "voice": "en-US-BrianNeural",
-        "rate": "+10%",
+        "rate": "+25%",
         "pitch": "-5Hz",
         "model": "mrkrabs"
-    },
-    "Announcer": {
-        "voice": "en-US-AndrewNeural",
-        "rate": "+5%",
-        "pitch": "+0Hz",
-        "model": None
     }
 }
 
