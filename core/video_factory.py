@@ -10,8 +10,7 @@ from moviepy.editor import (
     CompositeAudioClip, afx
 )
 from PIL import Image, ImageDraw, ImageFont
-import concurrent.futures
-import time
+
 import subprocess
 import gc
 
@@ -34,19 +33,6 @@ if os.path.exists(FFMPEG_PATH):
     os.environ["IMAGEIO_FFMPEG_EXE"] = FFMPEG_PATH
     print(f"✅ Using Custom FFmpeg: {FFMPEG_PATH}")
 
-def check_nvenc_support():
-    """Checks if NVIDIA NVENC encoder is available."""
-    try:
-        cmd = [FFMPEG_PATH, "-encoders"]
-        result = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8')
-        if "h264_nvenc" in result.stdout:
-            print("🚀 NVIDIA GPU Encoding (NVENC) Detected!")
-            return True
-    except Exception as e:
-        print(f"⚠️ Could not check for NVENC: {e}")
-    return False
-
-HAS_NVENC = False # Force CPU rendering as requested
 
 # Difficulty List Config
 DIFFICULTY_LEVELS = [
@@ -59,8 +45,8 @@ DIFFICULTY_LEVELS = [
 DEFAULT_LAYOUT = {
     "character": {"x": 0, "y": 1120, "width": 1080, "height": 850},
     "subtitles": {"x": 90, "y": 1050, "width": 900, "height": 150},
-    "timer": {"x": 90, "y": 510, "width": 900, "height": 900},
-    "cta": {"x": 140, "y": 560, "width": 800, "height": 800},
+    "timer": {"x": 0, "y": 0, "width": 1080, "height": 1920},
+    "cta": {"x": 0, "y": 0, "width": 1080, "height": 1920},
     "difficulty_list": {"x": 50, "y": 100, "width": 400, "height": 400, "font_size": 50}
 }
 
@@ -196,7 +182,7 @@ def preprocess_assets():
             cmd = [FFMPEG_PATH, "-y", "-i", mp4, "-vf", f"chromakey=0x00FF00:0.1:0.1,scale={w}:{h}", "-c:v", "qtrle", mov]
             subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, timer_clip_ref=None, cta_clip_ref=None):
+def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, timer_clip_ref=None, cta_clip_ref=None, woosh_file=None):
     visuals = segment.get("visuals", {})
     text = segment.get("text", "")
     speaker = segment.get("speaker", "")
@@ -239,13 +225,10 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, t
             keep_alive.append(char_clip)
             
             # SFX
-            sfx_dir = os.path.join(ASSETS_DIR, "Sounds")
-            if os.path.exists(sfx_dir):
-                sfx_files = glob.glob(os.path.join(sfx_dir, "*.wav"))
-                if sfx_files:
-                    sfx = AudioFileClip(random.choice(sfx_files)).volumex(0.15)
-                    if sfx.duration > duration: sfx = sfx.subclip(0, duration)
-                    seg_audio = CompositeAudioClip([seg_audio, sfx]) if seg_audio else sfx
+            if woosh_file and os.path.exists(woosh_file):
+                sfx = AudioFileClip(woosh_file).volumex(0.15)
+                if sfx.duration > duration: sfx = sfx.subclip(0, duration)
+                seg_audio = CompositeAudioClip([seg_audio, sfx]) if seg_audio else sfx
 
     if text:
         subs = create_perfect_subtitles(json_path, CUSTOM_FONT_PATH, visuals.get("subtitle_color", "yellow"))
@@ -322,7 +305,7 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, t
         
     return out_path, cta_shown
 
-def generate_video(video_data, use_gpu=False):
+def generate_video(video_data):
     video_id = video_data["video_id"]
     print(f"🎬 Rendering Video {video_id} (Segment-Based)...")
     
@@ -336,7 +319,8 @@ def generate_video(video_data, use_gpu=False):
         has_mask = timer_path.endswith(".mov")
         timer_clip_ref = VideoFileClip(timer_path, has_mask=has_mask)
         if not has_mask: 
-            timer_clip_ref = timer_clip_ref.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10).resize(width=LAYOUT["timer"]["width"])
+            timer_clip_ref = timer_clip_ref.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
+        timer_clip_ref = timer_clip_ref.resize(newsize=(LAYOUT["timer"]["width"], LAYOUT["timer"]["height"]))
 
     cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta_alpha_scaled.mov")
     if not os.path.exists(cta_path): cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
@@ -344,7 +328,8 @@ def generate_video(video_data, use_gpu=False):
         has_mask = cta_path.endswith(".mov")
         cta_clip_ref = VideoFileClip(cta_path, has_mask=has_mask)
         if not has_mask:
-            cta_clip_ref = cta_clip_ref.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10).resize(width=LAYOUT["cta"]["width"])
+            cta_clip_ref = cta_clip_ref.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
+        cta_clip_ref = cta_clip_ref.resize(newsize=(LAYOUT["cta"]["width"], LAYOUT["cta"]["height"]))
 
     total_duration = 0
     segments_to_render = []
@@ -389,10 +374,24 @@ def generate_video(video_data, use_gpu=False):
     bg_full = bg_full.resize((1080, 1920))
 
     segment_files, revealed_answers, cta_shown, bg_cursor = [], {}, False, 0
+    
+    # Pre-scan Woosh Sounds
+    sfx_dir = os.path.join(ASSETS_DIR, "Sounds")
+    available_wooshes = []
+    if os.path.exists(sfx_dir):
+        available_wooshes.extend(glob.glob(os.path.join(sfx_dir, "*.wav")))
+        available_wooshes.extend(glob.glob(os.path.join(sfx_dir, "*.mp3")))
+    character_woosh_map = {}
+
     for i, seg_data, dur in segments_to_render:
+        # Assign Woosh Sound
+        speaker = seg_data.get("speaker", "")
+        if speaker and speaker not in character_woosh_map and available_wooshes:
+            character_woosh_map[speaker] = random.choice(available_wooshes)
+
         bg_slice = bg_full.subclip(bg_cursor, bg_cursor + dur)
         bg_cursor += dur
-        seg_path, cta_shown = render_segment(video_id, i, seg_data, bg_slice, revealed_answers, cta_shown, timer_clip_ref, cta_clip_ref)
+        seg_path, cta_shown = render_segment(video_id, i, seg_data, bg_slice, revealed_answers, cta_shown, timer_clip_ref, cta_clip_ref, woosh_file=character_woosh_map.get(speaker))
         segment_files.append(seg_path)
         bg_slice.close()
         gc.collect() # Extra collection between segments
@@ -442,7 +441,7 @@ def generate_video(video_data, use_gpu=False):
 
 def process_video_wrapper(video_data):
     try:
-        generate_video(video_data, use_gpu=HAS_NVENC)
+        generate_video(video_data)
         return True
     except Exception as e:
         print(f"❌ Error processing video {video_data.get('video_id')}: {e}")

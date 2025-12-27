@@ -5,8 +5,7 @@ import edge_tts
 import torch
 import whisper
 import gc
-import glob
-import random
+
 from pydub import AudioSegment, silence
 from rvc_python.infer import RVCInference
 

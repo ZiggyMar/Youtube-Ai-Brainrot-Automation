@@ -12,16 +12,16 @@
     "height": 150
   },
   "timer": {
-    "x": 140,
-    "y": 359,
-    "width": 773,
-    "height": 768
+    "x": 0,
+    "y": 0,
+    "width": 1080,
+    "height": 1920
   },
   "cta": {
-    "x": 127,
-    "y": 196,
-    "width": 807,
-    "height": 859
+    "x": 0,
+    "y": 0,
+    "width": 1080,
+    "height": 1920
   },
   "difficulty_list": {
     "x": 58,
