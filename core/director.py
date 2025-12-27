@@ -25,7 +25,7 @@ OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 OUTPUT_FILE = os.path.join(DATA_DIR, "video_scripts.json")
 ARCHIVE_FILE = os.path.join(DATA_DIR, "archive_scripts.json")
 
-PROMPT_TEXT = """
+PROMPT_TEMPLATE = """
 You are a creative director for viral 'Shorts' trivia game videos.
 Generate 1 NEW script.
 
@@ -40,7 +40,7 @@ TITLE INSTRUCTIONS:
 SCRIPT STRUCTURE (STRICTLY FOLLOW THIS FLOW):
 
 1. **THE HOOK (Instant Elimination)**
-   - Speaker A (SpongeBob): "If you are [universal action e.g. breathing, blinking, sitting, touching a phone], you are eliminated."
+   - Speaker A (SpongeBob): "If you are {intro_action}, you are eliminated."
    - Speaker B (Patrick/Squidward/etc): "But SpongeBob, everyone is doing that! Give them a chance."
    - Speaker A: "Fine! I'll let it slide. But only if you SUBSCRIBE right now." (MUST use the word "SUBSCRIBE" to trigger overlay).
 
@@ -72,7 +72,7 @@ OUTPUT FORMAT (Follow this structure exactly):
     "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc80 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
     "script": [
       {
-        "text": "If you are blinking right now, you are eliminated.",
+        "text": "If you are {intro_action} right now, you are eliminated.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
@@ -83,7 +83,7 @@ OUTPUT FORMAT (Follow this structure exactly):
         }
       },
       {
-        "text": "SpongeBob, come on! Everyone blinks!",
+        "text": "SpongeBob, come on! Everyone does that!",
         "speaker": "Patrick",
         "visuals": {
           "character": "Patrick",
@@ -170,7 +170,94 @@ OUTPUT FORMAT (Follow this structure exactly):
           "answer_reveal": "PINK"
         }
       },
-      ... (Continue through Round 4: IMPOSSIBLE)
+      {
+        "text": "Round 3. Name a drink.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Cyan",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I bet they're gonna say Kelp Shake.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Kelp Shake, you're cooked. Comment below how many you got right so far.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Cyan",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "KELP SHAKE"
+        }
+      },
+      {
+        "text": "Final question. Pick between Gary or Sandy.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Gary is the obvious answer, he's a snail!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you picked Gary, you're safe. If you picked Sandy, you HAVE to subscribe.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "GARY"
+        }
+      }
     ]
   }
 ]
@@ -184,6 +271,15 @@ IMPORTANT:
 - Include EXACTLY 4 Rounds: 1. EASY, 2. MEDIUM, 3. HARD, 4. IMPOSSIBLE.
 - RETURN ONLY RAW JSON. NO MARKDOWN.
 """
+
+def get_prompt_text():
+    actions = [
+        "breathing", "blinking", "sitting down", "holding a phone", 
+        "touching your screen", "wearing a shirt", "inside a building", 
+        "awake", "alive", "using wifi", "wearing socks", "laying in bed"
+    ]
+    action = random.choice(actions)
+    return PROMPT_TEMPLATE.replace("{intro_action}", action)
 
 def validate_and_repair_script(video):
     """Ensures the video object has all required fields and correct types."""
@@ -263,6 +359,18 @@ def validate_and_repair_script(video):
         
         repaired_script.append(seg)
     
+    # Check for round count
+    round_count = 0
+    for seg in repaired_script:
+        txt = seg["text"].lower()
+        if "round" in txt and "name" in txt:
+            round_count += 1
+        elif "final question" in txt:
+            round_count += 1
+            
+    if round_count < 4:
+        print(f"⚠️ Warning: Script for '{video['title']}' seems to have only {round_count} rounds (expected 4).")
+
     video["script"] = repaired_script
     return video
 
@@ -331,7 +439,7 @@ def try_gemini():
         client = genai.Client(api_key=GEMINI_API_KEY)
         response = client.models.generate_content(
             model="gemini-flash-latest",
-            contents=PROMPT_TEXT,
+            contents=get_prompt_text(),
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )
         return save_scripts(json.loads(response.text))
@@ -345,7 +453,7 @@ def try_groq():
     try:
         headers = {"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"}
         payload = {
-            "messages": [{"role": "user", "content": PROMPT_TEXT}],
+            "messages": [{"role": "user", "content": get_prompt_text()}],
             "model": "llama-3.3-70b-versatile",
             "response_format": {"type": "json_object"}
         }
@@ -363,7 +471,7 @@ def try_mistral():
     try:
         headers = {"Authorization": f"Bearer {MISTRAL_API_KEY}", "Content-Type": "application/json"}
         payload = {
-            "messages": [{"role": "user", "content": PROMPT_TEXT}],
+            "messages": [{"role": "user", "content": get_prompt_text()}],
             "model": "mistral-small-latest",
             "response_format": {"type": "json_object"}
         }
@@ -380,7 +488,7 @@ def try_openrouter():
     if not OPENROUTER_API_KEY: return False
     try:
         headers = {"Authorization": f"Bearer {OPENROUTER_API_KEY}", "Content-Type": "application/json"}
-        payload = {"messages": [{"role": "user", "content": PROMPT_TEXT}], "model": "meta-llama/llama-3-8b-instruct:free"}
+        payload = {"messages": [{"role": "user", "content": get_prompt_text()}], "model": "meta-llama/llama-3-8b-instruct:free"}
         response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload)
         response.raise_for_status()
         content = response.json()['choices'][0]['message']['content']
@@ -394,10 +502,11 @@ def try_openrouter():
 def generate_dummy_script():
     print("⚠️ Generating DUMMY script due to API failures...")
     rand_id = random.randint(1000, 9999)
+    action = random.choice(["breathing", "blinking", "sitting down", "holding a phone", "touching your screen", "wearing a shirt", "inside a building", "awake"])
     data = [{
         "title": f"Avoid saying the same thing as FREAKBOB {rand_id} 💀 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
         "script": [
-            {"text": "If you are breathing right now, then you are out!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
+            {"text": f"If you are {action} right now, then you are out!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
             {"text": "But SpongeBob, that's too mean! Give them another chance!", "speaker": "Patrick", "visuals": {"character": "Patrick", "subtitle_color": "Pink", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
             {"text": "Ugh, fine! But only if they SUBSCRIBE right now!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
             {"text": "Round 1. Name a fruit.", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},

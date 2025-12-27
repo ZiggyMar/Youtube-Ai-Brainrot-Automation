@@ -332,14 +332,14 @@ def generate_video(video_data):
     timer_clip_ref = None
     cta_clip_ref = None
     
-    timer_path = os.path.join(ASSETS_DIR, "overlays", "timer_alpha.mov")
-    if not os.path.exists(timer_path): timer_path = os.path.join(ASSETS_DIR, "overlays", "timer_alpha_scaled.mov")
-    if not os.path.exists(timer_path): timer_path = os.path.join(ASSETS_DIR, "overlays", "timer.mp4")
+    # Timer: Prefer MP4 source and apply runtime mask for reliability
+    timer_path = os.path.join(ASSETS_DIR, "overlays", "timer.mp4")
+    if not os.path.exists(timer_path): timer_path = os.path.join(ASSETS_DIR, "overlays", "timer_alpha.mov")
+    
     if os.path.exists(timer_path):
-        has_mask = timer_path.endswith(".mov")
-        timer_clip_ref = VideoFileClip(timer_path, has_mask=has_mask)
-        if not has_mask: 
-            timer_clip_ref = timer_clip_ref.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
+        # Force green screen removal for MP4, or if it's the MOV fallback (just in case)
+        timer_clip_ref = VideoFileClip(timer_path)
+        timer_clip_ref = timer_clip_ref.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
         
         # Apply Scale
         timer_scale = LAYOUT["timer"].get("scale", 1.0)
@@ -366,14 +366,14 @@ def generate_video(video_data):
         else:
              timer_clip_ref = timer_clip_ref.set_position((LAYOUT["timer"]["x"], LAYOUT["timer"]["y"]))
 
-    cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta_alpha.mov")
-    if not os.path.exists(cta_path): cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta_alpha_scaled.mov")
-    if not os.path.exists(cta_path): cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
+    # CTA: Prefer MP4 source and apply runtime mask for reliability
+    cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
+    if not os.path.exists(cta_path): cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta_alpha.mov")
+    
     if os.path.exists(cta_path):
-        has_mask = cta_path.endswith(".mov")
-        cta_clip_ref = VideoFileClip(cta_path, has_mask=has_mask)
-        if not has_mask:
-            cta_clip_ref = cta_clip_ref.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
+        # Force green screen removal for MP4, or if it's the MOV fallback (just in case)
+        cta_clip_ref = VideoFileClip(cta_path)
+        cta_clip_ref = cta_clip_ref.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
             
         # Apply Scale
         cta_scale = LAYOUT["cta"].get("scale", 1.0)
