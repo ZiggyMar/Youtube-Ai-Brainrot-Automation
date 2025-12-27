@@ -2849,5 +2849,369 @@
       }
     ],
     "video_id": 29
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc80 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "If you are breathing right now, you are eliminated.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "But SpongeBob, everyone is doing that! Give them a chance.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Fine! I'll let it slide. But only if you SUBSCRIBE right now.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "First question. Name SpongeBob's pet.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Don't say Gary!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Gary you're out! Like the video if you survived.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "GARY"
+        }
+      },
+      {
+        "text": "Next question. Name a common vehicle in Bikini Bottom.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked BOAT. If you said BOAT, you are out. Subscribe if you picked anything else.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Teal",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "BOAT"
+        }
+      },
+      {
+        "text": "Third question. Name a character who works at the Chum Bucket.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Orange",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I bet they're gonna say Plankton.",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said PLANKTON, you're cooked. Comment below how many you got right so far.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Orange",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "PLANKTON"
+        }
+      },
+      {
+        "text": "Final question. Pick between Salty Spitoon or Goo Lagoon.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Goo Lagoon is for babies!",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you picked Salty Spitoon, you're safe. If you picked Goo Lagoon, you HAVE to subscribe.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "GOO LAGOON"
+        }
+      }
+    ],
+    "video_id": 30
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc80 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "If you are breathing right now, you are eliminated.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "But SpongeBob, everyone is doing that! Give them a chance.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Fine! I'll let it slide. But only if you SUBSCRIBE right now.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Round 1. Name one of the main character's pets.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Don't say Gary!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Gary you're out! Like the video if you survived.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "GARY"
+        }
+      },
+      {
+        "text": "Round 2. Name something Squidward loves to play.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Cyan",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Clarinet, you are out. Subscribe if you picked anything else.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Cyan",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "CLARINET"
+        }
+      },
+      {
+        "text": "Round 3. Name a character who lives in a dome structure.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I bet they're gonna say Sandy.",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Sandy, you're cooked. Comment below how many you got right so far.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "SANDY"
+        }
+      },
+      {
+        "text": "Final question. Pick between the Chum Bucket or the Krusty Krab.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "The Krusty Krab smells much better, that's for sure.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you picked Krusty Krab, you're safe. If you picked Chum Bucket, you HAVE to subscribe.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "CHUM BUCKET"
+        }
+      }
+    ],
+    "video_id": 31
   }
 ]

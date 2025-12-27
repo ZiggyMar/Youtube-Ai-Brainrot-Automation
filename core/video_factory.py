@@ -332,7 +332,8 @@ def generate_video(video_data):
     timer_clip_ref = None
     cta_clip_ref = None
     
-    timer_path = os.path.join(ASSETS_DIR, "overlays", "timer_alpha_scaled.mov")
+    timer_path = os.path.join(ASSETS_DIR, "overlays", "timer_alpha.mov")
+    if not os.path.exists(timer_path): timer_path = os.path.join(ASSETS_DIR, "overlays", "timer_alpha_scaled.mov")
     if not os.path.exists(timer_path): timer_path = os.path.join(ASSETS_DIR, "overlays", "timer.mp4")
     if os.path.exists(timer_path):
         has_mask = timer_path.endswith(".mov")
@@ -365,7 +366,8 @@ def generate_video(video_data):
         else:
              timer_clip_ref = timer_clip_ref.set_position((LAYOUT["timer"]["x"], LAYOUT["timer"]["y"]))
 
-    cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta_alpha_scaled.mov")
+    cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta_alpha.mov")
+    if not os.path.exists(cta_path): cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta_alpha_scaled.mov")
     if not os.path.exists(cta_path): cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
     if os.path.exists(cta_path):
         has_mask = cta_path.endswith(".mov")
