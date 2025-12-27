@@ -1,9 +1,9 @@
 [
   {
-    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc20 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "title": "Avoid saying the same thing as FREAKBOB \ud83c\udf54 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
     "script": [
       {
-        "text": "If you are watching TV, then you are out!",
+        "text": "If you are sitting down right now, you are eliminated.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
@@ -14,7 +14,7 @@
         }
       },
       {
-        "text": "But SpongeBob, that's way too mean! Give them another chance!",
+        "text": "But SpongeBob, everyone is doing that! Give them a chance.",
         "speaker": "Patrick",
         "visuals": {
           "character": "Patrick",
@@ -25,7 +25,7 @@
         }
       },
       {
-        "text": "Ugh, fine! But only if they subscribe right now for a revive!",
+        "text": "Fine! I'll let it slide. But only if you SUBSCRIBE right now.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
@@ -36,7 +36,7 @@
         }
       },
       {
-        "text": "Round 1: EASY. Name a character from Bikini Bottom.",
+        "text": "First question. Name a character that works at the Krusty Krab.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
@@ -47,33 +47,33 @@
         }
       },
       {
-        "text": "...",
-        "speaker": "Timer",
+        "text": "Don't say SpongeBob, you know everyone chose him!",
+        "speaker": "Squidward",
         "visuals": {
-          "character": null,
-          "subtitle_color": "White",
+          "character": "Squidward",
+          "subtitle_color": "Cyan",
           "list_highlight": "1. EASY",
           "show_timer": true,
           "answer_reveal": null
         }
       },
       {
-        "text": "I picked Patrick. If you said Patrick, you are out!",
+        "text": "If you said SpongeBob you're out! Like the video if you survived.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
           "subtitle_color": "Yellow",
           "list_highlight": "1. EASY",
           "show_timer": false,
-          "answer_reveal": "PATRICK"
+          "answer_reveal": "SPONGEBOB"
         }
       },
       {
-        "text": "Round 2: MEDIUM. Name a food that Mr. Krabs loves.",
-        "speaker": "SpongeBob",
+        "text": "Next question. Name something in Bikini Bottom that can fly.",
+        "speaker": "Sandy",
         "visuals": {
-          "character": "SpongeBob",
-          "subtitle_color": "Yellow",
+          "character": "Sandy",
+          "subtitle_color": "Brown",
           "list_highlight": "2. MEDIUM",
           "show_timer": false,
           "answer_reveal": null
@@ -91,22 +91,22 @@
         }
       },
       {
-        "text": "I picked Krabby Patties. If you said Krabby Patties, you are out!",
-        "speaker": "SpongeBob",
+        "text": "I picked Jellyfish. If you said Jellyfish, you are out. Subscribe if you picked anything else.",
+        "speaker": "Sandy",
         "visuals": {
-          "character": "SpongeBob",
-          "subtitle_color": "Yellow",
+          "character": "Sandy",
+          "subtitle_color": "Brown",
           "list_highlight": "2. MEDIUM",
           "show_timer": false,
-          "answer_reveal": "KRABBY PATTIES"
+          "answer_reveal": "JELLYFISH"
         }
       },
       {
-        "text": "Round 3: HARD. Name a villain from SpongeBob SquarePants.",
-        "speaker": "SpongeBob",
+        "text": "Third question. Name one of Krabs' stupid catchphrases.",
+        "speaker": "Plankton",
         "visuals": {
-          "character": "SpongeBob",
-          "subtitle_color": "Yellow",
+          "character": "Plankton",
+          "subtitle_color": "Green",
           "list_highlight": "3. HARD",
           "show_timer": false,
           "answer_reveal": null
@@ -124,18 +124,29 @@
         }
       },
       {
-        "text": "I picked Plankton. If you said Plankton, you are out!",
-        "speaker": "SpongeBob",
+        "text": "I bet they're gonna say money, money, money, Argh!",
+        "speaker": "MrKrabs",
         "visuals": {
-          "character": "SpongeBob",
-          "subtitle_color": "Yellow",
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
           "list_highlight": "3. HARD",
           "show_timer": false,
-          "answer_reveal": "PLANKTON"
+          "answer_reveal": null
         }
       },
       {
-        "text": "Round 4: IMPOSSIBLE. Name a made-up holiday in Bikini Bottom.",
+        "text": "If you said 'Argh', you're cooked. Comment below how many you got right so far.",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "ARGH"
+        }
+      },
+      {
+        "text": "Final question. Pick between Boating School or Karate.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
@@ -157,17 +168,28 @@
         }
       },
       {
-        "text": "I picked Mermaid Man and Barnacle Boy Day. If you said Mermaid Man and Barnacle Boy Day, you are out!",
+        "text": "Karate is way more fun, SpongeBob!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you picked Boating School, you're safe. If you picked Karate, you HAVE to subscribe.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
           "subtitle_color": "Yellow",
           "list_highlight": "4. IMPOSSIBLE",
           "show_timer": false,
-          "answer_reveal": "MERMAID MAN AND BARNACLE BOY DAY"
+          "answer_reveal": "KARATE"
         }
       }
     ],
-    "video_id": 18
+    "video_id": 21
   }
 ]

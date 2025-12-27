@@ -1338,5 +1338,176 @@
       }
     ],
     "video_id": 13
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc20 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "If you are watching TV, then you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "But SpongeBob, that's way too mean! Give them another chance!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Ugh, fine! But only if they subscribe right now for a revive!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Round 1: EASY. Name a character from Bikini Bottom.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Patrick. If you said Patrick, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "PATRICK"
+        }
+      },
+      {
+        "text": "Round 2: MEDIUM. Name a food that Mr. Krabs loves.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Krabby Patties. If you said Krabby Patties, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "KRABBY PATTIES"
+        }
+      },
+      {
+        "text": "Round 3: HARD. Name a villain from SpongeBob SquarePants.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Plankton. If you said Plankton, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "PLANKTON"
+        }
+      },
+      {
+        "text": "Round 4: IMPOSSIBLE. Name a made-up holiday in Bikini Bottom.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I picked Mermaid Man and Barnacle Boy Day. If you said Mermaid Man and Barnacle Boy Day, you are out!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "MERMAID MAN AND BARNACLE BOY DAY"
+        }
+      }
+    ],
+    "video_id": 18
   }
 ]

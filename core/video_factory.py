@@ -196,7 +196,7 @@ def preprocess_assets():
             cmd = [FFMPEG_PATH, "-y", "-i", mp4, "-vf", f"chromakey=0x00FF00:0.1:0.1,scale={w}:{h}", "-c:v", "qtrle", mov]
             subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown):
+def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, timer_clip_ref=None, cta_clip_ref=None):
     visuals = segment.get("visuals", {})
     text = segment.get("text", "")
     speaker = segment.get("speaker", "")
@@ -206,20 +206,26 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown):
     audio_path = os.path.join(AUDIO_CACHE_DIR, f"v{video_id}_s{i}_{speaker}.wav")
     json_path = os.path.join(AUDIO_CACHE_DIR, f"v{video_id}_s{i}_{speaker}.json")
     
+    # Audio Logic: Timer + Character Mixing
     seg_audio = None
-    if is_timer:
-        timer_path = os.path.join(ASSETS_DIR, "overlays", "timer_alpha_scaled.mov")
-        if not os.path.exists(timer_path): timer_path = os.path.join(ASSETS_DIR, "overlays", "timer.mp4")
-        if os.path.exists(timer_path):
-            timer_clip_temp = VideoFileClip(timer_path, has_mask=timer_path.endswith(".mov"))
-            seg_audio = timer_clip_temp.audio
-    elif os.path.exists(audio_path):
-        seg_audio = AudioFileClip(audio_path)
+    character_audio = None
+    
+    if is_timer and timer_clip_ref:
+        seg_audio = timer_clip_ref.audio
+    
+    if os.path.exists(audio_path):
+        character_audio = AudioFileClip(audio_path)
+        if seg_audio:
+            # Mix timer ticking with character speech
+            seg_audio = CompositeAudioClip([seg_audio, character_audio])
+        else:
+            seg_audio = character_audio
 
     layers = [bg_clip]
     keep_alive = []
 
-    if not is_timer:
+    # Character Logic (Show character even during timer if they are speaking)
+    if (not is_timer) or (is_timer and character_audio):
         char_path = find_character_image(speaker, visuals.get("character", ""))
         if char_path:
             def slide_pos(t):
@@ -241,21 +247,16 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown):
                     if sfx.duration > duration: sfx = sfx.subclip(0, duration)
                     seg_audio = CompositeAudioClip([seg_audio, sfx]) if seg_audio else sfx
 
-    if text and not is_timer:
+    if text:
         subs = create_perfect_subtitles(json_path, CUSTOM_FONT_PATH, visuals.get("subtitle_color", "yellow"))
         layers.extend(subs)
         keep_alive.extend(subs)
 
-    if is_timer:
-        timer_path = os.path.join(ASSETS_DIR, "overlays", "timer_alpha_scaled.mov")
-        if not os.path.exists(timer_path): timer_path = os.path.join(ASSETS_DIR, "overlays", "timer.mp4")
-        if os.path.exists(timer_path):
-            has_mask = timer_path.endswith(".mov")
-            timer_overlay = VideoFileClip(timer_path, has_mask=has_mask)
-            if not has_mask: timer_overlay = timer_overlay.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10).resize(width=LAYOUT["timer"]["width"])
-            timer_overlay = timer_overlay.set_position((LAYOUT["timer"]["x"], LAYOUT["timer"]["y"])).set_duration(duration)
-            layers.append(timer_overlay)
-            keep_alive.append(timer_overlay)
+    if is_timer and timer_clip_ref:
+        # Use preloaded timer clip
+        timer_overlay = timer_clip_ref.copy().set_position((LAYOUT["timer"]["x"], LAYOUT["timer"]["y"])).set_duration(duration)
+        layers.append(timer_overlay)
+        keep_alive.append(timer_overlay)
 
     LEVEL_MAPPING = {"2. R1": "1. EASY", "3. R2": "2. MEDIUM", "4. R3": "3. HARD", "5. R4": "4. IMPOSSIBLE"}
     raw_highlight = visuals.get("list_highlight", "")
@@ -266,19 +267,20 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown):
     keep_alive.extend(diff_list)
 
     cta_audio_to_add = None
-    if not cta_shown and text and any(k in text.lower() for k in ["subscribe", "like", "button", "lock in"]):
-        cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta_alpha_scaled.mov")
-        if not os.path.exists(cta_path): cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
+    # CTA Logic: Trigger on "subscribe" keyword
+    if text and "subscribe" in text.lower() and cta_clip_ref:
         try:
-            cta_source = VideoFileClip(cta_path, has_mask=cta_path.endswith(".mov"))
-            cta_clip = cta_source if cta_path.endswith(".mov") else cta_source.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10).resize(width=LAYOUT["cta"]["width"])
+            cta_clip = cta_clip_ref.copy().set_position((LAYOUT["cta"]["x"], LAYOUT["cta"]["y"])).set_start(0)
             if cta_clip.duration > duration: cta_clip = cta_clip.subclip(0, duration)
-            if cta_source.audio: cta_audio_to_add = cta_source.audio.subclip(0, min(cta_source.audio.duration, duration)).volumex(0.1)
-            cta_clip = cta_clip.set_position((LAYOUT["cta"]["x"], LAYOUT["cta"]["y"])).set_start(0)
+            
+            if cta_clip_ref.audio:
+                cta_audio_to_add = cta_clip_ref.audio.subclip(0, min(cta_clip_ref.audio.duration, duration)).volumex(0.1)
+                
             layers.append(cta_clip)
-            keep_alive.extend([cta_clip, cta_source])
+            keep_alive.append(cta_clip)
             cta_shown = True
-        except: pass
+        except Exception as e:
+            print(f"⚠️ CTA Error: {e}")
 
     segment_comp = CompositeVideoClip(layers, size=(1080, 1920)).set_duration(duration)
     seg_audios = [seg_audio] if seg_audio else []
@@ -311,6 +313,9 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown):
         if cta_audio_to_add:
             try: cta_audio_to_add.close()
             except: pass
+        if character_audio:
+            try: character_audio.close()
+            except: pass
         
         # Force garbage collection after each segment
         gc.collect()
@@ -321,6 +326,26 @@ def generate_video(video_data, use_gpu=False):
     video_id = video_data["video_id"]
     print(f"🎬 Rendering Video {video_id} (Segment-Based)...")
     
+    # Preload Assets (Timer & CTA)
+    timer_clip_ref = None
+    cta_clip_ref = None
+    
+    timer_path = os.path.join(ASSETS_DIR, "overlays", "timer_alpha_scaled.mov")
+    if not os.path.exists(timer_path): timer_path = os.path.join(ASSETS_DIR, "overlays", "timer.mp4")
+    if os.path.exists(timer_path):
+        has_mask = timer_path.endswith(".mov")
+        timer_clip_ref = VideoFileClip(timer_path, has_mask=has_mask)
+        if not has_mask: 
+            timer_clip_ref = timer_clip_ref.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10).resize(width=LAYOUT["timer"]["width"])
+
+    cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta_alpha_scaled.mov")
+    if not os.path.exists(cta_path): cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
+    if os.path.exists(cta_path):
+        has_mask = cta_path.endswith(".mov")
+        cta_clip_ref = VideoFileClip(cta_path, has_mask=has_mask)
+        if not has_mask:
+            cta_clip_ref = cta_clip_ref.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10).resize(width=LAYOUT["cta"]["width"])
+
     total_duration = 0
     segments_to_render = []
     for i, segment in enumerate(video_data.get("script", []), start=1):
@@ -328,18 +353,26 @@ def generate_video(video_data, use_gpu=False):
         speaker = segment.get("speaker", "")
         audio_path = os.path.join(AUDIO_CACHE_DIR, f"v{video_id}_s{i}_{speaker}.wav")
         seg_dur = 0
+        
+        # Determine duration based on audio or timer
         if visuals.get("show_timer"):
-            timer_path = os.path.join(ASSETS_DIR, "overlays", "timer_alpha_scaled.mov")
-            if not os.path.exists(timer_path): timer_path = os.path.join(ASSETS_DIR, "overlays", "timer.mp4")
-            if os.path.exists(timer_path):
-                with VideoFileClip(timer_path) as tc: seg_dur = tc.duration
+            if timer_clip_ref:
+                seg_dur = timer_clip_ref.duration
+            # If character speaks during timer, ensure duration covers speech if longer
+            if os.path.exists(audio_path):
+                with AudioFileClip(audio_path) as ac:
+                    seg_dur = max(seg_dur, ac.duration)
         elif os.path.exists(audio_path):
             with AudioFileClip(audio_path) as ac: seg_dur = ac.duration
+            
         if seg_dur > 0:
             total_duration += seg_dur
             segments_to_render.append((i, segment, seg_dur))
 
-    if not segments_to_render: return
+    if not segments_to_render: 
+        if timer_clip_ref: timer_clip_ref.close()
+        if cta_clip_ref: cta_clip_ref.close()
+        return
 
     bg_files = glob.glob(os.path.join(ASSETS_DIR, "backgrounds", "*.mp4"))
     if not bg_files: return
@@ -359,25 +392,25 @@ def generate_video(video_data, use_gpu=False):
     for i, seg_data, dur in segments_to_render:
         bg_slice = bg_full.subclip(bg_cursor, bg_cursor + dur)
         bg_cursor += dur
-        seg_path, cta_shown = render_segment(video_id, i, seg_data, bg_slice, revealed_answers, cta_shown)
+        seg_path, cta_shown = render_segment(video_id, i, seg_data, bg_slice, revealed_answers, cta_shown, timer_clip_ref, cta_clip_ref)
         segment_files.append(seg_path)
         bg_slice.close()
         gc.collect() # Extra collection between segments
 
     bg_full.close()
     bg_source.close()
+    if timer_clip_ref: timer_clip_ref.close()
+    if cta_clip_ref: cta_clip_ref.close()
     gc.collect()
 
     import re
     safe_title = re.sub(r'[<>:"/\\|?*]', '', video_data.get("title", f"video_{video_id}")).strip()
     out_path = os.path.join(OUTPUT_DIR, f"{safe_title}.mp4")
     
-
     concat_list = os.path.join(TEMP_SEGMENTS_DIR, f"v{video_id}_list.txt")
     print("   - Concatenating Segments...")
     temp_concat = os.path.join(TEMP_SEGMENTS_DIR, f"v{video_id}_concat.mp4")
     
-    # Fix SyntaxError: f-string expression part cannot include a backslash
     with open(concat_list, "w", encoding="utf-8") as f:
         for sf in segment_files:
             if sf:
@@ -395,7 +428,6 @@ def generate_video(video_data, use_gpu=False):
         cmd = [FFMPEG_PATH, "-y", "-i", temp_concat, "-c", "copy", out_path]
     subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    # Cleanup with error handling for WinError 32
     try:
         if os.path.exists(concat_list): os.remove(concat_list)
         if os.path.exists(temp_concat): os.remove(temp_concat)

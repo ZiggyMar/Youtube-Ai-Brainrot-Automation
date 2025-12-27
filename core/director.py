@@ -37,20 +37,42 @@ TITLE INSTRUCTIONS:
 - MUST use "FREAKBOB" instead of "SpongeBob" in the title.
 - MUST include hashtags: #Spongebob #Quiz #BrainrotQuiz #AIQuiz.
 
-HOOK & CTA STRUCTURE (MUST START EVERY VIDEO WITH THIS):
-1. SpongeBob: "If you are [super common action], then you are out!" 
-   - Examples: "If you are laying down, then you are out!", "If you are breathing, then you are out!", "If you drank water today, then you are out!"
-2. Another Character (Patrick, Squidward, MrKrabs, or Plankton): "But SpongeBob, that's too mean! Give them another chance!" (or similar vibe).
-3. SpongeBob: "Ugh, fine! But only if they subscribe right now!"
-   - This segment MUST mention "subscribe" to trigger the CTA overlay.
+SCRIPT STRUCTURE (STRICTLY FOLLOW THIS FLOW):
+
+1. **THE HOOK (Instant Elimination)**
+   - Speaker A (SpongeBob): "If you are [universal action e.g. breathing, blinking, sitting, touching a phone], you are eliminated."
+   - Speaker B (Patrick/Squidward/etc): "But SpongeBob, everyone is doing that! Give them a chance."
+   - Speaker A: "Fine! I'll let it slide. But only if you SUBSCRIBE right now." (MUST use the word "SUBSCRIBE" to trigger overlay).
+
+2. **ROUND 1: THE TRAP (Obvious Answer)**
+   - Speaker A: "First question. Name [Something with a VERY obvious answer]."
+   - **TIMER SEGMENT (SPECIAL)**: During the timer, Speaker B (NOT the host) interrupts: "Don't say [The Obvious Answer]!"
+   - Speaker A: "If you said [The Obvious Answer] you're out! Like the video if you survived."
+
+3. **ROUND 2: STANDARD**
+   - Speaker C: "Next question. Name [Category]."
+   - **TIMER SEGMENT**: Silent or generic ticking.
+   - Speaker C: "If you said [Item], you are out. Subscribe if you picked anything else."
+
+4. **ROUND 3: COMMENT BAIT**
+   - Speaker E: "Third question. Name [Category]."
+   - **TIMER SEGMENT**: Silent or generic ticking.
+   - Speaker F: "I bet they're gonna say [Item]."
+   - Speaker E: "If you said [Item], you're cooked. Comment below how many you got right so far."
+
+5. **FINAL ROUND: PICK A SIDE (A vs B)**
+   - Speaker A: "Final question. Pick between [Option A] or [Option B]." (Do NOT say "Pick between A or B", say the actual options).
+   - **TIMER SEGMENT**: Silent or generic ticking.
+   - Speaker B: "[Short comment on one option]."
+   - Speaker A: "If you picked [Option A], you're safe. If you picked [Option B], you HAVE to subscribe."
 
 OUTPUT FORMAT (Follow this structure exactly):
 [
   {
-    "title": "Avoid saying the same thing as FREAKBOB 💀 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc80 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
     "script": [
       {
-        "text": "If you are laying down right now, you are out!",
+        "text": "If you are blinking right now, you are eliminated.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
@@ -61,7 +83,7 @@ OUTPUT FORMAT (Follow this structure exactly):
         }
       },
       {
-        "text": "But SpongeBob, that's way too mean! Give them another chance!",
+        "text": "SpongeBob, come on! Everyone blinks!",
         "speaker": "Patrick",
         "visuals": {
           "character": "Patrick",
@@ -72,7 +94,7 @@ OUTPUT FORMAT (Follow this structure exactly):
         }
       },
       {
-        "text": "Ugh, fine! But only if they subscribe right now for a revive!",
+        "text": "Okay fine. I'll let it slide. But only if you SUBSCRIBE right now.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
@@ -83,12 +105,45 @@ OUTPUT FORMAT (Follow this structure exactly):
         }
       },
       {
-        "text": "Round 1. Name a fruit.",
+        "text": "Round 1. Name something you eat at the Krusty Krab.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
           "subtitle_color": "Yellow",
           "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Don't say Krabby Patty!",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Krabby Patty you're out! Like the video if you are still in.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "KRABBY PATTY"
+        }
+      },
+      {
+        "text": "Round 2. Name a color.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "2. MEDIUM",
           "show_timer": false,
           "answer_reveal": null
         }
@@ -99,20 +154,20 @@ OUTPUT FORMAT (Follow this structure exactly):
         "visuals": {
           "character": null,
           "subtitle_color": "White",
-          "list_highlight": "1. EASY",
+          "list_highlight": "2. MEDIUM",
           "show_timer": true,
           "answer_reveal": null
         }
       },
       {
-        "text": "I picked Apple. If you said Apple, you are out!",
-        "speaker": "SpongeBob",
+        "text": "I picked Pink. If you said Pink, you're out!",
+        "speaker": "Patrick",
         "visuals": {
-          "character": "SpongeBob",
-          "subtitle_color": "Yellow",
-          "list_highlight": "1. EASY",
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "2. MEDIUM",
           "show_timer": false,
-          "answer_reveal": "APPLE"
+          "answer_reveal": "PINK"
         }
       },
       ... (Continue through Round 4: IMPOSSIBLE)
@@ -121,8 +176,10 @@ OUTPUT FORMAT (Follow this structure exactly):
 ]
 
 IMPORTANT:
-- ONLY use these speakers: SpongeBob, Patrick, Squidward, Plankton, MrKrabs, Announcer.
-- Insert a segment with `visuals.show_timer=true` (and speaker="Timer", text="...") between EVERY Question and Answer.
+- ONLY use these speakers: SpongeBob, Patrick, Squidward, Plankton, MrKrabs, Sandy.
+- Insert a segment with `visuals.show_timer=true` between EVERY Question and Answer.
+- **CRITICAL FOR ROUND 1**: The Timer segment MUST have a speaker (NOT 'Timer') and text "Don't say [Obvious Answer]!".
+- For other rounds, the Timer segment can have speaker="Timer" and text="...".
 - For ANSWER segments, set `visuals.answer_reveal` to the specific item.
 - Include EXACTLY 4 Rounds: 1. EASY, 2. MEDIUM, 3. HARD, 4. IMPOSSIBLE.
 - RETURN ONLY RAW JSON. NO MARKDOWN.
@@ -149,6 +206,7 @@ def validate_and_repair_script(video):
         "Squidward": "Cyan",
         "Plankton": "Green",
         "MrKrabs": "Red",
+        "Sandy": "Brown",
         "Announcer": "White",
         "Timer": "White"
     }
@@ -341,9 +399,9 @@ def generate_dummy_script():
         "script": [
             {"text": "If you are breathing right now, then you are out!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
             {"text": "But SpongeBob, that's too mean! Give them another chance!", "speaker": "Patrick", "visuals": {"character": "Patrick", "subtitle_color": "Pink", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
-            {"text": "Ugh, fine! But only if they subscribe right now!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
+            {"text": "Ugh, fine! But only if they SUBSCRIBE right now!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
             {"text": "Round 1. Name a fruit.", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
-            {"text": "...", "speaker": "Timer", "visuals": {"character": None, "subtitle_color": "White", "list_highlight": "1. EASY", "show_timer": True, "answer_reveal": None}},
+            {"text": "Don't say Apple!", "speaker": "Patrick", "visuals": {"character": "Patrick", "subtitle_color": "Pink", "list_highlight": "1. EASY", "show_timer": True, "answer_reveal": None}},
             {"text": "I picked Apple!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": "APPLE"}},
             {"text": "Round 2. Name a color.", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "2. MEDIUM", "show_timer": False, "answer_reveal": None}},
             {"text": "...", "speaker": "Timer", "visuals": {"character": None, "subtitle_color": "White", "list_highlight": "2. MEDIUM", "show_timer": True, "answer_reveal": None}},
