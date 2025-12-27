@@ -3599,5 +3599,391 @@
       }
     ],
     "video_id": 39
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc80 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "If you are blinking right now, you are eliminated.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "But SpongeBob, everyone is doing that! Give them a chance.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Fine! I'll let it slide. But only if you SUBSCRIBE right now.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "First question. Name a neighbor of Squidward.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Don't say SpongeBob!",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said SpongeBob you're out! Like the video if you survived.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "SPONGEBOB"
+        }
+      },
+      {
+        "text": "Next question. Name a movie or TV show title featured in the series.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Orange",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Mermaid Man and Barnacle Boy, you are out. Subscribe if you picked anything else.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Orange",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "MERMAID MAN AND BARNACLE BOY"
+        }
+      },
+      {
+        "text": "Third question. Name a character whose voice Plankton has impersonated.",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I bet they're gonna say Mr. Krabs.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Cyan",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Mr. Krabs, you're cooked. Comment below how many you got right so far.",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "MR. KRABS"
+        }
+      },
+      {
+        "text": "Final question. Pick between Leif Erikson Day or Opposite Day.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Opposite Day is always chaos.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you picked Opposite Day, you're safe. If you picked Leif Erikson Day, you HAVE to subscribe.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "OPPOSITE DAY"
+        }
+      }
+    ],
+    "video_id": 40
+  },
+  {
+    "title": "Avoid saying the same thing as FREAKBOB \ud83d\udc80 #Spongebob #Quiz #BrainrotQuiz #AIQuiz",
+    "script": [
+      {
+        "text": "If you are touching your screen right now, you are eliminated.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "But SpongeBob, everyone is doing that! Give them a chance.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Fine! I'll let it slide. But only if you SUBSCRIBE right now.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Round 1. Name a character who works at the Krusty Krab.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Don't say SpongeBob! He's too obvious!",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "1. EASY",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said SpongeBob you're out! Like the video if you survived.",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "1. EASY",
+          "show_timer": false,
+          "answer_reveal": "SPONGEBOB"
+        }
+      },
+      {
+        "text": "Round 2. Name a location in Bikini Bottom.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Brown",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Goo Lagoon, you are out. Subscribe if you picked anything else.",
+        "speaker": "Sandy",
+        "visuals": {
+          "character": "Sandy",
+          "subtitle_color": "Brown",
+          "list_highlight": "2. MEDIUM",
+          "show_timer": false,
+          "answer_reveal": "GOO LAGOON"
+        }
+      },
+      {
+        "text": "Third question. Name something Squidward loves.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "3. HARD",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "I bet they're gonna say Clarinet.",
+        "speaker": "Squidward",
+        "visuals": {
+          "character": "Squidward",
+          "subtitle_color": "Cyan",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you said Clarinet, you're cooked. Comment below how many you got right so far.",
+        "speaker": "MrKrabs",
+        "visuals": {
+          "character": "MrKrabs",
+          "subtitle_color": "Red",
+          "list_highlight": "3. HARD",
+          "show_timer": false,
+          "answer_reveal": "CLARINET"
+        }
+      },
+      {
+        "text": "Final question. Pick between Mayonnaise or Secret Formula.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "...",
+        "speaker": "Timer",
+        "visuals": {
+          "character": null,
+          "subtitle_color": "White",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": true,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "Mayonnaise is NOT an instrument!",
+        "speaker": "Plankton",
+        "visuals": {
+          "character": "Plankton",
+          "subtitle_color": "Green",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you picked Mayonnaise, you're safe. If you picked Secret Formula, you HAVE to subscribe.",
+        "speaker": "Patrick",
+        "visuals": {
+          "character": "Patrick",
+          "subtitle_color": "Pink",
+          "list_highlight": "4. IMPOSSIBLE",
+          "show_timer": false,
+          "answer_reveal": "MAYONNAISE"
+        }
+      }
+    ],
+    "video_id": 41
   }
 ]

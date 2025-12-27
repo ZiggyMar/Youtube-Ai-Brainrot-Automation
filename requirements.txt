@@ -1,4 +1,5 @@
 google-genai
+google-auth>=2.45.0
 openai-whisper
 edge-tts
 rvc-python
@@ -13,3 +14,13 @@ torch
 torchvision
 torchaudio
 imageio-ffmpeg
+customtkinter
+schedule
+google-api-python-client
+google-auth-oauthlib
+google-auth-httplib2
+packaging
+pyinstaller
+fastapi
+uvicorn
+python-multipart

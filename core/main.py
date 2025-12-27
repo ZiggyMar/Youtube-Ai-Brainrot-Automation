@@ -24,21 +24,21 @@ def run_step(script_name, stage_title):
     
     if not os.path.exists(script_path):
         print(f"❌ Error: Script not found: {script_name}")
-        sys.exit(1)
+        raise FileNotFoundError(f"Script not found: {script_name}")
 
     try:
         # Run the script and wait for it to complete
         result = subprocess.run([sys.executable, script_path], check=True)
         if result.returncode != 0:
             print(f"❌ {script_name} failed with exit code {result.returncode}")
-            sys.exit(result.returncode)
+            raise RuntimeError(f"{script_name} failed with exit code {result.returncode}")
         print(f"✅ {stage_title} Complete.")
     except subprocess.CalledProcessError as e:
         print(f"❌ Error running {script_name}: {e}")
-        sys.exit(1)
+        raise e
     except Exception as e:
         print(f"❌ Unexpected error: {e}")
-        sys.exit(1)
+        raise e
 
 def archive_completed_videos():
     """
