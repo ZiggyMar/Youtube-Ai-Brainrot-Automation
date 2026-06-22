@@ -11,6 +11,10 @@ from moviepy.editor import (
 )
 from PIL import Image, ImageDraw, ImageFont
 
+# Pillow >=10 removed Image.ANTIALIAS (used by moviepy 1.0.3's resize). Shim for forward-compat.
+if not hasattr(Image, "ANTIALIAS"):
+    Image.ANTIALIAS = Image.Resampling.LANCZOS
+
 import subprocess
 import gc
 
@@ -25,13 +29,27 @@ AUDIO_CACHE_DIR = os.path.join(PROJECT_ROOT, "audio_cache")
 TEMP_SEGMENTS_DIR = os.path.join(OUTPUT_DIR, "temp_segments")
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+READY_TO_POST_DIR = os.path.join(OUTPUT_DIR, "ready_to_post")
+os.makedirs(READY_TO_POST_DIR, exist_ok=True)
 os.makedirs(TEMP_SEGMENTS_DIR, exist_ok=True)
 
-# FFmpeg Configuration
-FFMPEG_PATH = os.path.join(PROJECT_ROOT, "tools", "ffmpeg", "ffmpeg.exe")
-if os.path.exists(FFMPEG_PATH):
-    os.environ["IMAGEIO_FFMPEG_EXE"] = FFMPEG_PATH
-    print(f"✅ Using Custom FFmpeg: {FFMPEG_PATH}")
+# FFmpeg Configuration (cross-platform: bundled exe on Windows, system ffmpeg on Linux/server)
+import shutil
+def _resolve_ffmpeg():
+    local = os.path.join(PROJECT_ROOT, "tools", "ffmpeg", "ffmpeg.exe")
+    if os.path.exists(local):
+        return local
+    sys_ff = shutil.which("ffmpeg")
+    if sys_ff:
+        return sys_ff
+    try:
+        import imageio_ffmpeg
+        return imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        return "ffmpeg"
+FFMPEG_PATH = _resolve_ffmpeg()
+os.environ["IMAGEIO_FFMPEG_EXE"] = FFMPEG_PATH
+print(f"✅ Using FFmpeg: {FFMPEG_PATH}")
 
 
 # Difficulty List Config
@@ -41,6 +59,19 @@ DIFFICULTY_LEVELS = [
     {"label": "3. HARD", "color": "#9b59b6"},       # Purple
     {"label": "4. IMPOSSIBLE", "color": "#e74c3c"}  # Red
 ]
+
+# Brighter, screen-readable subtitle colors (PIL's default "blue"/"cyan" are too dark on gameplay).
+SUBTITLE_COLOR_MAP = {
+    "yellow": "#FFE600",
+    "blue":   "#3FA9F5",   # bright sky-blue (was near-black navy)
+    "cyan":   "#4FE3E3",
+    "green":  "#3DDC5C",
+    "pink":   "#FF6FB5",
+    "red":    "#FF5151",
+    "white":  "#FFFFFF",
+    "brown":  "#D08A4E",
+    "orange": "#FFA033",
+}
 
 DEFAULT_LAYOUT = {
     "character": {"x": 0, "y": 1120, "width": 1080, "height": 850},
@@ -107,11 +138,23 @@ def create_pil_text_image(text, font_path, color, stroke_width=6):
     return np.array(img)
 
 def create_perfect_subtitles(json_path, font_path, color):
+    # Brighten dark named colors (e.g. "Blue") for on-screen readability.
+    color = SUBTITLE_COLOR_MAP.get(str(color).strip().lower(), color)
     if not os.path.exists(json_path): return []
     with open(json_path, 'r', encoding='utf-8') as f:
         words = json.load(f)
     if not words: return []
     
+    # Subtle "bing" pop on every subtitle chunk: snap up to ~118% then settle to 100% in the
+    # first ~0.18s. Kills the flat, statically-spawned look without ever drifting off-screen
+    # (position stays centered; the tiny vertical growth is well within frame).
+    def _sub_pop(t):
+        if t < 0.10:
+            return 0.85 + (1.18 - 0.85) * (t / 0.10)
+        elif t < 0.18:
+            return 1.18 - 0.18 * ((t - 0.10) / 0.08)
+        return 1.0
+
     clips = []
     for i in range(0, len(words), 2):
         chunk_words = words[i:i+2]
@@ -120,7 +163,10 @@ def create_perfect_subtitles(json_path, font_path, color):
         duration = end_t - start_t
         if duration <= 0: continue
         img_array = create_pil_text_image(text_str.upper(), font_path, color)
-        txt_clip = ImageClip(img_array).set_duration(duration).set_start(start_t).set_position(("center", LAYOUT["subtitles"]["y"]))
+        txt_clip = (ImageClip(img_array).set_duration(duration)
+                    .resize(_sub_pop)
+                    .set_start(start_t)
+                    .set_position(("center", LAYOUT["subtitles"]["y"])))
         clips.append(txt_clip)
     return clips
 
@@ -156,6 +202,78 @@ def create_difficulty_list_pil(active_label, duration, revealed_answers=None):
         clips.append(txt_clip)
     return clips
 
+def create_hook_overlay(text, duration):
+    if not text: return None
+
+    font_size = 165
+    try:
+        font = ImageFont.truetype(CUSTOM_FONT_PATH, font_size) if CUSTOM_FONT_PATH else ImageFont.load_default()
+    except:
+        font = ImageFont.load_default()
+        
+    # Create text image
+    dummy = Image.new('RGBA', (1, 1))
+    draw = ImageDraw.Draw(dummy)
+    
+    # Word wrap logic (simple)
+    words = text.split()
+    lines = []
+    current_line = []
+    for word in words:
+        current_line.append(word)
+        bbox = draw.textbbox((0, 0), " ".join(current_line), font=font)
+        if bbox[2] > 900: # Max width
+            current_line.pop()
+            lines.append(" ".join(current_line))
+            current_line = [word]
+    lines.append(" ".join(current_line))
+    
+    final_text = "\n".join(lines)
+    
+    bbox = draw.textbbox((0, 0), final_text, font=font, stroke_width=12)
+    w, h = bbox[2]-bbox[0]+48, bbox[3]-bbox[1]+48
+
+    img = Image.new('RGBA', (w, h), (0,0,0,0))
+    draw = ImageDraw.Draw(img)
+
+    # Per-video color variety. ~35% of videos get an animated RGB rainbow cycle (text drawn white,
+    # then hue-cycled per frame); the rest get a random vibrant solid. Heavy black outline always.
+    HOOK_COLORS = ["#FFE600", "#00F2EA", "#39FF14", "#FF2D95", "#FF8A00", "#FF1744", "#18FFFF"]
+    rainbow = random.random() < 0.35
+    fill = "white" if rainbow else random.choice(HOOK_COLORS)
+    draw.text((24, 24), final_text, font=font, fill=fill, stroke_width=12, stroke_fill="black", align="center")
+
+    # Slam-then-clear: the hook lives ~1.9s (grab the open, then reveal the clean scoreboard).
+    hook_dur = min(1.9, duration)
+    clip = ImageClip(np.array(img)).set_duration(hook_dur)
+
+    # Frame-1 SLAM: pop the hook onto screen instantly (kills the slow fade).
+    def _hook_pop(t):
+        if t < 0.16:
+            return 0.4 + (1.18 - 0.4) * (t / 0.16)
+        elif t < 0.28:
+            return 1.18 - 0.18 * ((t - 0.16) / 0.12)
+        return 1.0
+    clip = clip.resize(_hook_pop)
+
+    if rainbow:
+        import colorsys
+        def _rgb_cycle(get_frame, t):
+            fr = get_frame(t).astype("float32")
+            r, g, b = colorsys.hsv_to_rgb((t / 1.5) % 1.0, 1.0, 1.0)
+            fr[..., 0] *= r; fr[..., 1] *= g; fr[..., 2] *= b
+            return fr.astype("uint8")
+        clip = clip.fl(_rgb_cycle)
+
+    # Slam in hard, then FADE OUT (don't hard-cut) so the hook gently clears the frame
+    # before the scoreboard reveal. Fade occupies the last ~0.4s of its life.
+    fade_d = min(0.4, hook_dur / 3)
+    clip = clip.crossfadeout(fade_d)
+
+    # Position BELOW the difficulty scoreboard so it never sits behind the 1/2/3/4 list.
+    clip = clip.set_position(("center", 600))
+    return clip
+
 def find_character_image(speaker, character_field):
     speaker_map = {"SpongeBob": "SpongeBob", "Patrick": "Patrick", "Squidward": "Squidward", "Plankton": "Plankton", "MrKrabs": "Mr. Krabs"}
     target_folder_name = speaker_map.get(speaker, speaker)
@@ -182,7 +300,7 @@ def preprocess_assets():
             cmd = [FFMPEG_PATH, "-y", "-i", mp4, "-vf", f"chromakey=0x00FF00:0.1:0.1,scale={w}:{h}", "-c:v", "qtrle", mov]
             subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, timer_clip_ref=None, cta_clip_ref=None, woosh_file=None):
+def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, timer_clip_ref=None, cta_clip_ref=None, woosh_file=None, is_first_segment=False, hook_text=None):
     visuals = segment.get("visuals", {})
     text = segment.get("text", "")
     speaker = segment.get("speaker", "")
@@ -221,6 +339,25 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, t
         else:
             seg_audio = character_audio
 
+    # Hook Sound Logic
+    hook_audio = None
+    if is_first_segment:
+        hook_dir = os.path.join(ASSETS_DIR, "Sounds", "Hook")
+        if os.path.exists(hook_dir):
+            hooks = glob.glob(os.path.join(hook_dir, "*.*"))
+            if hooks:
+                hook_file = random.choice(hooks)
+                print(f"   - 🎣 Adding Hook Sound: {os.path.basename(hook_file)}")
+                try:
+                    hook_audio = AudioFileClip(hook_file).volumex(0.18).set_start(0)
+                    # Mix it in
+                    if seg_audio:
+                        seg_audio = CompositeAudioClip([seg_audio, hook_audio])
+                    else:
+                        seg_audio = hook_audio
+                except Exception as e:
+                    print(f"⚠️ Failed to load hook sound: {e}")
+
     layers = [bg_clip]
     keep_alive = []
 
@@ -228,13 +365,34 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, t
     if (not is_timer) or (is_timer and character_audio):
         char_path = find_character_image(speaker, visuals.get("character", ""))
         if char_path:
+            # On a timer segment the character only stays on screen while speaking, then leaves;
+            # the timer overlay & background keep running for the full segment duration.
+            char_display_dur = duration
+            if is_timer and character_audio is not None:
+                char_display_dur = min(character_audio.duration + 0.3, duration)
             def slide_pos(t):
+                # Frame-1 retention fix: anchor character INSTANTLY on segment 1.
+                # The 0.4s slide burned 21% of the hook's 1.9s lifetime with the
+                # anchor off-screen during the make-or-break swipe-or-stay window.
+                # Slide-in is kept for later segments where it adds personality
+                # and isn't competing with first-impression retention.
+                if is_first_segment and LAYOUT.get("HOOK_STYLE", "punch") == "punch":
+                    return (LAYOUT["character"]["x"], LAYOUT["character"]["y"])
                 if t < 0.4:
                     prog = t / 0.4
                     ease = 1 - (1 - prog) ** 3
                     return (int(-1000 + (LAYOUT["character"]["x"] + 1000) * ease), LAYOUT["character"]["y"])
                 return (LAYOUT["character"]["x"], LAYOUT["character"]["y"])
-            char_clip = ImageClip(char_path).resize(height=LAYOUT["character"]["height"]).rotate(lambda t: 2 * np.sin(2 * np.pi * t / 3.0)).set_duration(duration).set_position(slide_pos)
+            # Pre-roll freeze+zoom on the FIRST segment only: a 0.2s (6 frames @ 30fps)
+            # 1.05 -> 1.00 character "settle" gives the eye a motion vector to lock
+            # onto at t=0, complementing the hook text's scale-pop without competing
+            # with it. No-op for non-first segments and for HOOK_STYLE == "classic".
+            _char_zoom_active = is_first_segment and LAYOUT.get("HOOK_STYLE", "punch") == "punch"
+            def _char_zoom(t):
+                if _char_zoom_active and t < 0.2:
+                    return 1.05 - 0.05 * (t / 0.2)
+                return 1.0
+            char_clip = ImageClip(char_path).resize(height=LAYOUT["character"]["height"]).resize(_char_zoom).rotate(lambda t: 2 * np.sin(2 * np.pi * t / 3.0)).set_duration(char_display_dur).set_position(slide_pos)
             layers.append(char_clip)
             keep_alive.append(char_clip)
             
@@ -256,6 +414,13 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, t
         subs = create_perfect_subtitles(json_path, CUSTOM_FONT_PATH, visuals.get("subtitle_color", "yellow"))
         layers.extend(subs)
         keep_alive.extend(subs)
+
+    # Hook Overlay (First Segment Only)
+    if is_first_segment and hook_text:
+        hook_clip = create_hook_overlay(hook_text, duration)
+        if hook_clip:
+            layers.append(hook_clip)
+            keep_alive.append(hook_clip)
 
     LEVEL_MAPPING = {"2. R1": "1. EASY", "3. R2": "2. MEDIUM", "4. R3": "3. HARD", "5. R4": "4. IMPOSSIBLE"}
     raw_highlight = visuals.get("list_highlight", "")
@@ -291,8 +456,8 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, t
     
     try:
         segment_comp.write_videofile(
-            out_path, 
-            fps=24, 
+            out_path,
+            fps=30,
             codec="libx264", 
             audio_codec="aac", 
             threads=1, 
@@ -317,6 +482,9 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, t
             except: pass
         if character_audio:
             try: character_audio.close()
+            except: pass
+        if hook_audio:
+            try: hook_audio.close()
             except: pass
         
         # Force garbage collection after each segment
@@ -407,15 +575,12 @@ def generate_video(video_data):
         if visuals.get("show_timer"):
             if timer_clip_ref:
                 seg_dur = timer_clip_ref.duration
-            # If character speaks during timer, ensure duration covers speech + 0.5s buffer
+            # If a character speaks DURING the timer (e.g. "Don't say X!" / "I bet they'll say X"),
+            # the timer must still run its FULL length. The character appears, says the line, then
+            # leaves while the clock keeps ticking. Only extend if speech is longer than the timer.
             if os.path.exists(audio_path):
                 with AudioFileClip(audio_path) as ac:
-                    # Logic: If speech exists, duration is speech + 0.5s.
-                    # If this is shorter than timer, we cut the timer.
-                    # If longer, we extend (loop) the timer.
-                    # BUT, usually timer is ~5s and speech is ~2s.
-                    # User wants: Speech ends, then 0.5s later segment ends.
-                    seg_dur = ac.duration + 0.5
+                    seg_dur = max(seg_dur, ac.duration + 0.5)
         elif os.path.exists(audio_path):
             with AudioFileClip(audio_path) as ac: seg_dur = ac.duration
             
@@ -429,9 +594,50 @@ def generate_video(video_data):
         return
 
     bg_files = glob.glob(os.path.join(ASSETS_DIR, "backgrounds", "*.mp4"))
-    if not bg_files: return
-    bg_source = VideoFileClip(random.choice(bg_files)).without_audio()
-    bg_full = bg_source.subclip(random.uniform(0, bg_source.duration - total_duration), bg_source.duration) if bg_source.duration > total_duration else bg_source.fx(vfx.loop, duration=total_duration)
+    if not bg_files:
+        print("❌ No background videos found in assets/backgrounds/")
+        return
+    # Robustly pick a USABLE background: some files probe fine but fail moviepy's
+    # first-frame read. Never let one bad file kill an unattended render — try others.
+    random.shuffle(bg_files)
+    bg_source = None
+    for bgf in bg_files:
+        candidate = None
+        try:
+            candidate = VideoFileClip(bgf).without_audio()
+            candidate.get_frame(0)  # force-validate the first frame
+            bg_source = candidate
+            print(f"   - 🎮 Background: {os.path.basename(bgf)}")
+            break
+        except Exception as e:
+            print(f"   ⚠️ Skipping unreadable background '{os.path.basename(bgf)}': {e}")
+            if candidate is not None:
+                try: candidate.close()
+                except: pass
+    if bg_source is None:
+        print("❌ No readable background videos available.")
+        return
+    
+    # Random Speed Factor (1.1x to 1.4x)
+    speed_factor = random.uniform(1.1, 1.4)
+    print(f"   - ⏩ Gameplay Speed: {speed_factor:.2f}x")
+    
+    # We need more raw footage because speeding it up shortens it
+    needed_raw_duration = total_duration * speed_factor
+    
+    if bg_source.duration > needed_raw_duration:
+        # Pick a random start point
+        start_t = random.uniform(0, bg_source.duration - needed_raw_duration)
+        bg_segment = bg_source.subclip(start_t, start_t + needed_raw_duration)
+    else:
+        # Loop it to get enough raw footage
+        bg_segment = bg_source.fx(vfx.loop, duration=needed_raw_duration)
+        
+    # Apply speed effect
+    bg_full = bg_segment.fx(vfx.speedx, speed_factor)
+    
+    # Ensure exact duration
+    bg_full = bg_full.set_duration(total_duration)
     
     w, h = bg_full.size
     if w/h > 9/16:
@@ -460,7 +666,11 @@ def generate_video(video_data):
 
         bg_slice = bg_full.subclip(bg_cursor, bg_cursor + dur)
         bg_cursor += dur
-        seg_path, cta_shown = render_segment(video_id, i, seg_data, bg_slice, revealed_answers, cta_shown, timer_clip_ref, cta_clip_ref, woosh_file=character_woosh_map.get(speaker))
+        
+        is_first = (i == 1)
+        hook_txt = video_data.get("hook_text") if is_first else None
+        seg_path, cta_shown = render_segment(video_id, i, seg_data, bg_slice, revealed_answers, cta_shown, timer_clip_ref, cta_clip_ref, woosh_file=character_woosh_map.get(speaker), is_first_segment=is_first, hook_text=hook_txt)
+        
         segment_files.append(seg_path)
         bg_slice.close()
         gc.collect() # Extra collection between segments
@@ -491,7 +701,15 @@ def generate_video(video_data):
     music_files = glob.glob(os.path.join(ASSETS_DIR, "music", "*.mp3"))
     bg_music = random.choice(music_files) if music_files else None
     if bg_music:
-        cmd = [FFMPEG_PATH, "-y", "-i", temp_concat, "-stream_loop", "-1", "-i", bg_music, "-filter_complex", "[1:a]volume=0.1[music];[0:a][music]amix=inputs=2:duration=first[a]", "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-shortest", out_path]
+        # Random Music Speed (1.0x - 1.25x)
+        music_speed = random.uniform(1.0, 1.25)
+        audio_filter = f"atempo={music_speed:.4f},"
+        print(f"   - 🎵 Applying Music Speed: {music_speed:.2f}x")
+
+        # Add volume normalization
+        audio_filter += "volume=0.1"
+        
+        cmd = [FFMPEG_PATH, "-y", "-i", temp_concat, "-stream_loop", "-1", "-i", bg_music, "-filter_complex", f"[1:a]{audio_filter}[music];[0:a][music]amix=inputs=2:duration=first[a]", "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-shortest", out_path]
     else:
         cmd = [FFMPEG_PATH, "-y", "-i", temp_concat, "-c", "copy", out_path]
     subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -507,6 +725,15 @@ def generate_video(video_data):
             if sf and os.path.exists(sf): os.remove(sf)
         except: pass
     print(f"✅ Finished: {out_path}")
+
+    # Move to ready_to_post
+    try:
+        final_path = os.path.join(READY_TO_POST_DIR, os.path.basename(out_path))
+        import shutil
+        shutil.move(out_path, final_path)
+        print(f"📦 Moved to Ready to Post: {final_path}")
+    except Exception as e:
+        print(f"⚠️ Error moving video to ready_to_post: {e}")
 
 def process_video_wrapper(video_data):
     try:

@@ -1,0 +1,296 @@
+"""
+youtube_uploader.py
+Uploads rendered Shorts to the (brand) channel and SCHEDULES them on the proven weekly
+EST blueprint - max 1 published per day. Videos are uploaded as `private` with a future
+`publishAt`, so YouTube publishes them on schedule even if the server is offline at that moment.
+
+Auth: OAuth (token.pickle). Authenticate ONCE locally selecting the BRAND channel, then copy
+token.pickle to the server (the server is headless and cannot open a browser).
+
+CLI:
+  --auth-only   authenticate and exit (use locally to mint token.pickle)
+  --watch       run forever, scheduling any ready videos as they appear
+  (no args)     process the ready folder once and exit
+"""
+import os
+import sys
+import json
+import time
+import random
+import pickle
+import datetime
+from zoneinfo import ZoneInfo
+
+from dotenv import load_dotenv
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
+from googleapiclient.errors import HttpError
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+
+CORE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(CORE_DIR)
+sys.path.insert(0, CORE_DIR)
+import notifier  # noqa: E402
+
+load_dotenv(os.path.join(PROJECT_ROOT, ".env"))
+
+DATA_DIR = os.path.join(PROJECT_ROOT, "data")
+OUTPUT_DIR = os.path.join(PROJECT_ROOT, "output")
+READY_DIR = os.path.join(OUTPUT_DIR, "ready_to_post")
+POSTED_DIR = os.path.join(OUTPUT_DIR, "posted")
+CLIENT_SECRETS_FILE = os.path.join(PROJECT_ROOT, "client_secrets.json")
+TOKEN_FILE = os.path.join(PROJECT_ROOT, "token.pickle")
+UPLOAD_LOG_FILE = os.path.join(DATA_DIR, "upload_log.json")
+
+SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
+TZ = ZoneInfo(os.environ.get("TIMEZONE", "America/Toronto"))
+
+# === Proven weekly EST blueprint: (hour, minute) local upload-target per weekday ===
+# Monday=0 ... Sunday=6. One published video per day at these high-traffic windows.
+BLUEPRINT = {
+    0: (18, 0),   # Monday    6:00 PM
+    1: (19, 0),   # Tuesday   7:00 PM
+    2: (17, 0),   # Wednesday 5:00 PM
+    3: (20, 0),   # Thursday  8:00 PM
+    4: (16, 0),   # Friday    4:00 PM (best day for Shorts)
+    5: (11, 0),   # Saturday 11:00 AM
+    6: (14, 0),   # Sunday    2:00 PM
+}
+
+# === Proven metadata (from FactZapTV's top videos) ===
+DESCRIPTION_TEMPLATE = """GOODLUCK!
+
+SUBSCRIBE TO HELP US REACH 100K!
+
+-- Tags --
+
+spongebob,spongebob squarepants,spongebob episodes,spongebob music,plankton spongebob,squidward spongebob,patrick spongebob,spongebob nick,spongebob quiz,spongebob video games,spongebob shorts,spongebob quizzes,spongebob megaquiz,spongebob game show,spongebob game,spongebob kids,spongebob meme,brainrot,brain teaser,mind games,dont say the same thing,quiz,trivia,challenge,shorts"""
+
+TAGS_LIST = [
+    "spongebob", "spongebob squarepants", "spongebob episodes", "spongebob music",
+    "plankton spongebob", "squidward spongebob", "patrick spongebob", "spongebob nick",
+    "spongebob quiz", "spongebob shorts", "spongebob quizzes", "spongebob megaquiz",
+    "spongebob game show", "spongebob game", "spongebob kids", "spongebob meme",
+    "brainrot", "brain teaser", "mind games", "dont say the same thing",
+    "quiz", "trivia", "challenge", "shorts",
+]
+
+
+def cap_tags(tags, limit=480):
+    """YouTube tags total must stay under ~500 chars (commas count)."""
+    out, total = [], 0
+    for t in tags:
+        add = len(t) + (1 if out else 0)
+        if total + add > limit:
+            break
+        out.append(t)
+        total += add
+    return out
+
+
+class YouTubeUploader:
+    def __init__(self):
+        self.youtube = self.authenticate()
+        self.log = self.load_log()
+
+    def authenticate(self):
+        creds = None
+        if os.path.exists(TOKEN_FILE):
+            try:
+                with open(TOKEN_FILE, "rb") as f:
+                    creds = pickle.load(f)
+            except Exception:
+                creds = None
+
+        if creds and creds.valid:
+            return build("youtube", "v3", credentials=creds)
+
+        if creds and creds.expired and creds.refresh_token:
+            try:
+                creds.refresh(Request())
+                with open(TOKEN_FILE, "wb") as f:
+                    pickle.dump(creds, f)
+                return build("youtube", "v3", credentials=creds)
+            except Exception as e:
+                print(f"⚠️ Token refresh failed: {e}")
+
+        # Need fresh browser auth. Only works where a browser is available (i.e. locally).
+        if not os.path.exists(CLIENT_SECRETS_FILE):
+            msg = "Missing client_secrets.json (download OAuth client from Google Cloud)."
+            print(f"❌ {msg}")
+            notifier.error("YouTube auth failed", msg)
+            return None
+        if not sys.stdout.isatty() and os.environ.get("DISPLAY") is None and os.name != "nt":
+            msg = ("No valid token.pickle and no browser available (headless server). "
+                   "Run `python core/youtube_uploader.py --auth-only` LOCALLY, select the BRAND "
+                   "channel, then copy token.pickle to the server.")
+            print(f"❌ {msg}")
+            notifier.error("YouTube auth needs a browser", msg)
+            return None
+        flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRETS_FILE, SCOPES)
+        print("\n🔐 A browser will open. Sign in and SELECT YOUR BRAND CHANNEL.\n")
+        creds = flow.run_local_server(port=0)
+        with open(TOKEN_FILE, "wb") as f:
+            pickle.dump(creds, f)
+        return build("youtube", "v3", credentials=creds)
+
+    def load_log(self):
+        if os.path.exists(UPLOAD_LOG_FILE):
+            try:
+                with open(UPLOAD_LOG_FILE, "r", encoding="utf-8") as f:
+                    return json.load(f)
+            except Exception:
+                pass
+        return {"last_scheduled_time": None, "uploaded": []}
+
+    def save_log(self):
+        os.makedirs(DATA_DIR, exist_ok=True)
+        with open(UPLOAD_LOG_FILE, "w", encoding="utf-8") as f:
+            json.dump(self.log, f, indent=2)
+
+    def scheduled_dates(self):
+        """Set of local-date strings that already have a video scheduled (enforce 1/day)."""
+        dates = set()
+        for v in self.log.get("uploaded", []):
+            t = v.get("publish_at")
+            if t:
+                dates.add(t[:10])
+        return dates
+
+    def next_slot(self):
+        """Next blueprint slot in TZ, strictly future, max 1 per calendar day (enforced by
+        the log of already-scheduled dates). Respects each weekday's exact blueprint time."""
+        now = datetime.datetime.now(TZ)
+        taken = self.scheduled_dates()
+
+        day = now.date()
+        for _ in range(60):  # look ahead up to 60 days
+            h, m = BLUEPRINT[day.weekday()]
+            slot = datetime.datetime(day.year, day.month, day.day, h, m, tzinfo=TZ)
+            if slot > now + datetime.timedelta(minutes=10) and slot.date().isoformat() not in taken:
+                return slot
+            day += datetime.timedelta(days=1)
+        return now + datetime.timedelta(days=1)
+
+    def upload(self, path):
+        if not self.youtube:
+            return "AUTH_ERROR"
+        filename = os.path.basename(path)
+        title = os.path.splitext(filename)[0][:95]  # YouTube title cap 100
+        slot_local = self.next_slot()
+        # Human-like jitter (±~5 min) so publishes aren't robotically on the exact minute.
+        slot_local += datetime.timedelta(minutes=random.randint(-5, 5), seconds=random.randint(0, 59))
+        if slot_local <= datetime.datetime.now(TZ) + datetime.timedelta(minutes=5):
+            slot_local += datetime.timedelta(minutes=10)
+        publish_at_utc = slot_local.astimezone(datetime.timezone.utc)
+
+        body = {
+            "snippet": {
+                "title": title,
+                "description": DESCRIPTION_TEMPLATE,
+                "tags": cap_tags(TAGS_LIST),
+                "categoryId": "24",  # Entertainment
+            },
+            "status": {
+                "privacyStatus": "private",
+                "publishAt": publish_at_utc.isoformat().replace("+00:00", "Z"),
+                "selfDeclaredMadeForKids": False,
+            },
+        }
+        print(f"🚀 Uploading: {filename}")
+        print(f"   📅 Scheduled: {slot_local.strftime('%a %Y-%m-%d %I:%M %p %Z')}")
+        try:
+            media = MediaFileUpload(path, chunksize=-1, resumable=True, mimetype="video/mp4")
+            req = self.youtube.videos().insert(part="snippet,status", body=body, media_body=media)
+            resp = None
+            while resp is None:
+                status, resp = req.next_chunk()
+                if status:
+                    print(f"   ...{int(status.progress()*100)}%")
+            vid = resp.get("id")
+            print(f"✅ Scheduled! https://youtu.be/{vid}")
+            self.log["last_scheduled_time"] = slot_local.isoformat()
+            self.log["uploaded"].append({
+                "video_id": vid, "filename": filename, "title": title,
+                "publish_at": slot_local.isoformat(),
+            })
+            self.save_log()
+            notifier.success(
+                "Video scheduled",
+                f"**{title}**\nPublishes: {slot_local.strftime('%a %b %d, %I:%M %p %Z')}\nhttps://youtu.be/{vid}",
+            )
+            return vid
+        except HttpError as e:
+            reason = (e.content or b"").decode("utf-8", "ignore")
+            if e.resp.status in (403, 429) and ("quota" in reason.lower() or "uploadLimit" in reason):
+                print("🛑 Quota / upload limit reached.")
+                notifier.warn("YouTube quota reached", "Will retry on the next cycle.")
+                return "QUOTA"
+            print(f"❌ HTTP error: {e}")
+            notifier.error("Upload failed (HTTP)", str(e)[:500])
+            return "ERROR"
+        except Exception as e:
+            print(f"❌ Upload error: {e}")
+            notifier.error("Upload failed", str(e)[:500])
+            return "ERROR"
+
+    def process_ready(self):
+        if not os.path.isdir(READY_DIR):
+            return
+        vids = sorted(
+            [f for f in os.listdir(READY_DIR) if f.endswith(".mp4")],
+            key=lambda x: os.path.getmtime(os.path.join(READY_DIR, x)),
+        )
+        if not vids:
+            print("ℹ️ No videos ready to post.")
+            return
+        os.makedirs(POSTED_DIR, exist_ok=True)
+        for v in vids:
+            path = os.path.join(READY_DIR, v)
+            result = self.upload(path)
+            if result == "QUOTA":
+                return "STOP"
+            if result in ("ERROR", "AUTH_ERROR"):
+                print(f"⚠️ Skipping {v} (will retry next cycle).")
+                continue
+            # Success: move out of ready so it isn't re-uploaded; archiver handles the rest.
+            try:
+                import shutil
+                shutil.move(path, os.path.join(POSTED_DIR, v))
+            except Exception as e:
+                print(f"⚠️ Could not move {v}: {e}")
+            time.sleep(3)
+
+    def watch(self, interval=300):
+        print("👀 Uploader watching ready_to_post/ ...")
+        while True:
+            try:
+                if self.process_ready() == "STOP":
+                    print("🛑 Pausing 1h after quota.")
+                    time.sleep(3600)
+                    continue
+            except Exception as e:
+                notifier.error("Uploader loop error", str(e)[:500])
+            time.sleep(interval)
+
+
+def main():
+    if "--auth-only" in sys.argv:
+        up = YouTubeUploader()
+        if up.youtube:
+            print("✅ Authentication successful — token.pickle saved.")
+        else:
+            print("❌ Authentication failed.")
+        return
+    up = YouTubeUploader()
+    if not up.youtube:
+        return
+    if "--watch" in sys.argv:
+        up.watch()
+    else:
+        up.process_ready()
+
+
+if __name__ == "__main__":
+    main()
