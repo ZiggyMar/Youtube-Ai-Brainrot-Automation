@@ -60,7 +60,10 @@ CHANNELS = {
         "token_file": os.path.join(PROJECT_ROOT, "token.pickle"),
         "log_file": os.path.join(DATA_DIR, "upload_log.json"),
         "cta": "subscribe_cta",            # assets/overlays/<cta>.mp4
-        "schedule": "blueprint",           # 1 post/day on the proven weekday BLUEPRINT
+        # 1 post/day at 6:00 AM — owner's A/B test (morning drop vs the old 6 PM evening
+        # slot); a 6 AM release gives the Short a full active day to be tested/accumulate.
+        # (Set "blueprint" to revert to the proven varying-weekday evening times.)
+        "schedule": [(6, 0)],
     },
     "factzap": {
         "name": "FactZap",
