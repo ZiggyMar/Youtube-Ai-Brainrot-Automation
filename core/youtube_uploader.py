@@ -43,7 +43,10 @@ CLIENT_SECRETS_FILE = os.path.join(PROJECT_ROOT, "client_secrets.json")
 TOKEN_FILE = os.path.join(PROJECT_ROOT, "token.pickle")
 UPLOAD_LOG_FILE = os.path.join(DATA_DIR, "upload_log.json")
 
-SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
+SCOPES = [
+    "https://www.googleapis.com/auth/youtube.upload",
+    "https://www.googleapis.com/auth/youtube.readonly",  # lets us confirm WHICH channel a token is for
+]
 TZ = ZoneInfo(os.environ.get("TIMEZONE", "America/Toronto"))
 
 # === Multi-channel registry ===========================================================
@@ -323,9 +326,31 @@ def _channel_from_argv():
 def main():
     cfg = _channel_from_argv()
     if "--auth-only" in sys.argv:
+        # Force a FRESH browser flow so the account/brand chooser reappears every time.
+        try:
+            if os.path.exists(cfg["token_file"]):
+                os.remove(cfg["token_file"])
+        except Exception:
+            pass
         up = YouTubeUploader(cfg)
         if up.youtube:
             print(f"✅ Authentication successful — {os.path.basename(up.token_file)} saved for {up.name}.")
+            # Confirm exactly WHICH YouTube channel this token controls.
+            try:
+                r = up.youtube.channels().list(part="snippet,statistics", mine=True).execute()
+                items = r.get("items", [])
+                if not items:
+                    print("   ⚠️ No channel returned for this account.")
+                for it in items:
+                    title = it["snippet"]["title"]
+                    subs = it.get("statistics", {}).get("subscriberCount", "?")
+                    print("   " + "=" * 50)
+                    print(f"   📺 THIS TOKEN CONTROLS:  {title}")
+                    print(f"      Subscribers: {subs}   |   id: {it['id']}")
+                    print("   " + "=" * 50)
+                    print("   >>> If that's NOT FactZap (35,900 subs), re-run and pick a different brand account.")
+            except Exception as e:
+                print(f"   (couldn't read channel identity: {str(e)[:160]})")
         else:
             print("❌ Authentication failed.")
         return
