@@ -1,6 +1,5 @@
 import json
 import os
-import re
 import asyncio
 import edge_tts
 import torch
@@ -83,7 +82,7 @@ def clean_text(text):
         text = text.replace(key, value)
     return text
 
-async def generate_base_audio(text, voice, rate, pitch, output_path, volume="+0%"):
+async def generate_base_audio(text, voice, rate, pitch, output_path):
     """Generates base audio using edge-tts. Handles silent/empty text gracefully."""
     # Sanitize text
     text = text.replace("’", "'").replace("“", '"').replace("”", '"')
@@ -99,7 +98,7 @@ async def generate_base_audio(text, voice, rate, pitch, output_path, volume="+0%
         return
 
     try:
-        communicate = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch, volume=volume)
+        communicate = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
         await communicate.save(output_path)
     except Exception as e:
         print(f"❌ Error generating TTS for '{text}': {e}. Generating silence fallback.")
@@ -297,27 +296,10 @@ async def process_scripts():
             if os.path.exists(final_path) and os.path.exists(json_path):
                 continue
                 
-            # SCREAM EMPHASIS: if the FIRST word is a drawn-out "WAAAIT!" scroll-stopper,
-            # render that line louder, higher and a touch slower so the lead character
-            # actually YELLS it instead of saying it in a flat tone like the rest.
-            rate = config["rate"]
-            pitch = config["pitch"]
-            volume = "+0%"
-            first_word = text.strip().split()[0] if text.strip().split() else ""
-            first_word_letters = re.sub(r"[^a-zA-Z]", "", first_word)
-            is_scream = re.sub(r"(.)\1+", r"\1", first_word_letters).upper() == "WAIT"
-            if is_scream:
-                rate = "-8%"          # stretch the yell out
-                pitch = "+45Hz"       # high, panicked, cartoonish
-                volume = "+40%"       # LOUD
-
             task = {
                 "text": clean_text(text),
                 "speaker": original_speaker, # Used for filename/logging
                 "config": config,
-                "rate": rate,
-                "pitch": pitch,
-                "volume": volume,
                 "base_path": base_path,
                 "rvc_path": rvc_path,
                 "final_path": final_path,
@@ -353,10 +335,9 @@ async def process_scripts():
         tts_coroutines.append(generate_base_audio(
             task["text"],
             task["config"]["voice"],
-            task["rate"],
-            task["pitch"],
-            task["base_path"],
-            task["volume"]
+            task["config"]["rate"],
+            task["config"]["pitch"],
+            task["base_path"]
         ))
     
     if tts_coroutines:

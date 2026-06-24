@@ -44,8 +44,7 @@ STYLE INSTRUCTIONS:
 SCRIPT STRUCTURE (this is the PROVEN formula that grew a real channel 0 -> 40K subscribers - copy it precisely):
 
 1. **THE HOOK + INSTANT SUBSCRIBE GATE**
-   - The VERY FIRST segment MUST be the LEAD character SCREAMING a single, drawn-out "WAAAIT!!!" all by itself (the segment's text is EXACTLY "WAAAIT!!!", nothing else). This is a loud, panicked, funny cartoon yell in the first second whose ONLY job is to freeze a swiping thumb. (show_timer=false, list_highlight "HOOK".)
-   - Then the Host (a character) does the callout: "If you are {intro_action} right now, you're eliminated."
+   - Host (a character): "If you are {intro_action} right now, you're eliminated."
    - Sidekick (a DIFFERENT character) defends the viewer BY NAME, energetic with an exclamation: e.g. "But [Host's name], everyone is {intro_action}! Give them a chance!"
    - Host relents and gates survival on subscribing: "Ugh, fine! I'll let it slide... but ONLY if you SUBSCRIBE right now!" (MUST contain the word SUBSCRIBE; keep the urgency).
 
@@ -77,17 +76,6 @@ OUTPUT FORMAT (Follow this structure exactly):
   {
     "title": "Viral Video Title #Hashtags",
     "script": [
-      {
-        "text": "WAAAIT!!!",
-        "speaker": "SpongeBob",
-        "visuals": {
-          "character": "SpongeBob",
-          "subtitle_color": "Yellow",
-          "list_highlight": "HOOK",
-          "show_timer": false,
-          "answer_reveal": null
-        }
-      },
       {
         "text": "If you are {intro_action} right now, you are eliminated.",
         "speaker": "SpongeBob",
@@ -694,7 +682,6 @@ def generate_dummy_script():
         "title": generate_varied_title(forbidden_titles=existing_titles),
         "hook_text": random.choice(["99% WILL FAIL THIS", "ONLY 1% CAN BEAT THIS", "YOU'LL FAIL IN 5 SECONDS"]),
         "script": [
-            {"text": "WAAAIT!!!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "HOOK", "show_timer": False, "answer_reveal": None}},
             {"text": f"If you are {action} right now, then you are out!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
             {"text": "But SpongeBob, that's too mean! Give them another chance!", "speaker": "Patrick", "visuals": {"character": "Patrick", "subtitle_color": "Pink", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
             {"text": "Ugh, fine! But only if they SUBSCRIBE right now!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
