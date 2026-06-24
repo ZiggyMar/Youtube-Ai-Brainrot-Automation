@@ -236,11 +236,10 @@ def create_hook_overlay(text, duration):
     img = Image.new('RGBA', (w, h), (0,0,0,0))
     draw = ImageDraw.Draw(img)
 
-    # Per-video color variety. ~35% of videos get an animated RGB rainbow cycle (text drawn white,
-    # then hue-cycled per frame); the rest get a random vibrant solid. Heavy black outline always.
-    HOOK_COLORS = ["#FFE600", "#00F2EA", "#39FF14", "#FF2D95", "#FF8A00", "#FF1744", "#18FFFF"]
-    rainbow = random.random() < 0.35
-    fill = "white" if rainbow else random.choice(HOOK_COLORS)
+    # Hook text ALWAYS gets the animated RGB rainbow cycle (drawn white, then hue-cycled per
+    # frame) - user preference. Heavy black outline always.
+    rainbow = True
+    fill = "white"
     draw.text((24, 24), final_text, font=font, fill=fill, stroke_width=12, stroke_fill="black", align="center")
 
     # Slam-then-clear: the hook lives ~1.9s (grab the open, then reveal the clean scoreboard).
