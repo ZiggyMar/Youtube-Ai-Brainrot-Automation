@@ -44,7 +44,8 @@ STYLE INSTRUCTIONS:
 SCRIPT STRUCTURE (this is the PROVEN formula that grew a real channel 0 -> 40K subscribers - copy it precisely):
 
 1. **THE HOOK + INSTANT SUBSCRIBE GATE**
-   - Host (the LEAD character) MUST open by SCREAMING "WAIT!" to stop the scroll, then immediately the callout — e.g. "WAIT! If you are {intro_action} right now, you're eliminated." The "WAIT!" is a loud, urgent shout in the very first second whose ONLY job is to freeze a swiping thumb. ALWAYS start the first line with "WAIT!".
+   - The VERY FIRST segment MUST be the LEAD character SCREAMING a single, drawn-out "WAAAIT!!!" all by itself (the segment's text is EXACTLY "WAAAIT!!!", nothing else). This is a loud, panicked, funny cartoon yell in the first second whose ONLY job is to freeze a swiping thumb. (show_timer=false, list_highlight "HOOK".)
+   - Then the Host (a character) does the callout: "If you are {intro_action} right now, you're eliminated."
    - Sidekick (a DIFFERENT character) defends the viewer BY NAME, energetic with an exclamation: e.g. "But [Host's name], everyone is {intro_action}! Give them a chance!"
    - Host relents and gates survival on subscribing: "Ugh, fine! I'll let it slide... but ONLY if you SUBSCRIBE right now!" (MUST contain the word SUBSCRIBE; keep the urgency).
 
@@ -77,7 +78,18 @@ OUTPUT FORMAT (Follow this structure exactly):
     "title": "Viral Video Title #Hashtags",
     "script": [
       {
-        "text": "WAIT! If you are {intro_action} right now, you are eliminated.",
+        "text": "WAAAIT!!!",
+        "speaker": "SpongeBob",
+        "visuals": {
+          "character": "SpongeBob",
+          "subtitle_color": "Yellow",
+          "list_highlight": "HOOK",
+          "show_timer": false,
+          "answer_reveal": null
+        }
+      },
+      {
+        "text": "If you are {intro_action} right now, you are eliminated.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
@@ -104,6 +116,7 @@ IMPORTANT:
 - **INTERRUPT/BET LINES ARE THE TIMER SEGMENT (CRITICAL)**: The "Don't say [X]!" interrupt and the "I bet they're gonna say [X]..." bet lines are spoken WHILE the timer is on screen. Each MUST be a single timer segment with `show_timer=true` AND a real character as the speaker (NOT "Timer"). DO NOT create a separate segment after the timer for these lines, and DO NOT also emit a silent speaker="Timer" segment for that round. Each round has exactly ONE timer segment.
 - **ITEM CONSISTENCY (CRITICAL)**: Within a single round, the item named in the timer line ("Don't say [X]!" / "I bet they're gonna say [X]...") MUST be the EXACT SAME item used in that round's elimination line ("If you said [X], you're out") and in `answer_reveal`. Never name two different items in the same round.
 - **QUESTION FORMAT (CRITICAL for "don't say the same thing")**: Every question MUST be "Name a/an [broad category]" or "Pick between [X] or [Y]" — something a viewer would instinctively blurt out loud. NEVER ask for a single specific fact that only one answer fits (e.g. a license-plate number, an exact date, a phone number, a specific name). If only one answer is possible, the "don't say the same thing" premise breaks.
+- **EVERY ROUND MUST HAVE ONE CONCRETE OBVIOUS ANSWER (CRITICAL — this is what makes a coherent script)**: For each round, pick the SINGLE most obvious thing ~everyone would blurt for that category, name that EXACT item in the timer/elimination line and in `answer_reveal`. The category must have a clear go-to answer (e.g. "Name a fruit" -> "Apple"; "Name a SpongeBob character" -> "SpongeBob"). NEVER write a vague question with no obvious answer ("name a thing in your room", "name something random") and NEVER write an elimination that refers to "it"/"that thing"/"something they shouldn't" without naming the actual item. If you can't name the one obvious answer, change the category.
 - **SUBSCRIBE FREQUENCY (CRITICAL)**: The word "subscribe" must appear EXACTLY TWICE in the whole script — once in the HOOK gate, and once in the FINAL round. NEVER say "subscribe" in the middle rounds (Round 2 or Round 3). Asking every round is beggy and makes people unsubscribe. Middle rounds use at most a LIKE (Round 1) and a COMMENT (Round 3) — nothing more.
 - **GLOBAL REACH**: If the THEME is NOT SpongeBob-specific (e.g. "Universal Everyday Trivia" or "Hot Takes"), the QUESTIONS must be universal and globally-relatable to any English speaker (everyday colors, foods, animals, countries, first names, "pick heads or tails", "name any sport") and require NO niche/fandom knowledge. ALWAYS still use the SpongeBob characters as the fun presenters (they are the only available voices/images).
 - For ANSWER segments, set `visuals.answer_reveal` to the specific item.
@@ -341,8 +354,12 @@ def get_prompt_text(forced_theme=None, forced_hashtag=None):
     ]
     action = random.choice(actions)
     
-    # Pick a random style and theme
-    style_name = random.choice(list(STYLES.keys()))
+    # Pick a style, HEAVILY weighted to STANDARD. The gimmick styles (RAGE_BAIT impossible
+    # instructions, SOCIAL_ROULETTE share-challenges, CORRECTION_BAIT) frequently produce
+    # incoherent rounds with no real answer to eliminate on - especially on the weaker
+    # fallback LLMs - which read as "trash" scripts. STANDARD ~70%.
+    style_pool = ["STANDARD"] * 7 + ["CORRECTION_BAIT", "SOCIAL_ROULETTE", "RAGE_BAIT"]
+    style_name = random.choice(style_pool)
     style_config = STYLES[style_name]
     
     if forced_theme:
@@ -677,7 +694,8 @@ def generate_dummy_script():
         "title": generate_varied_title(forbidden_titles=existing_titles),
         "hook_text": random.choice(["99% WILL FAIL THIS", "ONLY 1% CAN BEAT THIS", "YOU'LL FAIL IN 5 SECONDS"]),
         "script": [
-            {"text": f"WAIT! If you are {action} right now, then you are out!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
+            {"text": "WAAAIT!!!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "HOOK", "show_timer": False, "answer_reveal": None}},
+            {"text": f"If you are {action} right now, then you are out!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
             {"text": "But SpongeBob, that's too mean! Give them another chance!", "speaker": "Patrick", "visuals": {"character": "Patrick", "subtitle_color": "Pink", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
             {"text": "Ugh, fine! But only if they SUBSCRIBE right now!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
             {"text": "Round 1. Name a fruit.", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
