@@ -44,7 +44,7 @@ STYLE INSTRUCTIONS:
 SCRIPT STRUCTURE (this is the PROVEN formula that grew a real channel 0 -> 40K subscribers - copy it precisely):
 
 1. **THE HOOK + INSTANT SUBSCRIBE GATE**
-   - Host (a character): "If you are {intro_action} right now, you're eliminated."
+   - Host (the LEAD character) MUST open by SCREAMING "WAIT!" to stop the scroll, then immediately the callout — e.g. "WAIT! If you are {intro_action} right now, you're eliminated." The "WAIT!" is a loud, urgent shout in the very first second whose ONLY job is to freeze a swiping thumb. ALWAYS start the first line with "WAIT!".
    - Sidekick (a DIFFERENT character) defends the viewer BY NAME, energetic with an exclamation: e.g. "But [Host's name], everyone is {intro_action}! Give them a chance!"
    - Host relents and gates survival on subscribing: "Ugh, fine! I'll let it slide... but ONLY if you SUBSCRIBE right now!" (MUST contain the word SUBSCRIBE; keep the urgency).
 
@@ -69,7 +69,7 @@ SCRIPT STRUCTURE (this is the PROVEN formula that grew a real channel 0 -> 40K s
 
 TIMER VARIETY (IMPORTANT): Do NOT put an interrupt on every round. About HALF the rounds (e.g. 2 of 4) should have a character interrupt DURING the timer ("Don't say X!" / "I bet they'll say X..."); the rest should be a SILENT timer segment (speaker="Timer", text="..."). Vary which rounds get the interrupt so videos don't feel repetitive.
 
-CHARACTER PERSONALITY: Let the eliminations carry character humor - Squidward sarcastic ("Squidward's not happy, you're eliminated"), MrKrabs greedy ("name something that makes me money" -> "nothing, because I'll just steal the formula!"), Plankton scheming, SpongeBob hyper and silly, Patrick lovable-but-dumb defending the viewer.
+CHARACTER PERSONALITY (IMPORTANT - this is what makes videos likeable & shareable): EVERY elimination/answer line MUST carry a short in-character joke, not a flat "you're out". Squidward sarcastic ("Squidward's not happy, you're eliminated"), MrKrabs greedy ("ARRGH, my money!" / "I'll just steal the formula!"), Plankton scheming ("my plans are ruined again!"), SpongeBob hyper and silly, Patrick lovable-but-dumb defending the viewer. The best-performing video leaned HARD into these jokes - dry, joke-less eliminations underperform, so never write a bare elimination.
 
 OUTPUT FORMAT (Follow this structure exactly):
 [
@@ -77,7 +77,7 @@ OUTPUT FORMAT (Follow this structure exactly):
     "title": "Viral Video Title #Hashtags",
     "script": [
       {
-        "text": "If you are {intro_action} right now, you are eliminated.",
+        "text": "WAIT! If you are {intro_action} right now, you are eliminated.",
         "speaker": "SpongeBob",
         "visuals": {
           "character": "SpongeBob",
@@ -181,6 +181,13 @@ THEMES = [
 ]
 
 TITLE_TEMPLATES = [
+    # === PROVEN WINNERS (listed multiple times to weight selection toward them) ===
+    # "Only 1% Can Survive This SpongeBob Game! 🧽" was the top converter (+27 subs / 2.26%).
+    "Only 1% Can Survive This {theme} Game! 🧽",
+    "Only 1% Can Survive This {theme} Game! 🧽",
+    "Only 1% Can Survive This {theme} Challenge! 🧽",
+    "Only 1% Can Survive This {theme} Challenge! 🧽",
+    "Can You Survive This {theme} Game? 🧽",
     "99% Of People Fail This {theme} Test 🧽",
     "Can You Beat {character}? (Impossible Mode) ⭐️",
     "Only True Fans Know The Answer... 🤫",
@@ -324,10 +331,13 @@ def generate_varied_title(theme="SpongeBob", character="SpongeBob", forbidden_ti
     return f"{title_base} {' '.join(hashtags)}"
 
 def get_prompt_text(forced_theme=None, forced_hashtag=None):
+    # Openers are constrained to UNIVERSAL states that implicate ~100% of anyone scrolling
+    # a Short (the winning video used "sitting down"; weak non-universal callouts like
+    # "wearing socks" underperformed). Every option here is true of nearly every viewer.
     actions = [
-        "breathing", "blinking", "sitting down", "holding a phone", 
-        "touching your screen", "wearing a shirt", "inside a building", 
-        "awake", "alive", "using wifi", "wearing socks", "laying in bed"
+        "breathing", "blinking", "sitting down", "holding your phone",
+        "touching your screen", "awake", "alive", "watching this short",
+        "scrolling right now", "using your thumb",
     ]
     action = random.choice(actions)
     
@@ -661,13 +671,13 @@ def try_openrouter(forced_theme=None, forced_hashtag=None):
 def generate_dummy_script():
     print("⚠️ Generating DUMMY script due to API failures...")
     rand_id = random.randint(1000, 9999)
-    action = random.choice(["breathing", "blinking", "sitting down", "holding a phone", "touching your screen", "wearing a shirt", "inside a building", "awake"])
+    action = random.choice(["breathing", "blinking", "sitting down", "holding your phone", "touching your screen", "awake", "watching this short", "scrolling right now"])
     existing_titles = get_recent_titles()
     data = [{
         "title": generate_varied_title(forbidden_titles=existing_titles),
-        "hook_text": "Don't Say The Same Thing!",
+        "hook_text": random.choice(["99% WILL FAIL THIS", "ONLY 1% CAN BEAT THIS", "YOU'LL FAIL IN 5 SECONDS"]),
         "script": [
-            {"text": f"If you are {action} right now, then you are out!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
+            {"text": f"WAIT! If you are {action} right now, then you are out!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
             {"text": "But SpongeBob, that's too mean! Give them another chance!", "speaker": "Patrick", "visuals": {"character": "Patrick", "subtitle_color": "Pink", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
             {"text": "Ugh, fine! But only if they SUBSCRIBE right now!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
             {"text": "Round 1. Name a fruit.", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": None}},
