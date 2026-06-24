@@ -36,16 +36,15 @@ RUN_AT_HOUR = int(os.environ.get("RUN_AT_HOUR", "22"))
 RUN_AT_MINUTE = int(os.environ.get("RUN_AT_MINUTE", "0"))
 PY = sys.executable
 
-# Force UTF-8 so emoji prints never crash under non-UTF8 locales (Windows cp1252).
-RUN_ENV = dict(os.environ, PYTHONUTF8="1", PYTHONIOENCODING="utf-8")
-
-
 def stage(script, label, args=None):
     """Run a pipeline stage as a subprocess. Returns True on success."""
     print(f"\n{'='*50}\n=== {label} ===\n{'='*50}")
     cmd = [PY, os.path.join(CORE_DIR, script)] + (args or [])
+    # Build env FRESH each call so per-channel settings (e.g. CTA_OVERLAY set in run_cycle)
+    # reach the subprocess. Force UTF-8 so emoji prints never crash on cp1252.
+    env = dict(os.environ, PYTHONUTF8="1", PYTHONIOENCODING="utf-8")
     try:
-        subprocess.run(cmd, check=True, cwd=PROJECT_ROOT, env=RUN_ENV)
+        subprocess.run(cmd, check=True, cwd=PROJECT_ROOT, env=env)
         return True
     except subprocess.CalledProcessError as e:
         print(f"❌ {script} failed: {e}")
@@ -74,17 +73,18 @@ def generate_one():
     return True
 
 
-def schedule_ready():
-    """Schedule any ready videos onto the blueprint (uploader handles 1/day + brand channel)."""
+def schedule_channel(cfg):
+    """Post the freshly-rendered video sitting in ready_to_post to ONE channel and move it out."""
     try:
         import youtube_uploader
-        up = youtube_uploader.YouTubeUploader()
+        up = youtube_uploader.YouTubeUploader(cfg)
         if not up.youtube:
-            notifier.warn("Uploader not authenticated", "No valid token.pickle - videos are rendered and waiting.")
+            notifier.warn(f"Uploader not authenticated: {cfg['name']}",
+                          "Video is rendered and waiting in ready_to_post.")
             return
         up.process_ready()
     except Exception as e:
-        notifier.error("Scheduling failed", str(e)[:500])
+        notifier.error(f"Scheduling failed: {cfg['name']}", str(e)[:500])
 
 
 def seconds_until_next_run():
@@ -100,12 +100,28 @@ def run_cycle():
     start = datetime.datetime.now()
     print(f"\n🎬 CYCLE START {start.isoformat(timespec='seconds')}")
     fetch_footage()
+
+    import youtube_uploader
+    channels = youtube_uploader.enabled_channels()  # only channels whose token exists
+
     made = 0
-    for i in range(GEN_PER_RUN):
-        print(f"\n--- Generating video {i+1}/{GEN_PER_RUN} ---")
+    if not channels:
+        # Nothing authenticated yet: still render one so it's ready, but warn (nothing posts).
+        print("⚠️ No authenticated channels (no token). Rendering 1 video, not posting.")
+        os.environ["CTA_OVERLAY"] = youtube_uploader.CHANNELS[youtube_uploader.DEFAULT_CHANNEL]["cta"]
         if generate_one():
             made += 1
-    schedule_ready()
+        notifier.warn("No channel authenticated",
+                      "Rendered a video but nothing was posted — mint a token.pickle.")
+    else:
+        # One freshly-generated video PER channel (its own branded CTA), posted to that channel.
+        for key, cfg in channels:
+            print(f"\n--- Channel: {cfg['name']} ({key}) ---")
+            os.environ["CTA_OVERLAY"] = cfg["cta"]
+            if generate_one():
+                made += 1
+                schedule_channel(cfg)
+
     try:
         archiver.prune_posted(days=7)
     except Exception:
@@ -114,15 +130,21 @@ def run_cycle():
                 + datetime.timedelta(seconds=seconds_until_next_run()))
     notifier.success(
         "Daily cycle complete",
-        f"Generated {made}/{GEN_PER_RUN} video(s) and scheduled the queue. "
+        f"Generated/posted {made} video(s) across {len(channels) or 1} channel(s). "
         f"Next cycle at {next_run:%Y-%m-%d %H:%M} (server time).",
     )
 
 
 def main():
+    try:
+        import youtube_uploader
+        chan_names = ", ".join(c["name"] for _, c in youtube_uploader.enabled_channels()) or "none yet"
+    except Exception:
+        chan_names = "?"
     notifier.info(
         "Brainrot daemon started",
-        f"Runs daily at {RUN_AT_HOUR:02d}:{RUN_AT_MINUTE:02d} (server time), {GEN_PER_RUN} video(s)/cycle.",
+        f"Runs daily at {RUN_AT_HOUR:02d}:{RUN_AT_MINUTE:02d} (server time). "
+        f"One video per authenticated channel. Active: {chan_names}.",
     )
     while True:
         wait_s = seconds_until_next_run()

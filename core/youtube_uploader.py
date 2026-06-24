@@ -46,6 +46,32 @@ UPLOAD_LOG_FILE = os.path.join(DATA_DIR, "upload_log.json")
 SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
 TZ = ZoneInfo(os.environ.get("TIMEZONE", "America/Toronto"))
 
+# === Multi-channel registry ===========================================================
+# Each channel = its OWN OAuth token + upload log + in-video subscribe-CTA overlay.
+# A channel is only ACTIVE once its token file exists (minted locally via --auth-only),
+# so the pipeline behaves exactly as before until FactZap's token is added, then it
+# auto-scales to one freshly-generated video per channel per day.
+CHANNELS = {
+    "mmstorybook": {
+        "name": "MM Storybook",
+        "token_file": os.path.join(PROJECT_ROOT, "token.pickle"),
+        "log_file": os.path.join(DATA_DIR, "upload_log.json"),
+        "cta": "subscribe_cta",            # assets/overlays/<cta>.mp4
+    },
+    "factzap": {
+        "name": "FactZap",
+        "token_file": os.path.join(PROJECT_ROOT, "token_factzap.pickle"),
+        "log_file": os.path.join(DATA_DIR, "upload_log_factzap.json"),
+        "cta": "subscribe_cta_factzap",
+    },
+}
+DEFAULT_CHANNEL = "mmstorybook"
+
+
+def enabled_channels():
+    """(key, cfg) for every channel whose OAuth token exists, i.e. can actually post."""
+    return [(k, c) for k, c in CHANNELS.items() if os.path.exists(c["token_file"])]
+
 # === Proven weekly EST blueprint: (hour, minute) local upload-target per weekday ===
 # Monday=0 ... Sunday=6. One published video per day at these high-traffic windows.
 BLUEPRINT = {
@@ -90,11 +116,17 @@ def cap_tags(tags, limit=480):
 
 
 class YouTubeUploader:
-    def __init__(self):
+    def __init__(self, channel=None):
+        # channel: a CHANNELS[*] cfg dict. Defaults to the primary channel for backward compat.
+        cfg = channel or CHANNELS[DEFAULT_CHANNEL]
+        self.name = cfg["name"]
+        self.token_file = cfg["token_file"]
+        self.log_file = cfg["log_file"]
         self.youtube = self.authenticate()
         self.log = self.load_log()
 
     def authenticate(self):
+        TOKEN_FILE = self.token_file
         creds = None
         if os.path.exists(TOKEN_FILE):
             try:
@@ -129,16 +161,16 @@ class YouTubeUploader:
             notifier.error("YouTube auth needs a browser", msg)
             return None
         flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRETS_FILE, SCOPES)
-        print("\n🔐 A browser will open. Sign in and SELECT YOUR BRAND CHANNEL.\n")
+        print(f"\n🔐 A browser will open. Sign in and SELECT THE CHANNEL FOR: {self.name}.\n")
         creds = flow.run_local_server(port=0)
         with open(TOKEN_FILE, "wb") as f:
             pickle.dump(creds, f)
         return build("youtube", "v3", credentials=creds)
 
     def load_log(self):
-        if os.path.exists(UPLOAD_LOG_FILE):
+        if os.path.exists(self.log_file):
             try:
-                with open(UPLOAD_LOG_FILE, "r", encoding="utf-8") as f:
+                with open(self.log_file, "r", encoding="utf-8") as f:
                     return json.load(f)
             except Exception:
                 pass
@@ -146,7 +178,7 @@ class YouTubeUploader:
 
     def save_log(self):
         os.makedirs(DATA_DIR, exist_ok=True)
-        with open(UPLOAD_LOG_FILE, "w", encoding="utf-8") as f:
+        with open(self.log_file, "w", encoding="utf-8") as f:
             json.dump(self.log, f, indent=2)
 
     def scheduled_dates(self):
@@ -217,7 +249,7 @@ class YouTubeUploader:
             })
             self.save_log()
             notifier.success(
-                "Video scheduled",
+                f"Video scheduled — {self.name}",
                 f"**{title}**\nPublishes: {slot_local.strftime('%a %b %d, %I:%M %p %Z')}\nhttps://youtu.be/{vid}",
             )
             return vid
@@ -275,15 +307,29 @@ class YouTubeUploader:
             time.sleep(interval)
 
 
+def _channel_from_argv():
+    """--channel <key> selects which channel registry entry to use (default primary)."""
+    if "--channel" in sys.argv:
+        i = sys.argv.index("--channel")
+        if i + 1 < len(sys.argv):
+            key = sys.argv[i + 1]
+            if key in CHANNELS:
+                return CHANNELS[key]
+            print(f"❌ Unknown channel '{key}'. Valid: {', '.join(CHANNELS)}")
+            sys.exit(1)
+    return CHANNELS[DEFAULT_CHANNEL]
+
+
 def main():
+    cfg = _channel_from_argv()
     if "--auth-only" in sys.argv:
-        up = YouTubeUploader()
+        up = YouTubeUploader(cfg)
         if up.youtube:
-            print("✅ Authentication successful — token.pickle saved.")
+            print(f"✅ Authentication successful — {os.path.basename(up.token_file)} saved for {up.name}.")
         else:
             print("❌ Authentication failed.")
         return
-    up = YouTubeUploader()
+    up = YouTubeUploader(cfg)
     if not up.youtube:
         return
     if "--watch" in sys.argv:

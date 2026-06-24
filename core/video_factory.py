@@ -290,7 +290,10 @@ def find_character_image(speaker, character_field):
 
 def preprocess_assets():
     print("🛠️ Pre-processing Assets...")
-    for name, key in [("timer", "timer"), ("subscribe_cta", "cta")]:
+    # CTA overlay is per-channel: run_pipeline sets CTA_OVERLAY (e.g. subscribe_cta_factzap)
+    # so each channel gets its own branded subscribe card. Defaults to the primary overlay.
+    cta_name = os.environ.get("CTA_OVERLAY", "subscribe_cta")
+    for name, key in [("timer", "timer"), (cta_name, "cta")]:
         mp4 = os.path.join(ASSETS_DIR, "overlays", f"{name}.mp4")
         mov = os.path.join(ASSETS_DIR, "overlays", f"{name}_alpha_scaled.mov")
         if os.path.exists(mp4) and not os.path.exists(mov):
@@ -537,9 +540,11 @@ def generate_video(video_data):
         else:
              timer_clip_ref = timer_clip_ref.set_position((LAYOUT["timer"]["x"], LAYOUT["timer"]["y"]))
 
-    # CTA: Prefer MP4 source and apply runtime mask for reliability
-    cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
-    if not os.path.exists(cta_path): cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta_alpha.mov")
+    # CTA: Prefer MP4 source and apply runtime mask for reliability. Per-channel overlay
+    # selected via CTA_OVERLAY (set by run_pipeline); falls back to the primary overlay.
+    cta_name = os.environ.get("CTA_OVERLAY", "subscribe_cta")
+    cta_path = os.path.join(ASSETS_DIR, "overlays", f"{cta_name}.mp4")
+    if not os.path.exists(cta_path): cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
     
     if os.path.exists(cta_path):
         # Force green screen removal for MP4, or if it's the MOV fallback (just in case)
