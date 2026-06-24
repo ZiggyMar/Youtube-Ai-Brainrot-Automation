@@ -454,14 +454,18 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, t
     print(f"   - Rendering Segment {i} ({duration:.2f}s)...")
     
     try:
+        # Segments are FAST throwaway intermediates (ultrafast); the single CFR re-encode at
+        # the end (see "Final Polish") is what guarantees smooth, constant-30fps playback.
+        # Force exactly 30fps here too so durations stay frame-aligned before concat.
         segment_comp.write_videofile(
             out_path,
             fps=30,
-            codec="libx264", 
-            audio_codec="aac", 
-            threads=1, 
-            preset="ultrafast", 
-            logger=None, 
+            codec="libx264",
+            audio_codec="aac",
+            threads=2,
+            preset="ultrafast",
+            ffmpeg_params=["-pix_fmt", "yuv420p"],
+            logger=None,
             verbose=False
         )
     finally:
@@ -708,9 +712,12 @@ def generate_video(video_data):
         # Add volume normalization
         audio_filter += "volume=0.1"
         
-        cmd = [FFMPEG_PATH, "-y", "-i", temp_concat, "-stream_loop", "-1", "-i", bg_music, "-filter_complex", f"[1:a]{audio_filter}[music];[0:a][music]amix=inputs=2:duration=first[a]", "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-shortest", out_path]
+        # Re-encode the video to a CONSTANT 30fps stream here (not -c:v copy). The concat of
+        # audio-length segments was variable-frame-rate (~29.56fps avg) which judders/lags on
+        # playback; -r 30 -vsync cfr normalizes timing into a smooth, evenly-spaced stream.
+        cmd = [FFMPEG_PATH, "-y", "-i", temp_concat, "-stream_loop", "-1", "-i", bg_music, "-filter_complex", f"[1:a]{audio_filter}[music];[0:a][music]amix=inputs=2:duration=first[a]", "-map", "0:v", "-map", "[a]", "-r", "30", "-vsync", "cfr", "-c:v", "libx264", "-preset", "veryfast", "-crf", "23", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart", "-shortest", out_path]
     else:
-        cmd = [FFMPEG_PATH, "-y", "-i", temp_concat, "-c", "copy", out_path]
+        cmd = [FFMPEG_PATH, "-y", "-i", temp_concat, "-r", "30", "-vsync", "cfr", "-c:v", "libx264", "-preset", "veryfast", "-crf", "23", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart", out_path]
     subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     try:
