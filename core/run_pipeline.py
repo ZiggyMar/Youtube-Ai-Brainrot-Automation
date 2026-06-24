@@ -114,12 +114,19 @@ def run_cycle():
         notifier.warn("No channel authenticated",
                       "Rendered a video but nothing was posted — mint a token.pickle.")
     else:
-        # One freshly-generated video PER channel (its own branded CTA), posted to that channel.
+        # Per channel: render its posts_per_day videos (each with the channel's branded CTA),
+        # then post them — the uploader assigns each to that channel's next free daily slot.
         for key, cfg in channels:
-            print(f"\n--- Channel: {cfg['name']} ({key}) ---")
+            n = youtube_uploader.channel_posts_per_day(cfg)
+            print(f"\n--- Channel: {cfg['name']} ({key}) — {n} video(s)/day ---")
             os.environ["CTA_OVERLAY"] = cfg["cta"]
-            if generate_one():
-                made += 1
+            produced = 0
+            for j in range(n):
+                print(f"  · {cfg['name']} video {j+1}/{n}")
+                if generate_one():
+                    produced += 1
+                    made += 1
+            if produced:
                 schedule_channel(cfg)
 
     try:

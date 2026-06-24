@@ -60,15 +60,23 @@ CHANNELS = {
         "token_file": os.path.join(PROJECT_ROOT, "token.pickle"),
         "log_file": os.path.join(DATA_DIR, "upload_log.json"),
         "cta": "subscribe_cta",            # assets/overlays/<cta>.mp4
+        "schedule": "blueprint",           # 1 post/day on the proven weekday BLUEPRINT
     },
     "factzap": {
         "name": "FactZap",
         "token_file": os.path.join(PROJECT_ROOT, "token_factzap.pickle"),
         "log_file": os.path.join(DATA_DIR, "upload_log_factzap.json"),
         "cta": "subscribe_cta_factzap",
+        # 2 posts/day to force volume on the throttled OG channel: late morning + evening.
+        "schedule": [(11, 0), (19, 0)],
     },
 }
 DEFAULT_CHANNEL = "mmstorybook"
+
+
+def channel_posts_per_day(cfg):
+    sched = cfg.get("schedule", "blueprint")
+    return 1 if sched == "blueprint" else len(sched)
 
 
 def enabled_channels():
@@ -125,6 +133,7 @@ class YouTubeUploader:
         self.name = cfg["name"]
         self.token_file = cfg["token_file"]
         self.log_file = cfg["log_file"]
+        self.schedule = cfg.get("schedule", "blueprint")  # "blueprint" or [(h,m),...]
         self.youtube = self.authenticate()
         self.log = self.load_log()
 
@@ -184,26 +193,45 @@ class YouTubeUploader:
         with open(self.log_file, "w", encoding="utf-8") as f:
             json.dump(self.log, f, indent=2)
 
-    def scheduled_dates(self):
-        """Set of local-date strings that already have a video scheduled (enforce 1/day)."""
-        dates = set()
+    def _slots_for(self, day):
+        """Sorted list of (hour, minute) target times for this channel on `day`."""
+        if self.schedule == "blueprint":
+            return [BLUEPRINT[day.weekday()]]
+        return sorted(self.schedule)
+
+    def _taken_slots(self):
+        """Set of (date_iso, slot_index) already filled — each logged publish time is matched
+        to its NEAREST slot for that day, so jitter (±5min) doesn't confuse the mapping."""
+        taken = set()
         for v in self.log.get("uploaded", []):
             t = v.get("publish_at")
-            if t:
-                dates.add(t[:10])
-        return dates
+            if not t:
+                continue
+            try:
+                dt = datetime.datetime.fromisoformat(t)
+            except ValueError:
+                continue
+            slots = self._slots_for(dt.date())
+            mins = dt.hour * 60 + dt.minute
+            idx = min(range(len(slots)), key=lambda i: abs(mins - (slots[i][0] * 60 + slots[i][1])))
+            taken.add((dt.date().isoformat(), idx))
+        return taken
 
     def next_slot(self):
-        """Next blueprint slot in TZ, strictly future, max 1 per calendar day (enforced by
-        the log of already-scheduled dates). Respects each weekday's exact blueprint time."""
+        """Next free posting slot in TZ, strictly future. Supports N posts/day: each day exposes
+        len(slots) targets; a specific slot is skipped once a video is already scheduled into it."""
         now = datetime.datetime.now(TZ)
-        taken = self.scheduled_dates()
+        taken = self._taken_slots()
 
         day = now.date()
         for _ in range(60):  # look ahead up to 60 days
-            h, m = BLUEPRINT[day.weekday()]
-            slot = datetime.datetime(day.year, day.month, day.day, h, m, tzinfo=TZ)
-            if slot > now + datetime.timedelta(minutes=10) and slot.date().isoformat() not in taken:
+            slots = self._slots_for(day)
+            for idx, (h, m) in enumerate(slots):
+                slot = datetime.datetime(day.year, day.month, day.day, h, m, tzinfo=TZ)
+                if slot <= now + datetime.timedelta(minutes=10):
+                    continue            # this time already passed
+                if (day.isoformat(), idx) in taken:
+                    continue            # this exact slot already filled
                 return slot
             day += datetime.timedelta(days=1)
         return now + datetime.timedelta(days=1)
