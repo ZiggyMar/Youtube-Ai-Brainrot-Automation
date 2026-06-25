@@ -46,7 +46,7 @@ SCRIPT STRUCTURE (this is the PROVEN formula that grew a real channel 0 -> 40K s
 1. **THE HOOK + INSTANT SUBSCRIBE GATE**
    - Host (a character): "If you are {intro_action} right now, you're eliminated."
    - Sidekick (a DIFFERENT character) defends the viewer BY NAME, energetic with an exclamation: e.g. "But [Host's name], everyone is {intro_action}! Give them a chance!"
-   - Host relents and gates survival on subscribing: "Ugh, fine! I'll let it slide... but ONLY if you SUBSCRIBE right now!" (MUST contain the word SUBSCRIBE; keep the urgency).
+   - Host relents and gates survival on subscribing, with URGENCY like the originals: "Ugh, fine! I'll let it slide... but ONLY if you SUBSCRIBE right now — quick, quick!" (MUST contain the word SUBSCRIBE; the urgency "right now / quick quick" is what made the proven videos convert).
 
 2. **ROUND 1 (EASY) -> LIKE CTA**
    - Host: "First question. Name a/an [broad category about {theme}]."
@@ -119,11 +119,11 @@ IMPORTANT:
 
 FINAL_ROUND_VARIANTS = {
     "BINARY_SUBSCRIBE": {
-        "description": "5. **FINAL ROUND (IMPOSSIBLE): THE BINARY CHOICE** (the proven closer)\n   - Host: \"Final question. Choose between [Option A] or [Option B].\" (two fun options tied to {theme}).\n   - Resolution: give a playful response for BOTH options, and make ONE branch trigger a subscribe: \"If you picked [A] you're awesome! If you picked [B], hit subscribe because [in-character themed reason].\"",
+        "description": "5. **FINAL ROUND (IMPOSSIBLE): THE BINARY CHOICE** (THE proven closer - this is what converted the 49K video to +3,800 subs)\n   - Host: \"Final question. Choose between [Option A] or [Option B].\" (two fun options tied to {theme}).\n   - Resolution: give a playful response for BOTH options, and make ONE branch HARD-gate a subscribe with FORCE: \"If you picked [A] you're awesome! If you picked [B], hit that subscribe button right now because [in-character themed reason]!\"",
         "instructions": """  - The final question MUST be a binary choice: "Choose between [Option A] or [Option B]" (both tied to {theme}).
   - The resolution MUST give a fun in-character response for BOTH options.
-  - The losing/other branch MUST tell the viewer to subscribe with a playful in-character reason (the line MUST contain the word "subscribe").
-  - You MAY include a short silent timer segment (speaker="Timer", text="...") between the question and the resolution.
+  - The losing/other branch MUST FORCEFULLY tell the viewer to subscribe ("hit that subscribe button right now") with a playful in-character reason. A weak/buried subscribe ask is the #1 reason a high-retention video gets few subs - make it direct and confident. The line MUST contain the word "subscribe".
+  - If you want a beat before the resolution, a character must SPEAK over the timer (e.g. "drumroll please..."); NEVER a silent "..." timer.
 - Include EXACTLY 4 Rounds: 1. EASY, 2. MEDIUM, 3. HARD, 4. IMPOSSIBLE. The final round is the binary-choice subscribe close."""
     },
     "UNFINISHED_SYMPHONY": {
