@@ -50,24 +50,28 @@ SCRIPT STRUCTURE (this is the PROVEN formula that grew a real channel 0 -> 40K s
 
 2. **ROUND 1 (EASY) -> LIKE CTA**
    - Host: "First question. Name a/an [broad category about {theme}]."
-   - (Optional timer interrupt - see TIMER VARIETY) a character teases: "Don't say [Obvious Answer]!"
-   - Host: "If you said [Obvious Answer] you're out! Like the video if you survived." (the LIKE call-to-action)
+   - REQUIRED blurt (show_timer=true, a character speaks — never silent): the character instantly says the obvious answer, e.g. "[Obvious Answer]! Everyone says [Obvious Answer]..."
+   - Host: "If you said [Obvious Answer] you're out! Like the video if you survived." (the LIKE call-to-action) — optionally add redemption: "...but if you like this video we'll pretend it never happened."
 
 3. **ROUND 2 (MEDIUM) -> NO CTA (just the game + character humor)**
    - A character: "Next question. Name a/an [category about {theme}]."
-   - (Optional timer interrupt) a character teases the obvious answer.
-   - "If you said [Item], you're out!" — DO NOT add a like/subscribe/comment call-to-action here. Just the elimination, ideally with an in-character joke. (Spreading CTAs every single round feels beggy and makes people unsubscribe.)
+   - REQUIRED blurt (show_timer=true, a character speaks): "Don't say [Obvious Answer]!" / "[Obvious Answer], am I right?"
+   - "If you said [Item], you're out!" — DO NOT add a like/subscribe/comment call-to-action here. Just the elimination with an in-character joke.
    {round_2_override}
 
 4. **ROUND 3 (HARD) -> COMMENT CTA**
    - A character: "Third question. Name a/an [category about {theme}]."
-   - (Optional timer interrupt) "I bet they're gonna say [Item]..."
+   - REQUIRED blurt (show_timer=true, a character speaks): "I bet they're gonna say [Item]..."
    - "If you said [Item], you're cooked. Comment below how many you got right!" (the COMMENT call-to-action)
    {round_3_override}
 
 {final_round_description}
 
-TIMER VARIETY (IMPORTANT): Do NOT put an interrupt on every round. About HALF the rounds (e.g. 2 of 4) should have a character interrupt DURING the timer ("Don't say X!" / "I bet they'll say X..."); the rest should be a SILENT timer segment (speaker="Timer", text="..."). Vary which rounds get the interrupt so videos don't feel repetitive.
+PACING — NO DEAD AIR (THIS IS THE #1 RETENTION DRIVER, the actual secret of the original viral videos): NEVER write a silent timer or a "..." segment. Silence makes viewers swipe away — it is exactly why recent videos flopped (retention dropped from ~77% to ~50%). The ENTIRE script must play like ONE continuous, rapid-fire monologue with zero gaps. After EVERY question, a character IMMEDIATELY blurts the obvious trap answer OUT LOUD as a fast tease ("Krabby Patty! Everyone says Krabby Patty...") and the elimination follows INSTANTLY. Set show_timer=true on that blurt segment so the clock flashes for a beat, but a REAL character ALWAYS speaks it. A segment with speaker="Timer" and text="..." is BANNED — never emit one.
+
+ENGAGEMENT BAIT (use in ROUND 2 OR ROUND 3 about half the time — the original viral videos did this and it drives shares/comments which boost distribution): occasionally replace that round's question with an INTERACTIVE challenge that forces a tap/share/comment, then tie it back in-character. Examples: "Double-tap the screen to revive yourself!"; "Who's the first person that pops up when you hit share then more? If it's your best friend, you're out!"; "Go to the comments and pick an emoji — you picked that one, didn't you?". Keep it fast and continuous (still show_timer on the tease).
+
+REDEMPTION FRAMING (sprinkle 1-2 times like the originals): give eliminated viewers a second chance tied to engaging — "but you can get another chance if you subscribe right now", "if you like this video we'll pretend it never happened".
 
 CHARACTER PERSONALITY (IMPORTANT - this is what makes videos likeable & shareable): EVERY elimination/answer line MUST carry a short in-character joke, not a flat "you're out". Squidward sarcastic ("Squidward's not happy, you're eliminated"), MrKrabs greedy ("ARRGH, my money!" / "I'll just steal the formula!"), Plankton scheming ("my plans are ruined again!"), SpongeBob hyper and silly, Patrick lovable-but-dumb defending the viewer. The best-performing video leaned HARD into these jokes - dry, joke-less eliminations underperform, so never write a bare elimination.
 
@@ -360,15 +364,14 @@ def get_prompt_text(forced_theme=None, forced_hashtag=None):
         theme_hashtag = theme_obj["hashtag"]
         print(f"🎲 Selected Style: {style_name} | Theme: {theme_name}")
 
-    # Select a Final Round Ending - a deliberate 50/50 split:
-    #   - 50% "finishing close" (BINARY_SUBSCRIBE): the video resolves the final round.
-    #   - 50% retention loop (THE_BET / UNFINISHED_SYMPHONY): the final answer is NEVER
-    #     revealed -> viewers rewatch to the end -> the Short loops -> watch-time exceeds
-    #     100% -> YouTube pushes harder.
+    # Final-round ending, weighted to the PROVEN closer. EVERY one of the channel's top
+    # original videos (49K/19K/17K) ended on the BINARY CHOICE close, and it's also the best
+    # recent converter (video 126, +27 subs). THE_BET (bet line over the timer, NOT silent)
+    # is kept for variety. UNFINISHED_SYMPHONY is dropped — it ends on a SILENT timer = dead
+    # air at the worst moment, which tanks retention.
     ending_pool = (
-        ["THE_BET"] * 1 +
-        ["UNFINISHED_SYMPHONY"] * 1 +
-        ["BINARY_SUBSCRIBE"] * 2
+        ["BINARY_SUBSCRIBE"] * 3 +
+        ["THE_BET"] * 1
     )
     ending_variant_name = random.choice(ending_pool)
     ending_config = FINAL_ROUND_VARIANTS[ending_variant_name]
@@ -689,13 +692,13 @@ def generate_dummy_script():
             {"text": "Don't say Apple!", "speaker": "Patrick", "visuals": {"character": "Patrick", "subtitle_color": "Pink", "list_highlight": "1. EASY", "show_timer": True, "answer_reveal": None}},
             {"text": "I picked Apple!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "1. EASY", "show_timer": False, "answer_reveal": "APPLE"}},
             {"text": "Round 2. Name a color.", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "2. MEDIUM", "show_timer": False, "answer_reveal": None}},
-            {"text": "...", "speaker": "Timer", "visuals": {"character": None, "subtitle_color": "White", "list_highlight": "2. MEDIUM", "show_timer": True, "answer_reveal": None}},
+            {"text": "Blue! Everyone says Blue!", "speaker": "Patrick", "visuals": {"character": "Patrick", "subtitle_color": "Pink", "list_highlight": "2. MEDIUM", "show_timer": True, "answer_reveal": None}},
             {"text": "I picked Blue!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "2. MEDIUM", "show_timer": False, "answer_reveal": "BLUE"}},
             {"text": "Round 3. Name a drink.", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "3. HARD", "show_timer": False, "answer_reveal": None}},
-            {"text": "...", "speaker": "Timer", "visuals": {"character": None, "subtitle_color": "White", "list_highlight": "3. HARD", "show_timer": True, "answer_reveal": None}},
+            {"text": "I bet you'll say Water...", "speaker": "Patrick", "visuals": {"character": "Patrick", "subtitle_color": "Pink", "list_highlight": "3. HARD", "show_timer": True, "answer_reveal": None}},
             {"text": "I picked Water!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "3. HARD", "show_timer": False, "answer_reveal": "WATER"}},
             {"text": "Round 4. Name a planet.", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "4. IMPOSSIBLE", "show_timer": False, "answer_reveal": None}},
-            {"text": "...", "speaker": "Timer", "visuals": {"character": None, "subtitle_color": "White", "list_highlight": "4. IMPOSSIBLE", "show_timer": True, "answer_reveal": None}},
+            {"text": "Don't say Mars!", "speaker": "Patrick", "visuals": {"character": "Patrick", "subtitle_color": "Pink", "list_highlight": "4. IMPOSSIBLE", "show_timer": True, "answer_reveal": None}},
             {"text": "I picked Mars!", "speaker": "SpongeBob", "visuals": {"character": "SpongeBob", "subtitle_color": "Yellow", "list_highlight": "4. IMPOSSIBLE", "show_timer": False, "answer_reveal": "MARS"}}
         ]
     }]
