@@ -81,6 +81,13 @@ DEFAULT_LAYOUT = {
     "difficulty_list": {"x": 50, "y": 100, "width": 400, "height": 400, "font_size": 50}
 }
 
+# Tunables for the premade alpha subscribe overlay (dialed in via test-render screenshots).
+# Used when assets/overlays/<cta>_overlay.mov exists (transparent overlay placed above the
+# character); otherwise the legacy green-screen mp4 path runs.
+CTA_OVERLAY_WIDTH = 940      # px wide in the 1080-wide frame
+CTA_OVERLAY_TOP_Y = 520      # px from top — sits above the character's head, below the scoreboard
+CTA_OVERLAY_VOLUME = 0.35    # the overlay has its own subscribe SFX; make it audible
+
 def load_layout_config():
     layout_root = os.path.join(PROJECT_ROOT, "layout_config.json")
     layout_data = os.path.join(DATA_DIR, "layout_config.json")
@@ -302,7 +309,7 @@ def preprocess_assets():
             cmd = [FFMPEG_PATH, "-y", "-i", mp4, "-vf", f"chromakey=0x00FF00:0.1:0.1,scale={w}:{h}", "-c:v", "qtrle", mov]
             subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, timer_clip_ref=None, cta_clip_ref=None, woosh_file=None, is_first_segment=False, hook_text=None):
+def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, timer_clip_ref=None, cta_clip_ref=None, woosh_file=None, is_first_segment=False, hook_text=None, cta_is_alpha=False):
     visuals = segment.get("visuals", {})
     text = segment.get("text", "")
     speaker = segment.get("speaker", "")
@@ -436,11 +443,17 @@ def render_segment(video_id, i, segment, bg_clip, revealed_answers, cta_shown, t
     # CTA Logic: Trigger on "subscribe" keyword
     if text and "subscribe" in text.lower() and cta_clip_ref:
         try:
-            cta_clip = cta_clip_ref.copy().set_position((LAYOUT["cta"]["x"], LAYOUT["cta"]["y"])).set_start(0)
+            # Alpha overlay already has its position baked in (centered, above the character);
+            # the green-screen overlay is positioned from LAYOUT["cta"].
+            if cta_is_alpha:
+                cta_clip = cta_clip_ref.copy().set_start(0)
+            else:
+                cta_clip = cta_clip_ref.copy().set_position((LAYOUT["cta"]["x"], LAYOUT["cta"]["y"])).set_start(0)
             if cta_clip.duration > duration: cta_clip = cta_clip.subclip(0, duration)
-            
+
             if cta_clip_ref.audio:
-                cta_audio_to_add = cta_clip_ref.audio.subclip(0, min(cta_clip_ref.audio.duration, duration)).volumex(0.1).set_start(0)
+                cta_vol = CTA_OVERLAY_VOLUME if cta_is_alpha else 0.1
+                cta_audio_to_add = cta_clip_ref.audio.subclip(0, min(cta_clip_ref.audio.duration, duration)).volumex(cta_vol).set_start(0)
                 
             layers.append(cta_clip)
             keep_alive.append(cta_clip)
@@ -540,35 +553,29 @@ def generate_video(video_data):
         else:
              timer_clip_ref = timer_clip_ref.set_position((LAYOUT["timer"]["x"], LAYOUT["timer"]["y"]))
 
-    # CTA: Prefer MP4 source and apply runtime mask for reliability. Per-channel overlay
-    # selected via CTA_OVERLAY (set by run_pipeline); falls back to the primary overlay.
+    # CTA overlay. Per-channel, selected via CTA_OVERLAY (set by run_pipeline).
+    # PREFERRED: a premade transparent overlay assets/overlays/<cta>_overlay.mov (VP9->qtrle
+    # alpha) — load its real alpha mask (no chroma-key fringing) and place it ABOVE the
+    # character, centered. FALLBACK: the legacy green-screen mp4 (chroma-keyed full-frame).
     cta_name = os.environ.get("CTA_OVERLAY", "subscribe_cta")
-    cta_path = os.path.join(ASSETS_DIR, "overlays", f"{cta_name}.mp4")
-    if not os.path.exists(cta_path): cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
-    
-    if os.path.exists(cta_path):
-        # Force green screen removal for MP4, or if it's the MOV fallback (just in case)
-        cta_clip_ref = VideoFileClip(cta_path)
-        cta_clip_ref = cta_clip_ref.fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
-            
-        # Apply Scale
-        cta_scale = LAYOUT["cta"].get("scale", 1.0)
-        if cta_scale != 1.0:
-            cta_clip_ref = cta_clip_ref.resize(cta_scale)
-        else:
-            cta_clip_ref = cta_clip_ref.resize(newsize=(LAYOUT["cta"]["width"], LAYOUT["cta"]["height"]))
-
-        # Position Logic (Center in 1080x1920 frame if scaled, plus offset)
-        if cta_scale != 1.0:
-            w, h = cta_clip_ref.size
-            center_x = (1080 - w) // 2
-            center_y = (1920 - h) // 2
-            
-            final_x = center_x + LAYOUT["cta"]["x"]
-            final_y = center_y + LAYOUT["cta"]["y"]
-            
-            cta_clip_ref = cta_clip_ref.set_position((final_x, final_y))
-        else:
+    cta_clip_ref = None
+    cta_is_alpha = False
+    alpha_overlay = os.path.join(ASSETS_DIR, "overlays", f"{cta_name}_overlay.mov")
+    if os.path.exists(alpha_overlay):
+        cta_is_alpha = True
+        cta_clip_ref = VideoFileClip(alpha_overlay, has_mask=True).resize(width=CTA_OVERLAY_WIDTH)
+        cw, _ch = cta_clip_ref.size
+        cta_clip_ref = cta_clip_ref.set_position(((1080 - cw) // 2, CTA_OVERLAY_TOP_Y))
+    else:
+        cta_path = os.path.join(ASSETS_DIR, "overlays", f"{cta_name}.mp4")
+        if not os.path.exists(cta_path): cta_path = os.path.join(ASSETS_DIR, "overlays", "subscribe_cta.mp4")
+        if os.path.exists(cta_path):
+            cta_clip_ref = VideoFileClip(cta_path).fx(vfx.mask_color, color=[0, 255, 0], thr=100, s=10)
+            cta_scale = LAYOUT["cta"].get("scale", 1.0)
+            if cta_scale != 1.0:
+                cta_clip_ref = cta_clip_ref.resize(cta_scale)
+            else:
+                cta_clip_ref = cta_clip_ref.resize(newsize=(LAYOUT["cta"]["width"], LAYOUT["cta"]["height"]))
             cta_clip_ref = cta_clip_ref.set_position((LAYOUT["cta"]["x"], LAYOUT["cta"]["y"]))
 
     total_duration = 0
@@ -677,7 +684,7 @@ def generate_video(video_data):
         
         is_first = (i == 1)
         hook_txt = video_data.get("hook_text") if is_first else None
-        seg_path, cta_shown = render_segment(video_id, i, seg_data, bg_slice, revealed_answers, cta_shown, timer_clip_ref, cta_clip_ref, woosh_file=character_woosh_map.get(speaker), is_first_segment=is_first, hook_text=hook_txt)
+        seg_path, cta_shown = render_segment(video_id, i, seg_data, bg_slice, revealed_answers, cta_shown, timer_clip_ref, cta_clip_ref, woosh_file=character_woosh_map.get(speaker), is_first_segment=is_first, hook_text=hook_txt, cta_is_alpha=cta_is_alpha)
         
         segment_files.append(seg_path)
         bg_slice.close()
