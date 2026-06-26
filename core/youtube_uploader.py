@@ -73,6 +73,14 @@ CHANNELS = {
         # 2 posts/day to force volume on the throttled OG channel: late morning + evening.
         "schedule": [(11, 0), (19, 0)],
     },
+    "quizzap": {
+        "name": "QuizZap",
+        "token_file": os.path.join(PROJECT_ROOT, "token_quizzap.pickle"),
+        "log_file": os.path.join(DATA_DIR, "upload_log_quizzap.json"),
+        "cta": "subscribe_cta_quizzap",
+        # Brand-new clean channel — the control in the 3-channel experiment. 1 post/day.
+        "schedule": [(18, 0)],
+    },
 }
 DEFAULT_CHANNEL = "mmstorybook"
 
