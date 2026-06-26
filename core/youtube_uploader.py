@@ -78,8 +78,8 @@ CHANNELS = {
         "token_file": os.path.join(PROJECT_ROOT, "token_quizzap.pickle"),
         "log_file": os.path.join(DATA_DIR, "upload_log_quizzap.json"),
         "cta": "subscribe_cta_quizzap",
-        # Brand-new clean channel — the control in the 3-channel experiment. 1 post/day.
-        "schedule": [(18, 0)],
+        # Brand-new clean channel — the control in the 3-channel experiment. 1 post/day at 6 AM.
+        "schedule": [(6, 0)],
     },
 }
 DEFAULT_CHANNEL = "mmstorybook"
