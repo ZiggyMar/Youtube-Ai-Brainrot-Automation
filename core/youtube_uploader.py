@@ -80,6 +80,9 @@ CHANNELS = {
         "cta": "subscribe_cta_quizzap",
         # Brand-new clean channel — the control in the 3-channel experiment. 1 post/day at 6 AM.
         "schedule": [(6, 0)],
+        # SLOW IGNITION: held out of the daemon's auto cycle for the first few days so the
+        # fresh channel isn't day-one auto-blasted (spam signal). Flip to True to go daily.
+        "auto_post": False,
     },
 }
 DEFAULT_CHANNEL = "mmstorybook"
@@ -91,8 +94,12 @@ def channel_posts_per_day(cfg):
 
 
 def enabled_channels():
-    """(key, cfg) for every channel whose OAuth token exists, i.e. can actually post."""
-    return [(k, c) for k, c in CHANNELS.items() if os.path.exists(c["token_file"])]
+    """(key, cfg) the DAEMON auto-posts to: token exists AND auto_post not disabled.
+    A channel can be registered + tokened but held out of the auto cycle (auto_post=False)
+    e.g. a brand-new channel doing a slow, hand-controlled ignition. Manual posts via
+    YouTubeUploader(cfg) ignore this flag."""
+    return [(k, c) for k, c in CHANNELS.items()
+            if os.path.exists(c["token_file"]) and c.get("auto_post", True)]
 
 # === Proven weekly EST blueprint: (hour, minute) local upload-target per weekday ===
 # Monday=0 ... Sunday=6. One published video per day at these high-traffic windows.
