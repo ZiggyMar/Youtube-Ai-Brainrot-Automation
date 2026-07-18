@@ -3,9 +3,9 @@
 <!-- TODO: Insert a REAL screenshot or banner of your project here -->
 <!-- ![YouTube AI Brainrot Automation Banner](assets/docs/real_banner.png) -->
 
-# 🧠 YouTube AI Brainrot Automation
+# 🧠 Open-Source GenAI Video Rendering Framework
 
-**The ultimate high-performance pipeline for generating viral, highly-engaging "Brainrot" style videos for YouTube Shorts, TikTok, and Instagram Reels.**
+**A Headless Programmatic Video Compositing and Multi-Modal Orchestration Engine.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
@@ -15,18 +15,39 @@
 
 ---
 
-## 📖 Overview
+## 📖 System Overview
 
-Welcome to the **YouTube AI Brainrot Automation** project! This is a robust, highly-automated video production pipeline specifically designed to create viral short-form content. By leveraging multiple Large Language Models (LLMs), AI Voice Cloning, and frame-perfect subtitle synchronization, you can produce engaging trivia, quizzes, and brainrot-style videos in minutes, not hours.
+This framework is a highly stable, extensible **Multi-Modal Orchestration Engine** designed for **Headless Programmatic Video Compositing**. It solves the complex architectural challenge of synchronously bridging non-deterministic text generation (via LLMs), multi-stage audio processing pipelines (TTS and RVC voice cloning), and strict time-coded video layers (via FFmpeg). 
 
-## 🚀 Key Features
+By providing a robust, data-driven compositing pipeline, this open-source framework democratizes advanced media generation infrastructure—capabilities typically paywalled behind expensive, closed-source SaaS platforms charging $50-$100/month.
 
-*   🎥 **Visual Layout Editor**: A custom browser-based tool to visually position and scale all video elements, avoiding tedious coordinate guessing.
-*   ⏱️ **Frame-Perfect Subtitles**: Word-level synchronization using OpenAI Whisper timestamps ensures your subtitles pop exactly when the word is spoken.
-*   🧠 **Multi-LLM Fallback Architecture**: Robust script generation using **Gemini, Groq, Mistral, and OpenRouter**. Never hit a rate limit again; if one fails, the system seamlessly falls back to another.
-*   🕺 **Dynamic Character Animations**: Automatic character selection and "sway" animations based on the detected mood and energy of the speaker.
-*   🎙️ **Professional Audio Mixing**: Automated Text-to-Speech (Edge-TTS), Voice Conversion (RVC), and intelligent background music ducking (auto-lowering music volume when speaking).
-*   🎬 **Automated Overlays & Greenscreen**: Integrated timer videos and Call-To-Action (CTA) overlays with automatic green-screen (chroma key) masking.
+## ⚙️ Deep Dive Into Core Systems
+
+### Multi-LLM Resiliency Engine
+At the core of the content generation tier is an abstract token provider that manages distributed API rate limits, implements graceful fallbacks, and enforces strict JSON schema validation across heterogeneous models (including Gemini, Groq, and Mistral). This ensures that upstream text generation maintains high availability and deterministic structured output regardless of individual provider outages.
+
+### Deterministic Subtitle Component
+To solve the industry-wide issue of subtitle drift, the pipeline programmatically parses raw JSON timestamp metadata emitted by OpenAI Whisper. It translates this data into a highly structured `layout_config.json` schema, driving the FFmpeg compositing engine to achieve frame-perfect, word-by-word UI rendering without drift over long durations.
+
+### Headless Audio Engineering
+The framework executes an automated audio-ducking pipeline that programmatically analyzes backing tracks, invokes Voice Conversion (RVC) models on synthesized speech, and cleanly merges the resulting frequency layers via complex FFmpeg filter graphs. This results in broadcast-quality audio mixes decoupled from any manual editing interface.
+
+### Extensible Visual Orchestration
+*   🎥 **Visual Layout Editor**: A decoupled, browser-based configuration tool for serializing positional data and visual constraints into the JSON schema, avoiding hardcoded coordinates.
+*   🕺 **State-Driven Animations**: Programmatic character selection and coordinate transformations (e.g., "sway" animations) executed dynamically based on inferred semantic sentiment and energy levels.
+*   🎬 **Automated Overlays & Chroma Keying**: Algorithmic integration of timer artifacts and Call-To-Action (CTA) layers utilizing automated green-screen masking.
+
+---
+
+## 🚀 Production Deployments & Case Studies
+
+This headless framework actively drives high-volume media rendering pipelines in production environments. Engineered for reliability, it serves as a highly stable, scalable engine capable of handling real-world traffic, audience engagement, and strict algorithmic formatting.
+
+| Deployment Case | Channel Scale / Impact | Key Pipeline Features Demonstrated | Live Link |
+| :--- | :--- | :--- | :--- |
+| **High-Engagement Trivia Shorts Pipeline** | Active deployment on a verified 30K+ subscriber automated content channel | Automated voice conversion ducking, dynamic mood-based asset swapping, and word-level Whisper tracking | [FactZapTV on YouTube](https://www.youtube.com/@FactZapTV) |
+| **[Placeholder Deployment]** | [Placeholder Scale / Impact] | [Placeholder Features] | [Placeholder Link] |
+| **[Placeholder Deployment]** | [Placeholder Scale / Impact] | [Placeholder Features] | [Placeholder Link] |
 
 ---
 
