@@ -17,9 +17,9 @@
 
 ## 📖 System Overview
 
-This framework is a highly stable, extensible **Multi-Modal Orchestration Engine** designed for **Headless Programmatic Video Compositing**. It solves the complex architectural challenge of synchronously bridging non-deterministic text generation (via LLMs), multi-stage audio processing pipelines (TTS and RVC voice cloning), and strict time-coded video layers (via FFmpeg). 
+This framework is a highly stable, extensible **Multi-Modal Orchestration Pipeline** designed for **Headless Video Compositing**. It serves as foundational infrastructure that concurrently handles non-deterministic text generation (via LLMs), frame-perfect Whisper timestamps, and multi-stage TTS audio processing. 
 
-By providing a robust, data-driven compositing pipeline, this open-source framework democratizes advanced media generation infrastructure—capabilities typically paywalled behind expensive, closed-source SaaS platforms charging $50-$100/month.
+By providing a robust, data-driven compositing pipeline, this open-source framework democratizes advanced media generation infrastructure. These capabilities are typically paywalled behind expensive, closed-source SaaS platforms charging $50-$100/month.
 
 ## ⚙️ Deep Dive Into Core Systems
 
@@ -41,13 +41,11 @@ The framework executes an automated audio-ducking pipeline that programmatically
 
 ## 🚀 Production Deployments & Case Studies
 
-This headless framework actively drives high-volume media rendering pipelines in production environments. Engineered for reliability, it serves as a highly stable, scalable engine capable of handling real-world traffic, audience engagement, and strict algorithmic formatting.
+Examples of fully automated pipelines rendering live media for production channels. This headless framework actively drives high-volume media rendering pipelines in production environments. Engineered for reliability, it serves as a highly stable, scalable engine capable of handling real-world traffic, audience engagement, and strict algorithmic formatting.
 
-| Deployment Case | Channel Scale / Impact | Key Pipeline Features Demonstrated | Live Link |
-| :--- | :--- | :--- | :--- |
-| **High-Engagement Trivia Shorts Pipeline** | Active deployment on a verified 30K+ subscriber automated content channel | Automated voice conversion ducking, dynamic mood-based asset swapping, and word-level Whisper tracking | [FactZapTV on YouTube](https://www.youtube.com/@FactZapTV) |
-| **[Placeholder Deployment]** | [Placeholder Scale / Impact] | [Placeholder Features] | [Placeholder Link] |
-| **[Placeholder Deployment]** | [Placeholder Scale / Impact] | [Placeholder Features] | [Placeholder Link] |
+*   [**High-Engagement Trivia Shorts Pipeline** - FactZapTV on YouTube](https://www.youtube.com/@FactZapTV)
+*   [**[Placeholder Case 2]** - Insert YouTube/TikTok URL here](https://example.com)
+*   [**[Placeholder Case 3]** - Insert YouTube/TikTok URL here](https://example.com)
 
 ---
 
