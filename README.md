@@ -1,8 +1,5 @@
 <div align="center">
 
-<!-- TODO: Insert a REAL screenshot or banner of your project here -->
-<!-- ![YouTube AI Brainrot Automation Banner](assets/docs/real_banner.png) -->
-
 # 🧠 Open-Source GenAI Video Rendering Framework
 
 **A Headless Programmatic Video Compositing and Multi-Modal Orchestration Engine.**
@@ -44,8 +41,6 @@ The framework executes an automated audio-ducking pipeline that programmatically
 Examples of fully automated pipelines rendering live media for production channels. This headless framework actively drives high-volume media rendering pipelines in production environments. Engineered for reliability, it serves as a highly stable, scalable engine capable of handling real-world traffic, audience engagement, and strict algorithmic formatting.
 
 *   [**High-Engagement Trivia Shorts Pipeline** - FactZapTV on YouTube](https://www.youtube.com/@FactZapTV)
-*   [**[Placeholder Case 2]** - Insert YouTube/TikTok URL here](https://example.com)
-*   [**[Placeholder Case 3]** - Insert YouTube/TikTok URL here](https://example.com)
 
 ---
 
