@@ -22,10 +22,18 @@ POSTED_LOG_FILE = os.path.join(PROJECT_ROOT, "data", "posted_log.json")
 SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
 
 class YouTubeUploader:
+    """
+    Handles authentication and video uploads to the YouTube API.
+    Provides methods to refresh OAuth tokens and insert videos.
+    """
     def __init__(self):
         self.youtube = None
 
     def authenticate(self):
+        """
+        Authenticates with YouTube API via OAuth 2.0.
+        Loads existing token or initiates local server flow if missing.
+        """
         creds = None
         if os.path.exists(TOKEN_FILE):
             try:
@@ -101,6 +109,10 @@ class YouTubeUploader:
             return None
 
 class Scheduler:
+    """
+    Manages the scheduling and execution of automated video uploads.
+    Polls the ready directory and triggers YouTube uploads based on time slots.
+    """
     def __init__(self):
         self.uploader = YouTubeUploader()
         self.posted_log = self.load_log()
@@ -161,8 +173,8 @@ class Scheduler:
         # But user said "name of mp4 is already the title"
         
         # Add hashtags
-        tags = ["SpongeBob", "Shorts", "Brainrot", "Quiz"]
-        description = f"{title}\n\n#Spongebob #Shorts #Brainrot #Quiz #Comedy"
+        tags = ["SpongeBob", "Shorts", "GenAI", "Quiz"]
+        description = f"{title}\n\n#Spongebob #Shorts #GenAI #Quiz #Comedy"
         
         video_id = self.uploader.upload_video(video_path, title, description, tags)
         

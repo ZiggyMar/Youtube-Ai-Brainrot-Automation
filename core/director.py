@@ -209,7 +209,7 @@ TITLE_TEMPLATES = [
     "Don't Get Eliminated By {character}! 😱",
     "Bet You Can't Beat {character} At This Game 😈",
     "Are You Smarter Than {character}? 🧠",
-    "The Ultimate {theme} Brain Rot Quiz 🤪",
+    "The Ultimate {theme} GenAI Quiz 🤪",
     "You Will Fail This {theme} Challenge 🛑",
     "Don't Pick The Same Answer As {character}! ⚠️",
     "Survival Mode: {theme} Edition 🛡️",
@@ -218,7 +218,7 @@ TITLE_TEMPLATES = [
     "Only 1% Can Beat {character} 🥇",
     "Don't Say It! ({theme} Edition) 🤐",
     "The {theme} Test You Will Fail 📉",
-    "Brain Rot Quiz: {theme} Edition 🧠",
+    "GenAI Quiz: {theme} Edition 🧠",
     "Do Not Say The Same Thing! 🚫",
     "Challenge: Beat {character} In 4 Rounds 🥊",
     "Test Your {theme} Knowledge! 📚",
@@ -266,12 +266,12 @@ TITLE_TEMPLATES = [
 HASHTAG_POOL = [
     "#brainteasers", "#mindgames", "#didyouknow", "#spongebob", 
     "#mindgamesrevealed", "#shorts", "#challenge", "#trivia", 
-    "#quiz", "#brainrot", "#game", "#fun", "#viral"
+    "#quiz", "#genai", "#game", "#fun", "#viral"
 ]
 
 def dedupe_title_hashtags(title):
     """Removes duplicate hashtags from a title (case-insensitive), preserving order.
-    e.g. 'Beat SpongeBob #Quiz #Brainrot #Shorts #Quiz' -> '... #Quiz #Brainrot #Shorts'."""
+    e.g. 'Beat SpongeBob #Quiz #GenAI #Shorts #Quiz' -> '... #Quiz #GenAI #Shorts'."""
     if not title or "#" not in title:
         return title
     head, _, tags_part = title.partition("#")

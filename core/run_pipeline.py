@@ -60,6 +60,10 @@ def fetch_footage():
 
 
 def generate_one():
+    """
+    Executes a single video generation pipeline (Script -> Audio -> Video).
+    Archives intermediate data upon completion.
+    """
     if not stage("director.py", "STAGE 1: WRITE SCRIPT"):
         return False
     if not stage("voicebox.py", "STAGE 2: GENERATE AUDIO"):
@@ -97,6 +101,10 @@ def seconds_until_next_run():
 
 
 def run_cycle():
+    """
+    Executes the main daily automated content cycle:
+    Fetches footage, generates videos, posts them, and performs cleanups.
+    """
     start = datetime.datetime.now()
     print(f"\n🎬 CYCLE START {start.isoformat(timespec='seconds')}")
     fetch_footage()
@@ -143,13 +151,17 @@ def run_cycle():
 
 
 def main():
+    """
+    Main entry point for the long-running daemon process.
+    Handles scheduling, sleeping, and executing cycles.
+    """
     try:
         import youtube_uploader
         chan_names = ", ".join(c["name"] for _, c in youtube_uploader.enabled_channels()) or "none yet"
     except Exception:
         chan_names = "?"
     notifier.info(
-        "Brainrot daemon started",
+        "AutomatedMediaPipeline daemon started",
         f"Runs daily at {RUN_AT_HOUR:02d}:{RUN_AT_MINUTE:02d} (server time). "
         f"One video per authenticated channel. Active: {chan_names}.",
     )

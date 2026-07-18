@@ -14,7 +14,8 @@ ARCHIVE_FILE = os.path.join(DATA_DIR, 'archive_scripts.json')
 
 def run_step(script_name, stage_title):
     """
-    Runs a python script and waits for it to finish.
+    Executes a python script sequentially as part of the video pipeline.
+    Raises exceptions on failure to stop the pipeline.
     """
     print(f"\n{'='*50}")
     print(f"=== {stage_title} ===")
@@ -112,6 +113,10 @@ def archive_completed_videos():
         print("ℹ️ No completed videos found in output/ to archive.")
 
 def main():
+    """
+    Entry point for sequential manual testing of the video pipeline.
+    Generates a batch of videos back-to-back.
+    """
     # Number of videos to generate in sequence
     NUM_VIDEOS = 5
 

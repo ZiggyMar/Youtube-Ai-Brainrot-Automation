@@ -120,14 +120,14 @@ SUBSCRIBE TO HELP US REACH 100K!
 
 -- Tags --
 
-spongebob,spongebob squarepants,spongebob episodes,spongebob music,plankton spongebob,squidward spongebob,patrick spongebob,spongebob nick,spongebob quiz,spongebob video games,spongebob shorts,spongebob quizzes,spongebob megaquiz,spongebob game show,spongebob game,spongebob kids,spongebob meme,brainrot,brain teaser,mind games,dont say the same thing,quiz,trivia,challenge,shorts"""
+spongebob,spongebob squarepants,spongebob episodes,spongebob music,plankton spongebob,squidward spongebob,patrick spongebob,spongebob nick,spongebob quiz,spongebob video games,spongebob shorts,spongebob quizzes,spongebob megaquiz,spongebob game show,spongebob game,spongebob kids,spongebob meme,ai video,brain teaser,mind games,dont say the same thing,quiz,trivia,challenge,shorts"""
 
 TAGS_LIST = [
     "spongebob", "spongebob squarepants", "spongebob episodes", "spongebob music",
     "plankton spongebob", "squidward spongebob", "patrick spongebob", "spongebob nick",
     "spongebob quiz", "spongebob shorts", "spongebob quizzes", "spongebob megaquiz",
     "spongebob game show", "spongebob game", "spongebob kids", "spongebob meme",
-    "brainrot", "brain teaser", "mind games", "dont say the same thing",
+    "ai video", "brain teaser", "mind games", "dont say the same thing",
     "quiz", "trivia", "challenge", "shorts",
 ]
 
@@ -145,6 +145,10 @@ def cap_tags(tags, limit=480):
 
 
 class YouTubeUploader:
+    """
+    Manages OAuth authentication and scheduled uploads to YouTube channels.
+    Supports multi-channel configurations via CHANNELS registry.
+    """
     def __init__(self, channel=None):
         # channel: a CHANNELS[*] cfg dict. Defaults to the primary channel for backward compat.
         cfg = channel or CHANNELS[DEFAULT_CHANNEL]
