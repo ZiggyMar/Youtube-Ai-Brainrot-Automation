@@ -112,11 +112,29 @@ def archive_completed_videos():
     else:
         print("ℹ️ No completed videos found in output/ to archive.")
 
+def check_environment():
+    """Validates that at least one required API key is present."""
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(PROJECT_ROOT, '.env'))
+    
+    keys = ["GEMINI_API_KEY", "GROQ_API_KEY", "MISTRAL_API_KEY", "OPENROUTER_API_KEY"]
+    if not any(os.environ.get(k) and os.environ.get(k).strip() for k in keys):
+        print("\n\u274c CRITICAL CONFIGURATION ERROR \u274c")
+        print("No valid LLM API keys were found in your environment.")
+        print("Please copy '.env.example' to '.env' and add at least one API key.")
+        print("Example:")
+        print("  cp .env.example .env")
+        print("  nano .env\n")
+        import sys
+        sys.exit(1)
+
 def main():
     """
     Entry point for sequential manual testing of the video pipeline.
     Generates a batch of videos back-to-back.
     """
+    check_environment()
+    
     # Number of videos to generate in sequence
     NUM_VIDEOS = 5
 

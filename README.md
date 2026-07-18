@@ -46,8 +46,8 @@ Welcome to the **YouTube AI Brainrot Automation** project! This is a robust, hig
 
 ### 1. Prerequisites
 Ensure you have the following installed on your system:
-*   [Python 3.9+](https://www.python.org/downloads/)
-*   [FFmpeg](https://ffmpeg.org/download.html) (Ensure it's in your system PATH or located in `tools/ffmpeg/ffmpeg.exe`)
+*   [Docker](https://www.docker.com/products/docker-desktop)
+*   [Docker Compose](https://docs.docker.com/compose/install/)
 *   Git
 
 ### 2. Clone the Repository
@@ -56,22 +56,19 @@ git clone https://github.com/ZiggyMar/Youtube-Ai-Brainrot-Automation.git
 cd Youtube-Ai-Brainrot-Automation
 ```
 
-### 3. Install Dependencies
+### 3. Configure Environment Variables
+Copy the template to create your `.env` file (do not commit this file). Add your API keys:
 ```bash
-pip install -r requirements.txt
+cp .env.example .env
 ```
-
-### 4. Configure Environment Variables
-Create a `.env` file in the root directory (do not commit this file). Add your API keys:
-```env
-GEMINI_API_KEY=your_gemini_key
-GROQ_API_KEY=your_groq_key
-MISTRAL_API_KEY=your_mistral_key
-OPENROUTER_API_KEY=your_openrouter_key
-```
-
 *(Note: The project uses a fallback system, so you only strictly need one valid key to start!)*
 
+### 4. Build and Run via Docker
+The entire environment (including FFmpeg and all Python dependencies) is containerized for zero-setup execution. Simply run:
+```bash
+docker-compose up --build
+```
+Your generated videos will appear automatically in your local `output/` folder!
 ---
 
 ## 🎨 Workflow Guide
@@ -84,9 +81,9 @@ OPENROUTER_API_KEY=your_openrouter_key
 5. Move the downloaded `layout_config.json` to the root of your project directory.
 
 ### Step 2: Run the Pipeline
-Execute the main script to start generating videos:
+Execute the pipeline to start generating videos:
 ```bash
-python core/main.py
+docker-compose up
 ```
 
 ### What Happens Next?

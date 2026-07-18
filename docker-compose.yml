@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  brainrot-pipeline:
+    build: .
+    container_name: brainrot-pipeline
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./assets:/app/assets
+      - ./output:/app/output
+      - ./layout_config.json:/app/layout_config.json
